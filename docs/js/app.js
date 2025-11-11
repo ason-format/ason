@@ -293,6 +293,48 @@ function createInteractiveOutput(compressed) {
   const lines = compressed.split("\n");
   const container = document.createElement("div");
 
+  // Parse value dictionary from $def section
+  const valueDictionary = new Map();
+  let inDefSection = false;
+
+  lines.forEach((line) => {
+    if (line.trim() === "$def:") {
+      inDefSection = true;
+    } else if (line.trim() === "$data:") {
+      inDefSection = false;
+    } else if (inDefSection && line.match(/^\s+(#\d+):(.+)$/)) {
+      const match = line.match(/^\s+(#\d+):(.+)$/);
+      const ref = match[1];
+      let value = match[2];
+      // Remove quotes if present
+      if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.slice(1, -1);
+      }
+      valueDictionary.set(ref, value);
+    }
+  });
+
+  // Also parse inline dictionary (first occurrence with value #N)
+  lines.forEach((line) => {
+    // Match patterns like: value #0 or "value" #0
+    const inlineMatch = line.match(/[:\s]([^#\s]+|"[^"]+")(\s+)(#\d+)/g);
+    if (inlineMatch) {
+      inlineMatch.forEach((match) => {
+        const parts = match.match(/[:\s]([^#\s]+|"[^"]+")(\s+)(#\d+)/);
+        if (parts) {
+          let value = parts[1].trim();
+          const ref = parts[3];
+          if (value.startsWith('"') && value.endsWith('"')) {
+            value = value.slice(1, -1);
+          }
+          if (!valueDictionary.has(ref)) {
+            valueDictionary.set(ref, value);
+          }
+        }
+      });
+    }
+  });
+
   lines.forEach((line, idx) => {
     const lineDiv = document.createElement("div");
     let processed = false;
@@ -347,7 +389,10 @@ function createInteractiveOutput(compressed) {
       if (value.includes("#")) {
         value = value.replace(
           /(#\d+)/g,
-          `<span class="hover-part text-green-600" data-tooltip="Value dictionary reference">$1</span>`,
+          (match) => {
+            const dictValue = valueDictionary.get(match) || "Unknown value";
+            return `<span class="hover-part text-green-600" data-tooltip="Value: ${dictValue}">${match}</span>`;
+          }
         );
       }
       if (value.match(/\[(\d+)\]@/)) {
@@ -365,6 +410,18 @@ function createInteractiveOutput(compressed) {
     if (!processed) {
       // Process inline patterns in any line
       let html = line;
+
+      // Value dictionary references #N
+      if (html.includes("#")) {
+        html = html.replace(
+          /(#\d+)/g,
+          (match) => {
+            const dictValue = valueDictionary.get(match) || "Unknown value";
+            return `<span class="hover-part text-green-600" data-tooltip="Value: ${dictValue}">${match}</span>`;
+          }
+        );
+        processed = true;
+      }
 
       // Object reference &obj0
       if (html.includes("&obj")) {
