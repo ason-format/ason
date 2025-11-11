@@ -325,6 +325,37 @@ function createInteractiveOutput(compressed) {
         `<span class="hover-part text-blue-600" data-tooltip="Common object keys">${keys}</span>:`;
       processed = true;
     }
+    // Path flattening (properties with dots like order.customer.name)
+    else if (line.match(/^(\s*)([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)+):/)) {
+      const match = line.match(/^(\s*)([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)+):(.*)$/);
+      const indent = match[1];
+      const path = match[2];
+      let value = match[3];
+
+      // Highlight special values in the path flattening line
+      if (value.includes("&obj")) {
+        value = value.replace(
+          /(&obj\d+)/g,
+          `<span class="hover-part text-purple-600" data-tooltip="Reference to defined object">$1</span>`,
+        );
+      }
+      if (value.includes("#")) {
+        value = value.replace(
+          /(#\d+)/g,
+          `<span class="hover-part text-green-600" data-tooltip="Value dictionary reference">$1</span>`,
+        );
+      }
+      if (value.match(/\[(\d+)\]@/)) {
+        value = value.replace(
+          /(\[(\d+)\]@([\w,]+))/g,
+          `<span class="hover-part text-blue-600" data-tooltip="Uniform array">$1</span>`,
+        );
+      }
+
+      lineDiv.innerHTML =
+        `${indent}<span class="hover-part text-orange-600" data-tooltip="Flattened nested path">${path}</span>:${value}`;
+      processed = true;
+    }
 
     if (!processed) {
       // Process inline patterns in any line

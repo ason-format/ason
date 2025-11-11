@@ -81,6 +81,12 @@
                             Features
                         </a>
                         <a
+                            href="#installation"
+                            class="nav-link block px-3 py-2 text-sm rounded"
+                        >
+                            Installation & Usage
+                        </a>
+                        <a
                             href="#basic-example"
                             class="nav-link block px-3 py-2 text-sm rounded"
                         >
@@ -195,6 +201,82 @@
                                 >
                             </li>
                         </ul>
+                    </section>
+
+                    <section id="installation" class="section-heading mb-12">
+                        <h2 class="text-2xl font-semibold mb-4">Installation & Usage</h2>
+
+                        <!-- NPM -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-medium mb-3">NPM Package</h3>
+                            <div class="code-block mb-3">
+                                <pre>npm install @ason-format/ason</pre>
+                            </div>
+                            <div class="code-block">
+                                <pre>import { SmartCompressor } from '@ason-format/ason';
+
+const compressor = new SmartCompressor();
+const data = { users: [{ id: 1, name: "Alice" }] };
+
+const compressed = compressor.compress(data);
+const original = compressor.decompress(compressed);</pre>
+                            </div>
+                        </div>
+
+                        <!-- CDN -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-medium mb-3">CDN (Browser)</h3>
+                            <p class="text-sm text-gray-600 mb-3">
+                                Use ASON directly in the browser without installation:
+                            </p>
+
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Option 1: ESM Module</p>
+                                <div class="code-block">
+                                    <pre>&lt;script type="module"&gt;
+  import { SmartCompressor } from 'https://unpkg.com/@ason-format/ason@1.1.2';
+
+  const compressor = new SmartCompressor();
+  const compressed = compressor.compress({ hello: "world" });
+&lt;/script&gt;</pre>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Option 2: Global Variable</p>
+                                <div class="code-block">
+                                    <pre>&lt;script src="https://unpkg.com/@ason-format/ason@1.1.2/dist/index.browser.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const { SmartCompressor, TokenCounter } = window.ASON;
+  const compressor = new SmartCompressor();
+&lt;/script&gt;</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 border border-blue-200 rounded p-3 text-sm">
+                                <p class="text-blue-900">
+                                    <strong>Bundle size:</strong> ~14 KB minified (~5 KB gzipped)
+                                </p>
+                                <p class="text-blue-800 mt-1">
+                                    Also available on:
+                                    <a href="https://cdn.jsdelivr.net/npm/@ason-format/ason@1.1.2/" class="underline" target="_blank">jsDelivr</a>,
+                                    <a href="https://esm.sh/@ason-format/ason@1.1.2" class="underline" target="_blank">esm.sh</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CLI -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-medium mb-3">CLI Tool</h3>
+                            <div class="code-block">
+                                <pre># Convert JSON to ASON
+npx ason input.json -o output.ason
+
+# Show token savings
+npx ason data.json --stats
+# ✓ Saved 36 tokens (61.02%)</pre>
+                            </div>
+                        </div>
                     </section>
 
                     <section id="basic-example" class="section-heading mb-12">
