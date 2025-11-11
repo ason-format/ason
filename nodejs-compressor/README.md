@@ -469,10 +469,10 @@ Compares token usage between JSON and ASON.
 
 ## Documentation
 
-- **[Interactive Demo](https://seanluis.github.io/ason/)** - Try it in your browser
+- **[Interactive Demo](https://ason-format.github.io/ason/)** - Try it in your browser
 - **[GitHub Repository](https://github.com/ason-format/ason)** - Source code
-- **[Full Documentation](https://seanluis.github.io/ason/docs.html)** - Complete guide
-- **[Benchmarks](https://seanluis.github.io/ason/benchmarks.html)** - Performance tests
+- **[Full Documentation](https://ason-format.github.io/ason/docs.html)** - Complete guide
+- **[Benchmarks](https://ason-format.github.io/ason/benchmarks.html)** - Performance tests
 
 ## Contributing
 

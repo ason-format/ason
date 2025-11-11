@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/ason-format/ason/issues"
   },
-  "homepage": "https://seanluis.github.io/ason/",
+  "homepage": "https://ason-format.github.io/ason/",
   "scripts": {
     "build": "tsup",
     "prepublishOnly": "npm run build",

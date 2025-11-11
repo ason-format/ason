@@ -139,10 +139,10 @@ Tested on 5 real-world datasets:
 
 ## 📚 Documentation
 
-- **[Interactive Demo](https://seanluis.github.io/ason/)** - Try it in your browser
-- **[Full Documentation](https://seanluis.github.io/ason/docs.html)** - Complete guide
+- **[Interactive Demo](https://ason-format.github.io/ason/)** - Try it in your browser
+- **[Full Documentation](https://ason-format.github.io/ason/docs.html)** - Complete guide
 - **[API Reference](./nodejs-compressor/README.md)** - Detailed API documentation
-- **[Benchmarks](https://seanluis.github.io/ason/benchmarks.html)** - Performance tests
+- **[Benchmarks](https://ason-format.github.io/ason/benchmarks.html)** - Performance tests
 - **[Release Guide](./RELEASE.md)** - How to publish new versions
 - **[Changelog](./CHANGELOG.md)** - Version history
 
