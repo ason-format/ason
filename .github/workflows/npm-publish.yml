@@ -21,6 +21,11 @@ jobs:
           cd nodejs-compressor
           npm ci
 
+      - name: Build package
+        run: |
+          cd nodejs-compressor
+          npm run build
+
       - name: Run tests
         run: |
           cd nodejs-compressor
