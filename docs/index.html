@@ -281,6 +281,28 @@
         <section class="border-t pt-12 pb-12">
             <h2 class="text-lg font-semibold mb-6">How ASON Compresses Your Data</h2>
 
+            <!-- Sections Explanation -->
+            <div class="border rounded-lg p-4 mb-6 bg-gray-50">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded bg-gray-200 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="file-text" class="w-4 h-4 text-gray-700"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold mb-2">Document Structure</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <span class="bg-gray-200 text-gray-900 px-2 py-1 rounded font-mono">$def:</span>
+                                <p class="text-gray-600 mt-1">Definitions section where repeated objects and array schemas are declared once and referenced later.</p>
+                            </div>
+                            <div>
+                                <span class="bg-gray-200 text-gray-900 px-2 py-1 rounded font-mono">$data:</span>
+                                <p class="text-gray-600 mt-1">Data section containing the actual compressed content using the definitions from above.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <!-- Uniform Arrays -->
                 <div class="border rounded-lg p-4">
@@ -420,12 +442,12 @@
                             <span>ASON</span>
                             <span class="text-green-600">287 tokens (25% reduction)</span>
                         </div>
-                        <pre class="text-xs font-mono leading-relaxed overflow-auto"><code><span class="text-gray-500">$def:</span>
+                        <pre class="text-xs font-mono leading-relaxed overflow-auto"><code><span class="bg-gray-200 text-gray-900 px-1 rounded">$def:</span>
  <span class="bg-purple-100 text-purple-900 px-1 rounded">&obj0</span>:
   street:123 Main St
   city:San Francisco
   zip:94102
-<span class="text-gray-500">$data:</span>
+<span class="bg-gray-200 text-gray-900 px-1 rounded">$data:</span>
 <span class="bg-orange-100 text-orange-900 px-1 rounded">order.id</span>:ORD-2024-001
 <span class="bg-orange-100 text-orange-900 px-1 rounded">order.customer.name</span>:<span class="bg-green-100 text-green-900 px-1 rounded">Alice Johnson #0</span>
 <span class="bg-orange-100 text-orange-900 px-1 rounded">order.customer.email</span>:alice@example.com
@@ -438,11 +460,12 @@
                 </div>
                 <div class="px-4 py-3 bg-blue-50 border-t text-xs">
                     <div class="flex items-center gap-4 flex-wrap">
-                        <span class="font-medium">Techniques used:</span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded text-xs">Uniform Arrays</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-purple-100 text-purple-900 px-1.5 py-0.5 rounded text-xs">Object References</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-orange-100 text-orange-900 px-1.5 py-0.5 rounded text-xs">Path Flattening</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-green-100 text-green-900 px-1.5 py-0.5 rounded text-xs">Value Dictionary</span></span>
+                        <span class="font-medium">Components:</span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-gray-200 text-gray-900 px-1.5 py-0.5 rounded text-xs">$def / $data</span> <span class="text-gray-600">- Sections</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded text-xs">[N]@keys</span> <span class="text-gray-600">- Arrays</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-purple-100 text-purple-900 px-1.5 py-0.5 rounded text-xs">&obj0</span> <span class="text-gray-600">- References</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-orange-100 text-orange-900 px-1.5 py-0.5 rounded text-xs">a.b.c</span> <span class="text-gray-600">- Paths</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-green-100 text-green-900 px-1.5 py-0.5 rounded text-xs">#0</span> <span class="text-gray-600">- Values</span></span>
                     </div>
                 </div>
             </div>

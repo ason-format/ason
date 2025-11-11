@@ -301,13 +301,18 @@ function createInteractiveOutput(compressed) {
     if (line.startsWith("$schema:")) {
       const parts = line.split(":");
       lineDiv.innerHTML =
-        `<span class="hover-part text-purple-600" data-tooltip="Format version">$schema</span>:` +
+        `<span class="hover-part bg-gray-200 text-gray-900 px-1 rounded" data-tooltip="Format version">$schema</span>:` +
         `<span class="hover-part text-blue-600" data-tooltip="Version number">${parts[1]}</span>`;
+      processed = true;
+    }
+    // Def marker
+    else if (line.startsWith("$def:")) {
+      lineDiv.innerHTML = `<span class="hover-part bg-gray-200 text-gray-900 px-1 rounded" data-tooltip="Definitions section: repeated objects and schemas">$def:</span>`;
       processed = true;
     }
     // Data marker
     else if (line.startsWith("$data:")) {
-      lineDiv.innerHTML = `<span class="hover-part text-purple-600" data-tooltip="Start of compressed data">$data:</span>`;
+      lineDiv.innerHTML = `<span class="hover-part bg-gray-200 text-gray-900 px-1 rounded" data-tooltip="Data section: actual compressed content">$data:</span>`;
       processed = true;
     }
     // Uniform array with [N]@keys pattern
