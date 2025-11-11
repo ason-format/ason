@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="favicon.png" type="image/png" />
         <title>Benchmarks</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/lucide@latest"></script>
@@ -32,20 +33,45 @@
 
             <!-- Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div class="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
-                    <div class="text-xs font-medium text-gray-500 mb-2">ASON Wins</div>
-                    <div class="text-3xl font-semibold text-gray-900" id="asonWins">-</div>
-                    <div class="text-xs text-gray-500 mt-1">out of 5 datasets</div>
+                <div
+                    class="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow"
+                >
+                    <div class="text-xs font-medium text-gray-500 mb-2">
+                        ASON Wins
+                    </div>
+                    <div
+                        class="text-3xl font-semibold text-gray-900"
+                        id="asonWins"
+                    >
+                        -
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        out of 5 datasets
+                    </div>
                 </div>
-                <div class="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
-                    <div class="text-xs font-medium text-gray-500 mb-2">Avg Reduction</div>
-                    <div class="text-3xl font-semibold" id="avgReduction">-</div>
-                    <div class="text-xs text-gray-500 mt-1">vs JSON baseline</div>
+                <div
+                    class="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow"
+                >
+                    <div class="text-xs font-medium text-gray-500 mb-2">
+                        Avg Reduction
+                    </div>
+                    <div class="text-3xl font-semibold" id="avgReduction">
+                        -
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        vs JSON baseline
+                    </div>
                 </div>
-                <div class="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
-                    <div class="text-xs font-medium text-gray-500 mb-2">vs Toon</div>
+                <div
+                    class="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow"
+                >
+                    <div class="text-xs font-medium text-gray-500 mb-2">
+                        vs Toon
+                    </div>
                     <div class="text-3xl font-semibold" id="vsToon">-</div>
-                    <div class="text-xs text-gray-500 mt-1">average difference</div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        average difference
+                    </div>
                 </div>
             </div>
 
@@ -55,13 +81,41 @@
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50 border-b">
                             <tr>
-                                <th class="text-left px-4 py-3 font-medium text-gray-700">Dataset</th>
-                                <th class="text-center px-4 py-3 font-medium text-gray-700">JSON</th>
-                                <th class="text-center px-4 py-3 font-medium text-gray-700">ASON</th>
-                                <th class="text-center px-4 py-3 font-medium text-gray-700">Toon</th>
-                                <th class="text-center px-4 py-3 font-medium text-gray-700">Winner</th>
-                                <th class="text-center px-4 py-3 font-medium text-gray-700">ASON vs JSON</th>
-                                <th class="text-center px-4 py-3 font-medium text-gray-700">Toon vs JSON</th>
+                                <th
+                                    class="text-left px-4 py-3 font-medium text-gray-700"
+                                >
+                                    Dataset
+                                </th>
+                                <th
+                                    class="text-center px-4 py-3 font-medium text-gray-700"
+                                >
+                                    JSON
+                                </th>
+                                <th
+                                    class="text-center px-4 py-3 font-medium text-gray-700"
+                                >
+                                    ASON
+                                </th>
+                                <th
+                                    class="text-center px-4 py-3 font-medium text-gray-700"
+                                >
+                                    Toon
+                                </th>
+                                <th
+                                    class="text-center px-4 py-3 font-medium text-gray-700"
+                                >
+                                    Winner
+                                </th>
+                                <th
+                                    class="text-center px-4 py-3 font-medium text-gray-700"
+                                >
+                                    ASON vs JSON
+                                </th>
+                                <th
+                                    class="text-center px-4 py-3 font-medium text-gray-700"
+                                >
+                                    Toon vs JSON
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="benchmarksTable" class="divide-y">
@@ -72,34 +126,81 @@
             </div>
 
             <!-- Summary Section -->
-            <div class="border border-gray-200 rounded-lg p-5 bg-gray-50/50 mb-6">
-                <h3 class="text-sm font-semibold text-gray-900 mb-3">Key Findings</h3>
+            <div
+                class="border border-gray-200 rounded-lg p-5 bg-gray-50/50 mb-6"
+            >
+                <h3 class="text-sm font-semibold text-gray-900 mb-3">
+                    Key Findings
+                </h3>
                 <div class="space-y-3 text-sm">
                     <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5">
-                            <svg class="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        <div
+                            class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5"
+                        >
+                            <svg
+                                class="w-3 h-3 text-emerald-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd"
+                                ></path>
                             </svg>
                         </div>
                         <div class="text-gray-700">
-                            <strong class="text-gray-900" id="summaryWins">ASON wins 3 out of 5</strong> datasets — Best for uniform arrays and mixed structures
+                            <strong class="text-gray-900" id="summaryWins"
+                                >ASON wins 3 out of 5</strong
+                            >
+                            datasets — Best for uniform arrays and mixed
+                            structures
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center mt-0.5">
-                            <svg class="w-3 h-3 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        <div
+                            class="flex-shrink-0 w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center mt-0.5"
+                        >
+                            <svg
+                                class="w-3 h-3 text-amber-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                    clip-rule="evenodd"
+                                ></path>
                             </svg>
                         </div>
-                        <div class="text-gray-700">Both formats struggle with non-uniform data — JSON is better for deeply nested/irregular structures</div>
+                        <div class="text-gray-700">
+                            Both formats struggle with non-uniform data — JSON
+                            is better for deeply nested/irregular structures
+                        </div>
                     </div>
                     <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center mt-0.5">
-                            <svg class="w-3 h-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                        <div
+                            class="flex-shrink-0 w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center mt-0.5"
+                        >
+                            <svg
+                                class="w-3 h-3 text-blue-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd"
+                                ></path>
                             </svg>
                         </div>
-                        <div class="text-gray-700"><strong class="text-gray-900">ASON consistently outperforms Toon</strong> — Even when ASON loses to JSON, it loses less than Toon</div>
+                        <div class="text-gray-700">
+                            <strong class="text-gray-900"
+                                >ASON consistently outperforms Toon</strong
+                            >
+                            — Even when ASON loses to JSON, it loses less than
+                            Toon
+                        </div>
                     </div>
                 </div>
             </div>

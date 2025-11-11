@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2025-01-11
 
 ### Changed
-- **Package Rename** - Migrated from `@seanluis47/ason` to `@ason-format/ason`
+- **Package Rename** - Migrated from `@ason-format/ason`
   - Updated package name to reflect organization scope
   - Updated all documentation and examples with new package name
   - Updated repository URLs to `https://github.com/ason-format/ason`
