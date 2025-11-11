@@ -1,11 +1,13 @@
 # ASON - Aliased Serialization Object Notation
 
-[![npm version](https://badge.fury.io/js/%40ason-format%2Fason.svg)](https://www.npmjs.com/package/@ason-format/ason)
+![NPM Version](https://img.shields.io/npm/v/%40ason-format%2Fason)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
 > **Token-optimized JSON compression for Large Language Models.** Reduces tokens by up to 23% on uniform data. ASON achieves **+4.94% average** reduction vs JSON, while Toon averages **-6.75%** (worse than JSON).
+
+![ASON Overview](https://raw.githubusercontent.com/ason-format/ason/main/preview.png)
 
 ## Table of Contents
 
