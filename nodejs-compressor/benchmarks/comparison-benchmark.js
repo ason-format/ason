@@ -50,7 +50,7 @@ function compareFormats(data, datasetName) {
   }
 
   // 3. ASON compression
-  const compressor = new SmartCompressor({ indent: 0 });
+  const compressor = new SmartCompressor({ indent: 1 });
   const compressed = compressor.compress(data);
   const compressedSize = compressed.length;
   const compressedTokens = TokenCounter.estimateTokens(compressed);

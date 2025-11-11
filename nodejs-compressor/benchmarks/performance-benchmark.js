@@ -152,7 +152,7 @@ function estimateMemoryUsage(data, name) {
     console.log(`     Toon string:    N/A`);
   }
 
-  const compressor = new SmartCompressor({ indent: 0 });
+  const compressor = new SmartCompressor({ indent: 1 });
   const compressed = compressor.compress(data);
   console.log(`     ASON:           ${(compressed.length / 1024).toFixed(2)} KB (${((1 - compressed.length / jsonSize) * 100).toFixed(2)}% reduction)`);
 }

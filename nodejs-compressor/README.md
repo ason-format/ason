@@ -5,7 +5,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-> **Token-optimized JSON compression for Large Language Models.** Outperforms Toon with **33.26% average reduction** vs Toon's 32.96%.
+> **Token-optimized JSON compression for Large Language Models.** Reduces tokens by up to 23% on uniform data. ASON achieves **+4.94% average** reduction vs JSON, while Toon averages **-6.75%** (worse than JSON).
 
 ## Table of Contents
 
@@ -51,9 +51,9 @@ users:[2]@id,name,age
 
 | Metric | ASON | Toon |
 |--------|------|------|
-| **Token Reduction** | 33.26% | 32.96% |
-| **Real Dataset (28KB JSON)** | 1,808 tokens | 1,816 tokens |
-| **Advantage** | **+8 tokens saved** | Baseline |
+| **Average Token Reduction** | **+4.94%** ✅ | -6.75% ❌ |
+| **Best Case** | +23.45% (Analytics) | +15.31% (Analytics) |
+| **Wins vs JSON** | 3 out of 5 datasets | 1 out of 5 datasets |
 | **Pattern Detection** | 100% automatic | Manual configuration |
 | **TypeScript Support** | ✅ Full .d.ts | ✅ |
 | **Object References** | ✅ Automatic (`&obj0`) | ❌ |
@@ -70,20 +70,20 @@ Tested on 5 real-world datasets:
 ```
 🏆 Shipping Record
    │
-   ASON                ████████████░░░░░░░░    148 tokens  (9.76% vs JSON)
+   ASON                ████████████░░░░░░░░    148 tokens  (+9.76% vs JSON)
    JSON                ████████████████████    164 tokens  (baseline)
    Toon                ██████████████████░░    178 tokens  (-8.54% vs JSON)
 
 🏆 E-commerce Order
    │
-   ASON                █████████████████░░░    263 tokens  (10.24% vs JSON)
+   ASON                █████████████████░░░    263 tokens  (+10.24% vs JSON)
    JSON                ████████████████████    293 tokens  (baseline)
    Toon                ████████████████████    296 tokens  (-1.02% vs JSON)
 
 🏆 Analytics Time Series
    │
-   ASON                ███████████░░░░░░░░░    235 tokens  (23.45% vs JSON)
-   Toon                ████████████████░░░░    260 tokens  (15.31% vs JSON)
+   ASON                ███████████░░░░░░░░░    235 tokens  (+23.45% vs JSON)
+   Toon                ████████████████░░░░    260 tokens  (+15.31% vs JSON)
    JSON                ████████████████████    307 tokens  (baseline)
 
 📊 GitHub Repositories (Non-uniform)
@@ -125,7 +125,7 @@ npm install @ason-format/ason
 ```javascript
 import { SmartCompressor } from '@ason-format/ason';
 
-const compressor = new SmartCompressor({ indent: 0 });
+const compressor = new SmartCompressor({ indent: 1 });
 
 const data = {
   users: [
@@ -152,7 +152,7 @@ console.log(original);
 
 - ✅ **100% Automatic** - Zero configuration, detects patterns automatically
 - ✅ **Lossless** - Perfect round-trip fidelity
-- ✅ **33.26% Token Reduction** - Saves money on LLM API calls
+- ✅ **Up to 23% Token Reduction** - Saves money on LLM API calls (+4.94% average)
 - ✅ **Object References** - Deduplicates repeated structures (`&obj0`)
 - ✅ **Inline-First Dictionary** - Optimized for LLM readability
 - ✅ **TypeScript Support** - Full `.d.ts` type definitions included
@@ -239,7 +239,7 @@ cat large-dataset.json | npx ason > output.ason
 import { SmartCompressor, TokenCounter } from '@ason-format/ason';
 
 // Create compressor
-const compressor = new SmartCompressor({ indent: 0 });
+const compressor = new SmartCompressor({ indent: 1 });
 
 // Your data
 const data = {
@@ -263,7 +263,7 @@ console.log(`Saved ${comparison.reduction_percent}% tokens`);
 
 ```javascript
 const compressor = new SmartCompressor({
-  indent: 0,            // 0, 1, or 2 spaces (default: 1)
+  indent: 1,            // 1, 2, or 4 spaces (default: 1)
   useReferences: true,  // Auto-detect patterns (default: true)
   useDictionary: true,  // Value dictionary (default: true)
   delimiter: ','        // CSV delimiter (default: ',')
@@ -356,7 +356,7 @@ shipping.email:#0  // References first occurrence
 import { SmartCompressor } from '@ason-format/ason';
 import OpenAI from 'openai';
 
-const compressor = new SmartCompressor({ indent: 0 });
+const compressor = new SmartCompressor({ indent: 1 });
 const openai = new OpenAI();
 
 const largeData = await fetchDataFromDB();
@@ -375,7 +375,7 @@ const response = await openai.chat.completions.create({
 
 ```javascript
 // Save to Redis/localStorage with less space
-const compressor = new SmartCompressor({ indent: 0 });
+const compressor = new SmartCompressor({ indent: 1 });
 localStorage.setItem('cache', compressor.compress(bigObject));
 
 // Retrieve
@@ -408,7 +408,7 @@ new SmartCompressor(options?)
 ```
 
 **Options:**
-- `indent?: number` - Indentation spaces (0-2, default: 1)
+- `indent?: number` - Indentation spaces (1, 2, or 4, default: 1)
 - `delimiter?: string` - CSV delimiter (default: ',')
 - `useReferences?: boolean` - Enable object references (default: true)
 - `useDictionary?: boolean` - Enable value dictionary (default: true)

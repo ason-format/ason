@@ -20,7 +20,7 @@ describe("Built Package (dist/) - ESM Integration", () => {
   let compressor;
 
   beforeEach(() => {
-    compressor = new SmartCompressor({ indent: 0 });
+    compressor = new SmartCompressor({ indent: 1 });
   });
 
   test("should import SmartCompressor from dist/", () => {
@@ -167,7 +167,7 @@ describe("Built Package (dist/) - ESM Integration", () => {
 
 describe("Built Package (dist/) - Large Dataset Test", () => {
   test("should handle uniform array data with good compression", () => {
-    const compressor = new SmartCompressor({ indent: 0 });
+    const compressor = new SmartCompressor({ indent: 1 });
 
     // Create uniform data that compresses well (similar structure repeated)
     const uniformData = {

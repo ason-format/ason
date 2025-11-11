@@ -18,8 +18,6 @@
  * @version 1.0.0
  */
 
-import { encode } from "gpt-tokenizer";
-
 /**
  * SmartCompressor class handles compression and decompression of JSON data to/from ASON format.
  *
@@ -1395,15 +1393,9 @@ export class TokenCounter {
   static estimateTokens(text) {
     if (typeof text !== "string") text = JSON.stringify(text);
 
-    try {
-      // Use real GPT tokenizer (cl100k_base for GPT-4/3.5-turbo)
-      const tokens = encode(text);
-      return tokens.length;
-    } catch (error) {
-      // Fallback to approximation if tokenizer fails
-      console.warn("Tokenizer failed, using approximation:", error);
-      return Math.ceil(text.length / 4);
-    }
+    // Approximate tokens using character count / 4
+    // This is a common approximation: ~1 token per 4 characters for English text
+    return Math.ceil(text.length / 4);
   }
 
   /**

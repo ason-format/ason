@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Inline-first value dictionary optimized for LLM readability (`#0`, `#1`, etc.)
   - Uniform array compression with `@keys` notation
   - Path flattening for nested single-property objects
-  - Configurable indentation (0, 1, or 2 spaces)
+  - Configurable indentation (1, 2, or 4 spaces)
   - Lossless compression with perfect round-trip fidelity
 
 - **CLI Tool** - Command-line interface for JSON ↔ ASON conversion
@@ -59,11 +59,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - MIT License
 
 ### Performance
-- Achieves **33.26% token reduction** on real-world data (28KB JSON)
-- Benchmarks show ASON achieves **+4.94% average token reduction**
-- Beats Toon format by 8 tokens (1,808 vs 1,816)
-- Toon shows **-6.75% average** (worse than JSON in some cases)
-- ASON wins on **3 out of 4** tested real-world datasets
+- **Up to 23.45% token reduction** on uniform arrays (Analytics dataset)
+- **+4.94% average reduction** across 5 real-world datasets vs JSON
+- Toon shows **-6.75% average** (uses MORE tokens than JSON on average)
+- **ASON wins 3 out of 5** datasets vs JSON
+- **Always performs better than Toon** - Even when ASON loses to JSON, it loses less than Toon
 - Processes ~35ms for compression + decompression cycle
 - Memory efficient: ~10MB for large datasets
 - CLI `--stats` flag provides instant compression metrics

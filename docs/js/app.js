@@ -1,4 +1,4 @@
-import { SmartCompressor } from "./compressor.js";
+import { SmartCompressor } from "./ason.js";
 
 // DOM elements - Mode tabs
 const compressModeTab = document.getElementById("compressModeTab");

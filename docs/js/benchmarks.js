@@ -1,4 +1,4 @@
-import { SmartCompressor } from "./compressor.js";
+import { SmartCompressor } from "./ason.js";
 
 const benchmarks = [
   {

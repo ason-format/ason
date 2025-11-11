@@ -14,7 +14,7 @@ describe("Built Package (dist/) - CommonJS Integration", () => {
   let compressor;
 
   beforeEach(() => {
-    compressor = new SmartCompressor({ indent: 0 });
+    compressor = new SmartCompressor({ indent: 1 });
   });
 
   test("should require SmartCompressor from dist/index.cjs", () => {

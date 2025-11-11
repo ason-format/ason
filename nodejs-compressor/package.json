@@ -35,7 +35,8 @@
   },
   "homepage": "https://ason-format.github.io/ason/",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && npm run build:docs",
+    "build:docs": "cp dist/index.js ../docs/js/ason.js",
     "prepublishOnly": "npm run build",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
@@ -65,8 +66,7 @@
   "author": "ASON Project Contributors",
   "license": "MIT",
   "dependencies": {
-    "@toon-format/toon": "^0.9.0",
-    "gpt-tokenizer": "^3.4.0"
+    "@toon-format/toon": "^0.9.0"
   },
   "devDependencies": {
     "eslint": "^8.0.0",

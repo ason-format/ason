@@ -5,7 +5,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-> **Token-optimized JSON compression for Large Language Models.** Outperforms Toon with **33.26% average reduction** vs Toon's 32.96%.
+> **Token-optimized JSON compression for Large Language Models.** Reduces tokens by up to 23% on uniform data. ASON achieves **+4.94% average** reduction vs JSON, while Toon averages **-6.75%** (worse than JSON).
 
 ![ASON Overview](https://raw.githubusercontent.com/ason-format/ason/main/preview.png)
 
@@ -22,7 +22,7 @@ npm install @ason-format/ason
 ```javascript
 import { SmartCompressor } from '@ason-format/ason';
 
-const compressor = new SmartCompressor({ indent: 0 });
+const compressor = new SmartCompressor({ indent: 1 });
 
 const data = {
   users: [
@@ -80,20 +80,20 @@ Tested on 5 real-world datasets:
 ```
 🏆 Shipping Record
    │
-   ASON                ████████████░░░░░░░░    148 tokens  (9.76% vs JSON)
+   ASON                ████████████░░░░░░░░    148 tokens  (+9.76% vs JSON)
    JSON                ████████████████████    164 tokens  (baseline)
    Toon                ██████████████████░░    178 tokens  (-8.54% vs JSON)
 
 🏆 E-commerce Order
    │
-   ASON                █████████████████░░░    263 tokens  (10.24% vs JSON)
+   ASON                █████████████████░░░    263 tokens  (+10.24% vs JSON)
    JSON                ████████████████████    293 tokens  (baseline)
    Toon                ████████████████████    296 tokens  (-1.02% vs JSON)
 
 🏆 Analytics Time Series
    │
-   ASON                ███████████░░░░░░░░░    235 tokens  (23.45% vs JSON)
-   Toon                ████████████████░░░░    260 tokens  (15.31% vs JSON)
+   ASON                ███████████░░░░░░░░░    235 tokens  (+23.45% vs JSON)
+   Toon                ████████████████░░░░    260 tokens  (+15.31% vs JSON)
    JSON                ████████████████████    307 tokens  (baseline)
 
 📊 GitHub Repositories (Non-uniform)
@@ -130,7 +130,7 @@ Tested on 5 real-world datasets:
 
 - ✅ **100% Automatic** - Zero configuration, detects patterns automatically
 - ✅ **Lossless** - Perfect round-trip fidelity
-- ✅ **33.26% Token Reduction** - Saves money on LLM API calls
+- ✅ **Up to 23% Token Reduction** - Saves money on LLM API calls (+4.94% average)
 - ✅ **Object References** - Deduplicates repeated structures (`&obj0`)
 - ✅ **Inline-First Dictionary** - Optimized for LLM readability
 - ✅ **TypeScript Support** - Full `.d.ts` type definitions included
@@ -154,7 +154,7 @@ Tested on 5 real-world datasets:
 import { SmartCompressor } from '@ason-format/ason';
 import OpenAI from 'openai';
 
-const compressor = new SmartCompressor({ indent: 0 });
+const compressor = new SmartCompressor({ indent: 1 });
 const openai = new OpenAI();
 
 const largeData = await fetchDataFromDB();
@@ -173,7 +173,7 @@ const response = await openai.chat.completions.create({
 
 ```javascript
 // Save to Redis/localStorage with less space
-const compressor = new SmartCompressor({ indent: 0 });
+const compressor = new SmartCompressor({ indent: 1 });
 localStorage.setItem('cache', compressor.compress(bigObject));
 
 // Retrieve
