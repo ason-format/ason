@@ -58,7 +58,7 @@
   "author": "ASON Project Contributors",
   "license": "MIT",
   "dependencies": {
-    "@ason-format/ason": "^1.1.1",
+    "@ason-format/ason": "^1.1.2",
     "@toon-format/toon": "^0.9.0"
   },
   "devDependencies": {
