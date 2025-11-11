@@ -1,0 +1,16 @@
+{
+  "dataset": "user_transactions",
+  "total": 1000,
+  "transactions": [
+    {"id": 1, "userId": 101, "amount": 45.99, "category": "food", "date": "2025-01-01", "status": "completed"},
+    {"id": 2, "userId": 102, "amount": 129.50, "category": "electronics", "date": "2025-01-01", "status": "completed"},
+    {"id": 3, "userId": 103, "amount": 15.00, "category": "transport", "date": "2025-01-01", "status": "completed"},
+    {"id": 4, "userId": 101, "amount": 89.99, "category": "clothing", "date": "2025-01-02", "status": "completed"},
+    {"id": 5, "userId": 104, "amount": 250.00, "category": "electronics", "date": "2025-01-02", "status": "pending"},
+    {"id": 6, "userId": 105, "amount": 12.50, "category": "food", "date": "2025-01-02", "status": "completed"},
+    {"id": 7, "userId": 102, "amount": 75.30, "category": "entertainment", "date": "2025-01-03", "status": "completed"},
+    {"id": 8, "userId": 106, "amount": 199.99, "category": "electronics", "date": "2025-01-03", "status": "completed"},
+    {"id": 9, "userId": 103, "amount": 45.00, "category": "food", "date": "2025-01-03", "status": "completed"},
+    {"id": 10, "userId": 107, "amount": 320.00, "category": "travel", "date": "2025-01-04", "status": "completed"}
+  ]
+}

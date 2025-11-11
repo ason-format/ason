@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ASON Documentation</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <style>
+            .code-block {
+                background: #f9fafb;
+                border: 1px solid #e5e7eb;
+                border-radius: 4px;
+                padding: 12px;
+                overflow-x: auto;
+                font-family: "Courier New", monospace;
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
+            .nav-link {
+                transition: all 0.15s;
+            }
+
+            .nav-link:hover {
+                background-color: #f9fafb;
+            }
+
+            .nav-link.active {
+                background-color: #f3f4f6;
+                font-weight: 500;
+            }
+
+            .section-heading {
+                scroll-margin-top: 80px;
+            }
+        </style>
+    </head>
+    <body class="bg-white text-gray-900 antialiased">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <header class="border-b pb-4 mb-6">
+                <h1 class="text-xl font-semibold mb-1">
+                    ASON - Aliased Serialization Object Notation
+                </h1>
+                <p class="text-sm text-gray-600">
+                    Token-optimized JSON compression format for LLMs
+                </p>
+                <nav class="mt-3 flex gap-2">
+                    <a
+                        href="index.html"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                    >
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        Back
+                    </a>
+                    <a
+                        href="benchmarks.html"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                    >
+                        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                        Benchmarks
+                    </a>
+                </nav>
+            </header>
+
+            <div class="flex gap-8">
+                <!-- Sidebar Navigation -->
+                <aside class="w-56 flex-shrink-0">
+                    <nav class="sticky top-6 space-y-1">
+                        <a
+                            href="#introduction"
+                            class="nav-link block px-3 py-2 text-sm rounded"
+                        >
+                            Introduction
+                        </a>
+                        <a
+                            href="#features"
+                            class="nav-link block px-3 py-2 text-sm rounded"
+                        >
+                            Features
+                        </a>
+                        <a
+                            href="#basic-example"
+                            class="nav-link block px-3 py-2 text-sm rounded"
+                        >
+                            Basic Example
+                        </a>
+                        <a
+                            href="#techniques"
+                            class="nav-link block px-3 py-2 text-sm rounded"
+                        >
+                            Compression Techniques
+                        </a>
+                        <div class="pl-3">
+                            <a
+                                href="#uniform-arrays"
+                                class="nav-link block px-3 py-1.5 text-xs text-gray-600 rounded"
+                            >
+                                Uniform Arrays
+                            </a>
+                            <a
+                                href="#path-flattening"
+                                class="nav-link block px-3 py-1.5 text-xs text-gray-600 rounded"
+                            >
+                                Path Flattening
+                            </a>
+                            <a
+                                href="#value-dictionary"
+                                class="nav-link block px-3 py-1.5 text-xs text-gray-600 rounded"
+                            >
+                                Value Dictionary
+                            </a>
+                            <a
+                                href="#object-references"
+                                class="nav-link block px-3 py-1.5 text-xs text-gray-600 rounded"
+                            >
+                                Object References
+                            </a>
+                        </div>
+                        <a
+                            href="#use-cases"
+                            class="nav-link block px-3 py-2 text-sm rounded"
+                        >
+                            Use Cases
+                        </a>
+                        <a
+                            href="#comparison"
+                            class="nav-link block px-3 py-2 text-sm rounded"
+                        >
+                            Comparison
+                        </a>
+                        <a
+                            href="#when-to-use"
+                            class="nav-link block px-3 py-2 text-sm rounded"
+                        >
+                            When to Use ASON
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="flex-1 max-w-3xl">
+                    <section id="introduction" class="section-heading mb-12">
+                        <h2 class="text-2xl font-semibold mb-4">
+                            Introduction
+                        </h2>
+                        <p class="text-gray-700 mb-4">
+                            ASON (Aliased Serialization Object Notation) is a
+                            serialization format designed to optimize token
+                            consumption in LLM (Large Language Model) contexts
+                            while maintaining human readability and guaranteeing
+                            complete round-trip fidelity.
+                        </p>
+                        <p class="text-gray-700">
+                            Unlike traditional JSON, ASON uses intelligent
+                            compression techniques such as object references,
+                            value dictionaries, and path flattening to
+                            significantly reduce payload size without losing
+                            information.
+                        </p>
+                    </section>
+
+                    <section id="features" class="section-heading mb-12">
+                        <h2 class="text-2xl font-semibold mb-4">Features</h2>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-gray-400 mt-1">•</span>
+                                <span
+                                    ><strong>Intelligent Compression:</strong>
+                                    Reduces up to 60% of tokens compared to
+                                    JSON</span
+                                >
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-gray-400 mt-1">•</span>
+                                <span
+                                    ><strong>Human Readable:</strong> Maintains
+                                    a clear and easy-to-read structure</span
+                                >
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-gray-400 mt-1">•</span>
+                                <span
+                                    ><strong>Perfect Round-Trip:</strong>
+                                    Guaranteed decompression without data
+                                    loss</span
+                                >
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-gray-400 mt-1">•</span>
+                                <span
+                                    ><strong>Reference System:</strong> Detects
+                                    and reuses repeated objects</span
+                                >
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section id="basic-example" class="section-heading mb-12">
+                        <h2 class="text-2xl font-semibold mb-4">
+                            Basic Example
+                        </h2>
+
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-medium text-gray-700">
+                                    Original JSON
+                                </h3>
+                                <span class="text-xs text-gray-500"
+                                    >195 tokens</span
+                                >
+                            </div>
+                            <div class="code-block">
+                                <pre>
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "email": "alice@example.com",
+      "age": 25,
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "email": "bob@example.com",
+      "age": 30,
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "email": "charlie@example.com",
+      "age": 35,
+      "active": false
+    }
+  ]
+}</pre
+                                >
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-medium text-gray-700">
+                                    Compressed ASON
+                                </h3>
+                                <span class="text-xs text-gray-500"
+                                    >35 tokens · -64.6%</span
+                                >
+                            </div>
+                            <div class="code-block">
+                                <pre>
+users:[3]@id,name,email,age,active
+ 1,Alice,alice@example.com,25,true
+ 2,Bob,bob@example.com,30,true
+ 3,Charlie,charlie@example.com,35,false</pre
+                                >
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="techniques" class="section-heading mb-12">
+                        <h2 class="text-2xl font-semibold mb-6">
+                            Compression Techniques
+                        </h2>
+
+                        <div id="uniform-arrays" class="section-heading mb-8">
+                            <h3 class="text-lg font-semibold mb-3">
+                                Uniform Arrays
+                            </h3>
+                            <p class="text-gray-700 mb-3 text-sm">
+                                When an array contains objects with the same
+                                keys, ASON extracts the keys as a header and
+                                stores only the values.
+                            </p>
+                            <div class="code-block">
+                                <pre>
+users:[3]@id,name,email
+ 1,Alice,alice@example.com
+ 2,Bob,bob@example.com
+ 3,Charlie,charlie@example.com</pre
+                                >
+                            </div>
+                        </div>
+
+                        <div id="path-flattening" class="section-heading mb-8">
+                            <h3 class="text-lg font-semibold mb-3">
+                                Path Flattening
+                            </h3>
+                            <p class="text-gray-700 mb-3 text-sm">
+                                Nested objects with a single property are
+                                flattened using dot notation.
+                            </p>
+                            <div class="code-block">
+                                <pre>
+// Instead of:
+config:
+ database:
+  host:localhost
+
+// ASON uses:
+config.database.host:localhost</pre
+                                >
+                            </div>
+                        </div>
+
+                        <div id="value-dictionary" class="section-heading mb-8">
+                            <h3 class="text-lg font-semibold mb-3">
+                                Value Dictionary (Inline-First)
+                            </h3>
+                            <p class="text-gray-700 mb-3 text-sm">
+                                Frequently repeated strings use an
+                                "inline-first" approach optimized for LLMs: the
+                                first occurrence shows the complete value with a
+                                tag, subsequent occurrences use only the tag.
+                            </p>
+                            <p class="text-gray-700 mb-3 text-sm">
+                                <strong>Advantage for LLMs:</strong> The model
+                                reads the complete value immediately on first
+                                mention, without needing to mentally resolve
+                                references. Subsequent occurrences serve as
+                                "reminders" of the already-known value.
+                            </p>
+                            <div class="code-block">
+                                <pre>
+// First occurrence: shows value + tag
+billing.email:customer@example.com #0
+billing.city:San Francisco #1
+
+// Subsequent occurrences: tag only
+shipping.email:#0
+shipping.city:#1
+contact.email:#0</pre
+                                >
+                            </div>
+                            <p class="text-gray-700 mt-3 text-sm">
+                                This format reduces cognitive load compared to
+                                formats that require looking up definitions in a
+                                separate <code>$def:</code> section.
+                            </p>
+                        </div>
+
+                        <div
+                            id="object-references"
+                            class="section-heading mb-8"
+                        >
+                            <h3 class="text-lg font-semibold mb-3">
+                                Object References
+                            </h3>
+                            <p class="text-gray-700 mb-3 text-sm">
+                                Identical objects that appear multiple times are
+                                defined once and referenced afterwards.
+                            </p>
+                            <div class="code-block">
+                                <pre>
+&obj0:
+ status:unavailable
+$data:
+ incremental_authorization:&obj0
+ multicapture:&obj0</pre
+                                >
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="use-cases" class="section-heading mb-12">
+                        <h2 class="text-2xl font-semibold mb-4">
+                            Real-World Use Cases
+                        </h2>
+
+                        <div class="space-y-4">
+                            <div class="border rounded p-4">
+                                <div
+                                    class="flex items-center justify-between mb-2"
+                                >
+                                    <h3 class="font-semibold text-sm">
+                                        Stripe Payment Intent
+                                    </h3>
+                                    <span class="text-xs text-gray-600"
+                                        >-6.0%</span
+                                    >
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">
+                                    Complex JSON with 70+ fields, nested
+                                    objects, and multiple references.
+                                </p>
+                                <div class="flex gap-4 text-xs text-gray-500">
+                                    <span>JSON: 1076 tokens</span>
+                                    <span>ASON: 1011 tokens</span>
+                                </div>
+                            </div>
+
+                            <div class="border rounded p-4">
+                                <div
+                                    class="flex items-center justify-between mb-2"
+                                >
+                                    <h3 class="font-semibold text-sm">
+                                        Array of 50 Products
+                                    </h3>
+                                    <span class="text-xs text-gray-600"
+                                        >-59.1%</span
+                                    >
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">
+                                    Large list with uniform structure, ideal for
+                                    compression.
+                                </p>
+                                <div class="flex gap-4 text-xs text-gray-500">
+                                    <span>JSON: 1028 tokens</span>
+                                    <span>ASON: 420 tokens</span>
+                                </div>
+                            </div>
+
+                            <div class="border rounded p-4">
+                                <div
+                                    class="flex items-center justify-between mb-2"
+                                >
+                                    <h3 class="font-semibold text-sm">
+                                        10 Users
+                                    </h3>
+                                    <span class="text-xs text-gray-600"
+                                        >-48.2%</span
+                                    >
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">
+                                    Typical REST API case with uniform objects.
+                                </p>
+                                <div class="flex gap-4 text-xs text-gray-500">
+                                    <span>JSON: 195 tokens</span>
+                                    <span>ASON: 101 tokens</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="comparison" class="section-heading mb-12">
+                        <h2 class="text-2xl font-semibold mb-4">
+                            Comparison with Other Formats
+                        </h2>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th
+                                            class="text-left py-2 font-semibold"
+                                        >
+                                            Feature
+                                        </th>
+                                        <th
+                                            class="text-center py-2 font-semibold"
+                                        >
+                                            JSON
+                                        </th>
+                                        <th
+                                            class="text-center py-2 font-semibold"
+                                        >
+                                            ASON
+                                        </th>
+                                        <th
+                                            class="text-center py-2 font-semibold"
+                                        >
+                                            TOON
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="py-2">Human Readability</td>
+                                        <td class="text-center py-2">Yes</td>
+                                        <td class="text-center py-2">Yes</td>
+                                        <td class="text-center py-2">Yes</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-2">
+                                            Average Compression
+                                        </td>
+                                        <td
+                                            class="text-center py-2 text-gray-500"
+                                        >
+                                            0%
+                                        </td>
+                                        <td
+                                            class="text-center py-2 font-semibold"
+                                        >
+                                            22.1%
+                                        </td>
+                                        <td class="text-center py-2">12.3%</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-2">Object References</td>
+                                        <td class="text-center py-2">No</td>
+                                        <td class="text-center py-2">Yes</td>
+                                        <td class="text-center py-2">No</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-2">Value Dictionary</td>
+                                        <td class="text-center py-2">No</td>
+                                        <td class="text-center py-2">
+                                            Yes (inline-first)
+                                        </td>
+                                        <td class="text-center py-2">No</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-2">Uniform Arrays</td>
+                                        <td class="text-center py-2">No</td>
+                                        <td class="text-center py-2">Yes</td>
+                                        <td class="text-center py-2">Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2">
+                                            Guaranteed Round-Trip
+                                        </td>
+                                        <td class="text-center py-2">Yes</td>
+                                        <td class="text-center py-2">Yes</td>
+                                        <td class="text-center py-2">Yes</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="when-to-use" class="section-heading mb-12">
+                        <h2 class="text-2xl font-semibold mb-4">
+                            When to Use ASON
+                        </h2>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="font-semibold mb-3 text-sm">
+                                    Ideal Cases
+                                </h3>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-gray-400 mt-0.5"
+                                            >•</span
+                                        >
+                                        <span
+                                            >Payloads for LLMs with token
+                                            limits</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-gray-400 mt-0.5"
+                                            >•</span
+                                        >
+                                        <span
+                                            >Large arrays with uniform
+                                            objects</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-gray-400 mt-0.5"
+                                            >•</span
+                                        >
+                                        <span>APIs with repetitive data</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-gray-400 mt-0.5"
+                                            >•</span
+                                        >
+                                        <span>Compact structured logging</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 class="font-semibold mb-3 text-sm">
+                                    Not Recommended
+                                </h3>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-gray-400 mt-0.5"
+                                            >•</span
+                                        >
+                                        <span
+                                            >Very small JSON (&lt;100
+                                            chars)</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-gray-400 mt-0.5"
+                                            >•</span
+                                        >
+                                        <span
+                                            >Completely heterogeneous data</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-gray-400 mt-0.5"
+                                            >•</span
+                                        >
+                                        <span>No token limits</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-gray-400 mt-0.5"
+                                            >•</span
+                                        >
+                                        <span
+                                            >Compatibility with legacy
+                                            systems</span
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="max-w-7xl mx-auto px-4 py-8 mt-12 border-t">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                <!-- Project Info -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">ASON Project</h3>
+                    <p class="text-xs text-gray-600 mb-2">
+                        Token-optimized JSON compression format for Large Language Models
+                    </p>
+                    <p class="text-xs text-gray-500">
+                        33.26% token reduction • Beats Toon • Open Source
+                    </p>
+                </div>
+
+                <!-- Documentation -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">Documentation</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a href="index.html" class="text-gray-600 hover:text-gray-900">
+                                Visualizer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="docs.html" class="text-gray-600 hover:text-gray-900">
+                                Documentation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="benchmarks.html" class="text-gray-600 hover:text-gray-900">
+                                Benchmarks
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                GitHub Repository
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Community -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">Community</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/CONTRIBUTING.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Contributing
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/CODE_OF_CONDUCT.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Code of Conduct
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/SECURITY.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Security
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/issues" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Issues
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t text-center">
+                <p class="text-xs text-gray-500">
+                    © 2025 ASON Project Contributors •
+                    <a href="https://github.com/SeanLuis/ason/blob/main/LICENSE" class="hover:text-gray-900" target="_blank">MIT License</a> •
+                    Made with <span class="text-red-500">♥</span> for the LLM community
+                </p>
+            </div>
+        </footer>
+
+        <script>
+            lucide.createIcons();
+
+            // Active nav link based on scroll
+            const sections = document.querySelectorAll(".section-heading");
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            window.addEventListener("scroll", () => {
+                let current = "";
+                sections.forEach((section) => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute("id");
+                    }
+                });
+
+                navLinks.forEach((link) => {
+                    link.classList.remove("active");
+                    if (link.getAttribute("href") === "#" + current) {
+                        link.classList.add("active");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

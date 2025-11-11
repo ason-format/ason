@@ -1,0 +1,23 @@
+{
+  "id": "mixed-001",
+  "data": [
+    "string value",
+    42,
+    true,
+    null,
+    {"nested": "object", "value": 123},
+    [1, 2, 3],
+    3.14159,
+    "another string",
+    {"type": "complex", "items": [{"a": 1}, {"b": 2}]},
+    false
+  ],
+  "metadata": {
+    "created": "2025-11-10",
+    "tags": ["test", "mixed", "complex"],
+    "settings": {
+      "enabled": true,
+      "options": [1, "two", 3.0, null]
+    }
+  }
+}

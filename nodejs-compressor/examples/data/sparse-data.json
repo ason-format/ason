@@ -1,0 +1,55 @@
+{
+  "id": 9001,
+  "type": "product",
+  "name": "Smart Watch Pro",
+  "sku": "SW-PRO-2025",
+  "price": 399.99,
+  "inStock": true,
+  "category": "electronics",
+  "brand": "TechBrand",
+  "description": null,
+  "longDescription": null,
+  "specifications": {
+    "display": "1.4 inch AMOLED",
+    "battery": "7 days",
+    "waterResistance": "5ATM",
+    "weight": null,
+    "dimensions": null,
+    "processor": null,
+    "ram": null,
+    "storage": "8GB",
+    "connectivity": ["Bluetooth 5.0", "Wi-Fi"],
+    "sensors": ["Heart Rate", "SpO2", "Accelerometer"],
+    "gps": true,
+    "nfc": null,
+    "warranty": "2 years",
+    "certifications": null
+  },
+  "images": [
+    "https://example.com/images/sw-pro-1.jpg",
+    "https://example.com/images/sw-pro-2.jpg"
+  ],
+  "videos": null,
+  "reviews": {
+    "average": 4.5,
+    "count": 892,
+    "breakdown": null
+  },
+  "shipping": {
+    "weight": 0.05,
+    "dimensions": null,
+    "freeShipping": true,
+    "shippingTime": null
+  },
+  "variants": null,
+  "relatedProducts": null,
+  "tags": ["smartwatch", "fitness", "health"],
+  "metadata": {
+    "createdAt": "2025-01-15T10:00:00Z",
+    "updatedAt": "2025-11-10T08:30:00Z",
+    "createdBy": "admin",
+    "lastModifiedBy": null,
+    "publishedAt": "2025-02-01T00:00:00Z",
+    "archivedAt": null
+  }
+}

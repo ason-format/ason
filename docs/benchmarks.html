@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Benchmarks</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+    </head>
+    <body class="bg-white text-gray-900 antialiased">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <header class="border-b pb-4 mb-6">
+                <h1 class="text-xl font-semibold mb-1">Benchmarks</h1>
+                <p class="text-sm text-gray-600">ASON vs Toon vs JSON</p>
+                <nav class="mt-3 flex gap-2">
+                    <a
+                        href="index.html"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                    >
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        Back
+                    </a>
+                    <a
+                        href="docs.html"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                    >
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        Documentation
+                    </a>
+                </nav>
+            </header>
+
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="border rounded-lg p-3">
+                    <div class="text-xs text-gray-600 mb-1">Victories</div>
+                    <div class="text-2xl font-semibold" id="victoriesText">
+                        -
+                    </div>
+                </div>
+                <div class="border rounded-lg p-3">
+                    <div class="text-xs text-gray-600 mb-1">
+                        Average Reduction
+                    </div>
+                    <div class="text-2xl font-semibold" id="avgReduction">
+                        -
+                    </div>
+                </div>
+                <div class="border rounded-lg p-3">
+                    <div class="text-xs text-gray-600 mb-1">vs Toon</div>
+                    <div class="text-2xl font-semibold" id="vsToon">-</div>
+                </div>
+            </div>
+
+            <div id="benchmarksContainer" class="space-y-4"></div>
+
+            <div
+                class="mt-6 border rounded-lg p-4 bg-yellow-50 border-yellow-200"
+            >
+                <div class="flex items-start gap-2 mb-2">
+                    <i
+                        data-lucide="info"
+                        class="w-4 h-4 text-yellow-800 mt-0.5"
+                    ></i>
+                    <div>
+                        <div class="text-sm font-medium text-yellow-900 mb-1">
+                            Token Approximation
+                        </div>
+                        <p class="text-xs text-yellow-800 mb-2">
+                            Values are approximate (chars/4). For precise
+                            results:
+                        </p>
+                        <pre
+                            class="text-xs bg-yellow-100 p-2 rounded border border-yellow-300 text-yellow-900"
+                        >
+cd nodejs-compressor && node benchmarks/toon-comparison-benchmark.js</pre
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="max-w-7xl mx-auto px-4 py-8 mt-12 border-t">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                <!-- Project Info -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">ASON Project</h3>
+                    <p class="text-xs text-gray-600 mb-2">
+                        Token-optimized JSON compression format for Large Language Models
+                    </p>
+                    <p class="text-xs text-gray-500">
+                        33.26% token reduction • Beats Toon • Open Source
+                    </p>
+                </div>
+
+                <!-- Documentation -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">Documentation</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a href="index.html" class="text-gray-600 hover:text-gray-900">
+                                Visualizer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="docs.html" class="text-gray-600 hover:text-gray-900">
+                                Documentation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="benchmarks.html" class="text-gray-600 hover:text-gray-900">
+                                Benchmarks
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                GitHub Repository
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Community -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">Community</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/CONTRIBUTING.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Contributing
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/CODE_OF_CONDUCT.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Code of Conduct
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/SECURITY.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Security
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/issues" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Issues
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t text-center">
+                <p class="text-xs text-gray-500">
+                    © 2025 ASON Project Contributors •
+                    <a href="https://github.com/SeanLuis/ason/blob/main/LICENSE" class="hover:text-gray-900" target="_blank">MIT License</a> •
+                    Made with <span class="text-red-500">♥</span> for the LLM community
+                </p>
+            </div>
+        </footer>
+
+        <script type="module" src="js/benchmarks.js"></script>
+        <script>
+            lucide.createIcons();
+        </script>
+    </body>
+</html>

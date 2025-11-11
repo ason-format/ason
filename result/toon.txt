@@ -1,0 +1,180 @@
+object: payment_intent
+id: pi_3OQ4xJ2eZvKYlo2C0x7fGHYZ
+amount: 2099
+amount_capturable: 0
+amount_details:
+  tip:
+amount_received: 2099
+application:
+application_fee_amount:
+automatic_payment_methods:
+  allow_redirects: always
+  enabled: true
+canceled_at:
+cancellation_reason:
+capture_method: automatic
+client_secret: pi_3OQ4xJ2eZvKYlo2C0x7fGHYZ_secret_xDFg8h9J2kLmN3oPqR4sTuVwXyZ
+confirmation_method: automatic
+created: 1704067200
+currency: usd
+customer: cus_PQR789XYZ012
+description: Premium subscription - Annual plan
+invoice:
+last_payment_error:
+latest_charge: ch_3OQ4xJ2eZvKYlo2C0x7fGHYZ
+livemode: false
+metadata:
+  order_id: ord_abc123xyz
+  user_id: usr_456def789
+  plan_type: annual
+  campaign: spring_sale_2024
+  referral_code: SAVE20
+next_action:
+on_behalf_of:
+payment_method: pm_1OQ4xI2eZvKYlo2C9zAbCdEf
+payment_method_configuration_details:
+payment_method_options:
+  card:
+    installments:
+    mandate_options:
+    network:
+    request_three_d_secure: automatic
+payment_method_types: items[1]:
+    - card
+processing:
+receipt_email: customer@example.com
+review:
+setup_future_usage: off_session
+shipping:
+  address:
+    city: San Francisco
+    country: US
+    line1: 123 Market Street
+    line2: Suite 456
+    postal_code: 94103
+    state: CA
+  carrier: USPS
+  name: John Doe
+  phone: +14155551234
+  tracking_number: 9400111899562537289457
+source:
+statement_descriptor: ACME CORP
+statement_descriptor_suffix:
+status: succeeded
+transfer_data:
+transfer_group:
+charges:
+  object: list
+  data: items[1]:
+      - id: ch_3OQ4xJ2eZvKYlo2C0x7fGHYZ
+      object: charge
+      amount: 2099
+      amount_captured: 2099
+      amount_refunded: 0
+      application:
+      application_fee:
+      application_fee_amount:
+      balance_transaction: txn_3OQ4xJ2eZvKYlo2C0x7fGHYZ
+      billing_details:
+        address:
+          city: San Francisco
+          country: US
+          line1: 123 Market Street
+          line2: Suite 456
+          postal_code: 94103
+          state: CA
+        email: customer@example.com
+        name: John Doe
+        phone: +14155551234
+      calculated_statement_descriptor: ACME CORP
+      captured: true
+      created: 1704067200
+      currency: usd
+      customer: cus_PQR789XYZ012
+      description: Premium subscription - Annual plan
+      destination:
+      dispute:
+      disputed: false
+      failure_balance_transaction:
+      failure_code:
+      failure_message:
+      fraud_details:
+      invoice:
+      livemode: false
+      metadata:
+        order_id: ord_abc123xyz
+        user_id: usr_456def789
+      on_behalf_of:
+      outcome:
+        network_status: approved_by_network
+        reason:
+        risk_level: normal
+        risk_score: 32
+        seller_message: Payment complete.
+        type: authorized
+      paid: true
+      payment_intent: pi_3OQ4xJ2eZvKYlo2C0x7fGHYZ
+      payment_method: pm_1OQ4xI2eZvKYlo2C9zAbCdEf
+      payment_method_details:
+        card:
+          amount_authorized: 2099
+          brand: visa
+          checks:
+            address_line1_check: pass
+            address_postal_code_check: pass
+            cvc_check: pass
+          country: US
+          exp_month: 12
+          exp_year: 2027
+          extended_authorization:
+            status: disabled
+          fingerprint: AbCdEfGh12345678
+          funding: credit
+          incremental_authorization:
+            status: unavailable
+          installments:
+          last4: 4242
+          mandate:
+          multicapture:
+            status: unavailable
+          network: visa
+          network_token:
+            used: false
+          overcapture:
+            maximum_amount_capturable: 2099
+            status: unavailable
+          three_d_secure:
+          wallet:
+        type: card
+      receipt_email: customer@example.com
+      receipt_number: 2024-0001-5678
+      receipt_url: https://pay.stripe.com/receipts/payment/CAcQARoXChVhY2N0XzFPUTR4SjJlWnZLWWxvMkMo
+      refunded: false
+      refunds:
+        object: list
+        data: []        has_more: false
+        total_count: 0
+        url: /v1/charges/ch_3OQ4xJ2eZvKYlo2C0x7fGHYZ/refunds
+      review:
+      shipping:
+        address:
+          city: San Francisco
+          country: US
+          line1: 123 Market Street
+          line2: Suite 456
+          postal_code: 94103
+          state: CA
+        carrier: USPS
+        name: John Doe
+        phone: +14155551234
+        tracking_number: 9400111899562537289457
+      source:
+      source_transfer:
+      statement_descriptor: ACME CORP
+      statement_descriptor_suffix:
+      status: succeeded
+      transfer_data:
+      transfer_group:
+  has_more: false
+  total_count: 1
+  url: /v1/charges?payment_intent=pi_3OQ4xJ2eZvKYlo2C0x7fGHYZ

@@ -1,0 +1,29 @@
+{
+  "id": 527528,
+  "process": {
+    "id": 3852,
+    "processType": "SHIPPING"
+  },
+  "person_in_charge": {
+    "id": 3974,
+    "name": "Agtrace Dev"
+  },
+  "product": "Tomate Salada 2A",
+  "amount": 123,
+  "unit": "Quilogramas",
+  "lot": "123",
+  "record_date_time": "2025-10-08T13:14:00",
+  "status": "VALIDATED",
+  "origin": {
+    "name": "123extranjero",
+    "gln": "AGTE7C2F850A9373EE",
+    "latitude": "-14.026188",
+    "longitude": "-52.157386"
+  },
+  "destination": {
+    "name": "123extranjero",
+    "gln": "AGTE7C2F850A9373EE",
+    "latitude": "-14.026188",
+    "longitude": "-52.157386"
+  }
+}

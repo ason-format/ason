@@ -1,0 +1,179 @@
+$def:
+ &obj0:
+  status:unavailable #9
+$data:
+ object:payment_intent
+ id:pi_3OQ4xJ2eZvKYlo2C0x7fGHYZ #3
+ amount:2099
+ amount_capturable:0
+ amount_details.tip:{}
+ amount_received:2099
+ application:null
+ application_fee_amount:null
+ automatic_payment_methods:
+  allow_redirects:always
+  enabled:true
+ canceled_at:null
+ cancellation_reason:null
+ capture_method:automatic #10
+ client_secret:pi_3OQ4xJ2eZvKYlo2C0x7fGHYZ_secret_xDFg8h9J2kLmN3oPqR4sTuVwXyZ
+ confirmation_method:#10
+ created:1704067200
+ currency:usd
+ customer:cus_PQR789XYZ012 #11
+ description:Premium subscription - Annual plan #1
+ invoice:null
+ last_payment_error:null
+ latest_charge:ch_3OQ4xJ2eZvKYlo2C0x7fGHYZ #4
+ livemode:false
+ metadata:
+  order_id:ord_abc123xyz #15
+  user_id:usr_456def789 #16
+  plan_type:annual
+  campaign:spring_sale_2024
+  referral_code:SAVE20
+ next_action:null
+ on_behalf_of:null
+ payment_method:pm_1OQ4xI2eZvKYlo2C9zAbCdEf #5
+ payment_method_configuration_details:null
+ payment_method_options.card:
+  installments:null
+  mandate_options:null
+  network:null
+  request_three_d_secure:#10
+ payment_method_types:[card]
+ processing:null
+ receipt_email:customer@example.com #0
+ review:null
+ setup_future_usage:off_session
+ shipping:
+  address:
+   city:San Francisco #6
+   country:US
+   line1:123 Market Street #2
+   line2:Suite 456 #12
+   postal_code:"94103" #18
+   state:CA
+  carrier:USPS
+  name:John Doe #14
+  phone:+14155551234 #7
+  tracking_number:"9400111899562537289457" #8
+ source:null
+ statement_descriptor:ACME CORP #13
+ statement_descriptor_suffix:null
+ status:succeeded #17
+ transfer_data:null
+ transfer_group:null
+ charges:
+  object:list
+  data:
+   -
+    id:#4
+    object:charge
+    amount:2099
+    amount_captured:2099
+    amount_refunded:0
+    application:null
+    application_fee:null
+    application_fee_amount:null
+    balance_transaction:txn_3OQ4xJ2eZvKYlo2C0x7fGHYZ
+    billing_details:
+     address:
+      city:#6
+      country:US
+      line1:#2
+      line2:#12
+      postal_code:#18
+      state:CA
+     email:#0
+     name:#14
+     phone:#7
+    calculated_statement_descriptor:#13
+    captured:true
+    created:1704067200
+    currency:usd
+    customer:#11
+    description:#1
+    destination:null
+    dispute:null
+    disputed:false
+    failure_balance_transaction:null
+    failure_code:null
+    failure_message:null
+    fraud_details:{}
+    invoice:null
+    livemode:false
+    metadata:
+     order_id:#15
+     user_id:#16
+    on_behalf_of:null
+    outcome:
+     network_status:approved_by_network
+     reason:null
+     risk_level:normal
+     risk_score:32
+     seller_message:Payment complete.
+     type:authorized
+    paid:true
+    payment_intent:#3
+    payment_method:#5
+    payment_method_details:
+     card:
+      amount_authorized:2099
+      brand:visa
+      checks:
+       address_line1_check:pass
+       address_postal_code_check:pass
+       cvc_check:pass
+      country:US
+      exp_month:12
+      exp_year:2027
+      extended_authorization.status:disabled
+      fingerprint:AbCdEfGh12345678
+      funding:credit
+      incremental_authorization:&obj0
+      installments:null
+      last4:"4242"
+      mandate:null
+      multicapture:&obj0
+      network:visa
+      network_token.used:false
+      overcapture:
+       maximum_amount_capturable:2099
+       status:#9
+      three_d_secure:null
+      wallet:null
+     type:card
+    receipt_email:#0
+    receipt_number:2024-0001-5678
+    receipt_url:https://pay.stripe.com/receipts/payment/CAcQARoXChVhY2N0XzFPUTR4SjJlWnZLWWxvMkMo
+    refunded:false
+    refunds:
+     object:list
+     data:[]
+     has_more:false
+     total_count:0
+     url:/v1/charges/ch_3OQ4xJ2eZvKYlo2C0x7fGHYZ/refunds
+    review:null
+    shipping:
+     address:
+      city:#6
+      country:US
+      line1:#2
+      line2:#12
+      postal_code:#18
+      state:CA
+     carrier:USPS
+     name:#14
+     phone:#7
+     tracking_number:#8
+    source:null
+    source_transfer:null
+    statement_descriptor:#13
+    statement_descriptor_suffix:null
+    status:#17
+    transfer_data:null
+    transfer_group:null
+  has_more:false
+  total_count:1
+  url:/v1/charges?payment_intent=pi_3OQ4xJ2eZvKYlo2C0x7fGHYZ

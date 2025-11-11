@@ -1,0 +1,49 @@
+{
+  "company": {
+    "id": 1001,
+    "name": "TechCorp Solutions",
+    "headquarters": {
+      "address": {
+        "street": "123 Innovation Drive",
+        "city": "San Francisco",
+        "state": "CA",
+        "zipCode": "94105",
+        "country": "USA",
+        "coordinates": {
+          "latitude": 37.7749,
+          "longitude": -122.4194,
+          "elevation": 52
+        }
+      },
+      "contact": {
+        "phone": "+1-415-555-0100",
+        "email": "info@techcorp.com",
+        "website": "https://techcorp.com"
+      }
+    },
+    "departments": {
+      "engineering": {
+        "manager": {
+          "id": 501,
+          "name": "Sarah Chen",
+          "contact": {
+            "email": "sarah.chen@techcorp.com",
+            "phone": "+1-415-555-0101"
+          }
+        },
+        "teams": {
+          "backend": {
+            "lead": "John Doe",
+            "members": 15,
+            "stack": ["Node.js", "Python", "PostgreSQL"]
+          },
+          "frontend": {
+            "lead": "Jane Smith",
+            "members": 12,
+            "stack": ["React", "TypeScript", "CSS"]
+          }
+        }
+      }
+    }
+  }
+}

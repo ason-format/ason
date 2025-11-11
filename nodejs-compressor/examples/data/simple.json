@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "name": "Alice Johnson",
+  "email": "alice@example.com",
+  "age": 28,
+  "active": true,
+  "role": "admin",
+  "department": "Engineering",
+  "salary": 85000,
+  "joinDate": "2020-03-15",
+  "lastLogin": "2025-11-10T08:30:00Z"
+}

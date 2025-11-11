@@ -1,0 +1,24 @@
+{
+  "reportId": "ANALYTICS-2025-Q1",
+  "dateRange": {
+    "start": "2025-01-01",
+    "end": "2025-06-30"
+  },
+  "metrics": [
+    {"date": "2025-01-01", "users": 1250, "sessions": 3420, "pageviews": 15680, "revenue": 5420.50},
+    {"date": "2025-01-02", "users": 1180, "sessions": 3210, "pageviews": 14230, "revenue": 4890.25},
+    {"date": "2025-01-03", "users": 1340, "sessions": 3680, "pageviews": 16420, "revenue": 6125.75},
+    {"date": "2025-01-04", "users": 1420, "sessions": 3890, "pageviews": 17560, "revenue": 6780.00},
+    {"date": "2025-01-05", "users": 1580, "sessions": 4210, "pageviews": 19340, "revenue": 7450.50},
+    {"date": "2025-01-06", "users": 890, "sessions": 2340, "pageviews": 10120, "revenue": 3210.25},
+    {"date": "2025-01-07", "users": 920, "sessions": 2450, "pageviews": 10680, "revenue": 3450.75}
+  ],
+  "summary": {
+    "totalUsers": 9580,
+    "totalSessions": 23200,
+    "totalPageviews": 104030,
+    "totalRevenue": 37328.00,
+    "averageSessionDuration": 245,
+    "bounceRate": 0.42
+  }
+}

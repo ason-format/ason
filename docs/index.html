@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>JSON Compressor</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <style>
+            .interactive-output {
+                font-family: "Courier New", monospace;
+                line-height: 1.8;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+
+            .hover-part {
+                cursor: help;
+                transition: background-color 0.15s;
+                padding: 2px 3px;
+                margin: 0 1px;
+                border-radius: 3px;
+            }
+
+            .hover-part:hover {
+                font-weight: 600;
+                background-color: #fef3c7;
+            }
+
+            #globalTooltip {
+                position: fixed;
+                background: #18181b;
+                color: #fafafa;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 500;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s;
+                z-index: 10000;
+                box-shadow:
+                    0 4px 6px -1px rgb(0 0 0 / 0.1),
+                    0 2px 4px -2px rgb(0 0 0 / 0.1);
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    sans-serif;
+            }
+
+            #globalTooltip::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 6px solid transparent;
+                border-top-color: #18181b;
+            }
+
+            #globalTooltip.show {
+                opacity: 1;
+            }
+
+            .mode-tab {
+                transition: all 0.2s;
+            }
+
+            .mode-tab.active {
+                background-color: #f9fafb;
+                border-bottom-color: transparent;
+            }
+        </style>
+    </head>
+    <body class="bg-white text-gray-900 antialiased">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <header class="border-b pb-4 mb-6">
+                <h1 class="text-xl font-semibold mb-1">
+                    ASON - Aliased Serialization Object Notation
+                </h1>
+                <p class="text-sm text-gray-600">
+                    Token-optimized JSON compression format for LLMs
+                </p>
+                <nav class="mt-3 flex gap-2">
+                    <a
+                        href="docs.html"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                    >
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        Documentation
+                    </a>
+                    <a
+                        href="benchmarks.html"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                    >
+                        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                        Benchmarks
+                    </a>
+                </nav>
+            </header>
+
+            <div class="border rounded-lg overflow-hidden mb-4">
+                <div class="flex border-b">
+                    <button
+                        id="compressModeTab"
+                        class="mode-tab active flex-1 px-4 py-2.5 text-sm font-medium border-r hover:bg-gray-50"
+                    >
+                        <i
+                            data-lucide="minimize-2"
+                            class="w-4 h-4 inline mr-1.5"
+                        ></i>
+                        Compress
+                    </button>
+                    <button
+                        id="decompressModeTab"
+                        class="mode-tab flex-1 px-4 py-2.5 text-sm font-medium hover:bg-gray-50"
+                    >
+                        <i
+                            data-lucide="maximize-2"
+                            class="w-4 h-4 inline mr-1.5"
+                        ></i>
+                        Decompress
+                    </button>
+                </div>
+
+                <div id="compressMode" class="p-4">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="border rounded-lg overflow-hidden">
+                            <div
+                                class="flex items-center justify-between px-3 py-2 border-b bg-gray-50"
+                            >
+                                <h2 class="text-sm font-medium">
+                                    Original JSON
+                                </h2>
+                                <button
+                                    id="loadExample"
+                                    class="inline-flex items-center gap-1.5 px-2 py-1 text-xs border rounded hover:bg-white"
+                                >
+                                    <i
+                                        data-lucide="file-text"
+                                        class="w-3.5 h-3.5"
+                                    ></i>
+                                    Example
+                                </button>
+                            </div>
+                            <textarea
+                                id="compressInput"
+                                class="w-full h-96 p-3 text-xs font-mono resize-none focus:outline-none"
+                                placeholder='{"users": [{"id": 1, "name": "Alice"}]}'
+                            ></textarea>
+                        </div>
+
+                        <div class="border rounded-lg overflow-hidden">
+                            <div
+                                class="flex items-center justify-between px-3 py-2 border-b bg-gray-50"
+                            >
+                                <h2 class="text-sm font-medium">
+                                    ASON Format
+                                </h2>
+                                <button
+                                    id="copyCompressed"
+                                    class="inline-flex items-center gap-1.5 px-2 py-1 text-xs border rounded hover:bg-white"
+                                >
+                                    <i
+                                        data-lucide="copy"
+                                        class="w-3.5 h-3.5"
+                                    ></i>
+                                    Copy
+                                </button>
+                            </div>
+                            <div
+                                id="compressOutput"
+                                class="w-full h-96 p-3 text-xs interactive-output bg-gray-50 overflow-auto"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button
+                            id="compressBtn"
+                            class="inline-flex items-center gap-1.5 px-4 py-2 text-sm bg-gray-900 text-white rounded hover:bg-gray-700"
+                        >
+                            <i data-lucide="minimize-2" class="w-4 h-4"></i>
+                            Compress
+                        </button>
+
+                        <div
+                            id="compressStats"
+                            class="flex items-center gap-4 text-sm hidden"
+                        >
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-gray-600">Original:</span>
+                                <span
+                                    class="font-semibold"
+                                    id="compressOriginalTokens"
+                                    >0</span
+                                >
+                                <span class="text-gray-600">tokens</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-gray-600">Compressed:</span>
+                                <span
+                                    class="font-semibold"
+                                    id="compressCompressedTokens"
+                                    >0</span
+                                >
+                                <span class="text-gray-600">tokens</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-gray-600">Reduction:</span>
+                                <span
+                                    class="font-semibold text-green-600"
+                                    id="compressReduction"
+                                    >0%</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="decompressMode" class="p-4 hidden">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="border rounded-lg overflow-hidden">
+                            <div
+                                class="flex items-center justify-between px-3 py-2 border-b bg-gray-50"
+                            >
+                                <h2 class="text-sm font-medium">
+                                    ASON Format
+                                </h2>
+                            </div>
+                            <textarea
+                                id="decompressInput"
+                                class="w-full h-96 p-3 text-xs font-mono resize-none focus:outline-none"
+                                placeholder="users:[4]@id,name,email,age,active&#10;1,Alice,alice@example.com,25,true&#10;..."
+                            ></textarea>
+                        </div>
+
+                        <div class="border rounded-lg overflow-hidden">
+                            <div
+                                class="flex items-center justify-between px-3 py-2 border-b bg-gray-50"
+                            >
+                                <h2 class="text-sm font-medium">
+                                    Decompressed JSON
+                                </h2>
+                                <button
+                                    id="copyDecompressed"
+                                    class="inline-flex items-center gap-1.5 px-2 py-1 text-xs border rounded hover:bg-white"
+                                >
+                                    <i
+                                        data-lucide="copy"
+                                        class="w-3.5 h-3.5"
+                                    ></i>
+                                    Copy
+                                </button>
+                            </div>
+                            <textarea
+                                id="decompressOutput"
+                                class="w-full h-96 p-3 text-xs font-mono bg-gray-50 resize-none focus:outline-none"
+                                readonly
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <button
+                        id="decompressBtn"
+                        class="inline-flex items-center gap-1.5 px-4 py-2 text-sm bg-gray-900 text-white rounded hover:bg-gray-700"
+                    >
+                        <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                        Decompress
+                    </button>
+                </div>
+            </div>
+
+            <div class="border rounded-lg p-3 bg-blue-50 border-blue-200">
+                <div class="text-xs text-blue-800">
+                    <span class="font-medium">Tip:</span> Hover over parts of
+                    the compressed format to see what each element represents.
+                </div>
+            </div>
+        </div>
+
+        <div id="globalTooltip"></div>
+
+        <!-- Footer -->
+        <footer class="max-w-7xl mx-auto px-4 py-8 mt-12 border-t">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                <!-- Project Info -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">ASON Project</h3>
+                    <p class="text-xs text-gray-600 mb-2">
+                        Token-optimized JSON compression format for Large Language Models
+                    </p>
+                    <p class="text-xs text-gray-500">
+                        33.26% token reduction • Beats Toon • Open Source
+                    </p>
+                </div>
+
+                <!-- Documentation -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">Documentation</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a href="index.html" class="text-gray-600 hover:text-gray-900">
+                                Visualizer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="docs.html" class="text-gray-600 hover:text-gray-900">
+                                Documentation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="benchmarks.html" class="text-gray-600 hover:text-gray-900">
+                                Benchmarks
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                GitHub Repository
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Community -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">Community</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/CONTRIBUTING.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Contributing
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/CODE_OF_CONDUCT.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Code of Conduct
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/blob/main/SECURITY.md" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Security
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/SeanLuis/ason/issues" class="text-gray-600 hover:text-gray-900" target="_blank">
+                                Issues
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t text-center">
+                <p class="text-xs text-gray-500">
+                    © 2025 ASON Project Contributors •
+                    <a href="https://github.com/SeanLuis/ason/blob/main/LICENSE" class="hover:text-gray-900" target="_blank">MIT License</a> •
+                    Made with <span class="text-red-500">♥</span> for the LLM community
+                </p>
+            </div>
+        </footer>
+
+        <script type="module" src="js/app.js"></script>
+        <script>
+            lucide.createIcons();
+        </script>
+    </body>
+</html>

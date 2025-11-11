@@ -1,0 +1,50 @@
+{
+  "total_count": 100,
+  "repositories": [
+    {
+      "id": 1001,
+      "name": "awesome-ml",
+      "full_name": "user/awesome-ml",
+      "owner": {"login": "user", "id": 501, "type": "User"},
+      "description": "Machine learning algorithms and examples",
+      "language": "Python",
+      "stars": 15420,
+      "forks": 3210,
+      "watchers": 890,
+      "size": 45632,
+      "created_at": "2020-05-12T10:30:00Z",
+      "updated_at": "2025-11-08T15:45:00Z",
+      "topics": ["machine-learning", "python", "ai", "deep-learning"]
+    },
+    {
+      "id": 1002,
+      "name": "react-components",
+      "full_name": "org/react-components",
+      "owner": {"login": "org", "id": 502, "type": "Organization"},
+      "description": "Reusable React component library",
+      "language": "TypeScript",
+      "stars": 8920,
+      "forks": 1456,
+      "watchers": 445,
+      "size": 23456,
+      "created_at": "2021-03-20T14:20:00Z",
+      "updated_at": "2025-11-09T09:30:00Z",
+      "topics": ["react", "components", "ui", "typescript"]
+    },
+    {
+      "id": 1003,
+      "name": "data-pipeline",
+      "full_name": "company/data-pipeline",
+      "owner": {"login": "company", "id": 503, "type": "Organization"},
+      "description": "Scalable data processing pipeline",
+      "language": "Go",
+      "stars": 5632,
+      "forks": 892,
+      "watchers": 234,
+      "size": 34567,
+      "created_at": "2022-01-15T08:00:00Z",
+      "updated_at": "2025-11-10T11:20:00Z",
+      "topics": ["data", "pipeline", "etl", "golang"]
+    }
+  ]
+}

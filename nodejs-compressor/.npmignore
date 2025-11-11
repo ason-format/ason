@@ -1,0 +1,35 @@
+# Test files
+tests/
+*.test.js
+coverage/
+
+# Benchmarks
+benchmarks/
+
+# Examples
+examples/
+
+# Development files
+.eslintrc.*
+.prettierrc
+.editorconfig
+.vscode/
+.idea/
+
+# Documentation
+*.md
+!README.md
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm/

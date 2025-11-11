@@ -1,0 +1,63 @@
+{
+  "orderId": "ORD-2025-001234",
+  "customerId": 50123,
+  "orderDate": "2025-11-10T14:30:00Z",
+  "status": "processing",
+  "customer": {
+    "name": "Maria Rodriguez",
+    "email": "maria.r@example.com",
+    "phone": "+1-555-0199"
+  },
+  "items": [
+    {
+      "sku": "LAPTOP-001",
+      "name": "Professional Laptop 15\"",
+      "quantity": 1,
+      "unitPrice": 1299.99,
+      "discount": 0.10,
+      "total": 1169.99
+    },
+    {
+      "sku": "MOUSE-042",
+      "name": "Wireless Mouse",
+      "quantity": 2,
+      "unitPrice": 29.99,
+      "discount": 0,
+      "total": 59.98
+    },
+    {
+      "sku": "KB-PRO-88",
+      "name": "Mechanical Keyboard",
+      "quantity": 1,
+      "unitPrice": 149.99,
+      "discount": 0.15,
+      "total": 127.49
+    }
+  ],
+  "shipping": {
+    "method": "express",
+    "cost": 15.99,
+    "address": {
+      "street": "456 Oak Avenue",
+      "city": "Portland",
+      "state": "OR",
+      "zipCode": "97201",
+      "country": "USA"
+    },
+    "estimatedDelivery": "2025-11-13"
+  },
+  "payment": {
+    "method": "credit_card",
+    "last4": "4242",
+    "cardType": "Visa",
+    "status": "authorized",
+    "amount": 1373.45
+  },
+  "totals": {
+    "subtotal": 1357.46,
+    "shipping": 15.99,
+    "tax": 108.59,
+    "discount": 179.99,
+    "total": 1373.45
+  }
+}

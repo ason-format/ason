@@ -1,0 +1,29 @@
+# CODEOWNERS file for ASON project
+# This file defines code ownership for the repository
+# Learn more: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owners - will be requested for review on all PRs
+* @SeanLuis
+
+# Node.js implementation
+/nodejs-compressor/ @SeanLuis
+
+# Web visualizer and documentation
+/docs/ @SeanLuis
+
+# Documentation files
+*.md @SeanLuis
+LICENSE @SeanLuis
+
+# Test files
+/nodejs-compressor/tests/ @SeanLuis
+/nodejs-compressor/benchmarks/ @SeanLuis
+
+# Configuration files
+package.json @SeanLuis
+*.config.js @SeanLuis
+
+# Security and community files
+/CODE_OF_CONDUCT.md @SeanLuis
+/CONTRIBUTING.md @SeanLuis
+/SECURITY.md @SeanLuis
