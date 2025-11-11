@@ -1,6 +1,6 @@
 {
-  "name": "@seanluis47/ason",
-  "version": "1.1.0",
+  "name": "@ason-format/ason",
+  "version": "1.0.0",
   "description": "ASON (Aliased Serialization Object Notation) - Token-optimized JSON compression for LLMs. Reduces tokens by 20-60% while maintaining perfect round-trip fidelity.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -28,10 +28,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SeanLuis/ason.git"
+    "url": "git+https://github.com/ason-format/ason.git"
   },
   "bugs": {
-    "url": "https://github.com/SeanLuis/ason/issues"
+    "url": "https://github.com/ason-format/ason/issues"
   },
   "homepage": "https://seanluis.github.io/ason/",
   "scripts": {

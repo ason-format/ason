@@ -1,6 +1,6 @@
 # ASON - Aliased Serialization Object Notation
 
-[![npm version](https://badge.fury.io/js/%40seanluis47%2Fason.svg)](https://www.npmjs.com/package/@seanluis47/ason)
+[![npm version](https://badge.fury.io/js/%40ason-format%2Fason.svg)](https://www.npmjs.com/package/@ason-format/ason)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
@@ -119,11 +119,11 @@ Tested on 5 real-world datasets:
 ## Quick Start
 
 ```bash
-npm install @seanluis47/ason
+npm install @ason-format/ason
 ```
 
 ```javascript
-import { SmartCompressor } from '@seanluis47/ason';
+import { SmartCompressor } from '@ason-format/ason';
 
 const compressor = new SmartCompressor({ indent: 0 });
 
@@ -163,13 +163,13 @@ console.log(original);
 
 ```bash
 # npm
-npm install @seanluis47/ason
+npm install @ason-format/ason
 
 # yarn
-yarn add @seanluis47/ason
+yarn add @ason-format/ason
 
 # pnpm
-pnpm add @seanluis47/ason
+pnpm add @ason-format/ason
 ```
 
 ## CLI
@@ -236,7 +236,7 @@ cat large-dataset.json | npx ason > output.ason
 ### Basic Usage
 
 ```javascript
-import { SmartCompressor, TokenCounter } from '@seanluis47/ason';
+import { SmartCompressor, TokenCounter } from '@ason-format/ason';
 
 // Create compressor
 const compressor = new SmartCompressor({ indent: 0 });
@@ -275,7 +275,7 @@ const compressor = new SmartCompressor({
 ASON includes full TypeScript definitions:
 
 ```typescript
-import { SmartCompressor, TokenCounter } from '@seanluis47/ason';
+import { SmartCompressor, TokenCounter } from '@ason-format/ason';
 
 interface User {
   id: number;
@@ -353,7 +353,7 @@ shipping.email:#0  // References first occurrence
 ### 1. Reduce LLM API Costs
 
 ```javascript
-import { SmartCompressor } from '@seanluis47/ason';
+import { SmartCompressor } from '@ason-format/ason';
 import OpenAI from 'openai';
 
 const compressor = new SmartCompressor({ indent: 0 });
@@ -470,17 +470,17 @@ Compares token usage between JSON and ASON.
 ## Documentation
 
 - **[Interactive Demo](https://seanluis.github.io/ason/)** - Try it in your browser
-- **[GitHub Repository](https://github.com/SeanLuis/ason)** - Source code
+- **[GitHub Repository](https://github.com/ason-format/ason)** - Source code
 - **[Full Documentation](https://seanluis.github.io/ason/docs.html)** - Complete guide
 - **[Benchmarks](https://seanluis.github.io/ason/benchmarks.html)** - Performance tests
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/SeanLuis/ason/blob/main/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/ason-format/ason/blob/main/CONTRIBUTING.md)
 
 ## License
 
-[MIT](https://github.com/SeanLuis/ason/blob/main/LICENSE) © 2025 ASON Project Contributors
+[MIT](https://github.com/ason-format/ason/blob/main/LICENSE) © 2025 ASON Project Contributors
 
 ---
 

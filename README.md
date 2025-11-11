@@ -1,26 +1,26 @@
 # ASON - Aliased Serialization Object Notation
 
-[![npm version](https://badge.fury.io/js/%40seanluis47%2Fason.svg)](https://www.npmjs.com/package/@seanluis47/ason)
+[![npm version](https://badge.fury.io/js/%40ason-format%2Fason.svg)](https://www.npmjs.com/package/@ason-format/ason)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
 > **Token-optimized JSON compression for Large Language Models.** Outperforms Toon with **33.26% average reduction** vs Toon's 32.96%.
 
-![ASON Overview](https://raw.githubusercontent.com/SeanLuis/ason/main/preview.png)
+![ASON Overview](https://raw.githubusercontent.com/ason-format/ason/main/preview.png)
 
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
-npm install @seanluis47/ason
+npm install @ason-format/ason
 ```
 
 ### Basic Usage
 
 ```javascript
-import { SmartCompressor } from '@seanluis47/ason';
+import { SmartCompressor } from '@ason-format/ason';
 
 const compressor = new SmartCompressor({ indent: 0 });
 
@@ -151,7 +151,7 @@ Tested on 5 real-world datasets:
 ### 1. Reduce LLM API Costs
 
 ```javascript
-import { SmartCompressor } from '@seanluis47/ason';
+import { SmartCompressor } from '@ason-format/ason';
 import OpenAI from 'openai';
 
 const compressor = new SmartCompressor({ indent: 0 });
@@ -199,7 +199,7 @@ app.get('/api/data/compact', (req, res) => {
 
 ```bash
 # Clone repository
-git clone https://github.com/SeanLuis/ason.git
+git clone https://github.com/ason-format/ason.git
 cd ason
 
 # Install dependencies

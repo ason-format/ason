@@ -81,7 +81,7 @@
                 <p class="text-sm text-gray-600">
                     Token-optimized JSON compression format for LLMs
                 </p>
-                <nav class="mt-3 flex gap-2">
+                <nav class="mt-3 flex flex-wrap gap-2">
                     <a
                         href="docs.html"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
@@ -124,7 +124,7 @@
                 </div>
 
                 <div id="compressMode" class="p-4">
-                    <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div class="border rounded-lg overflow-hidden">
                             <div
                                 class="flex items-center justify-between px-3 py-2 border-b bg-gray-50"
@@ -145,7 +145,7 @@
                             </div>
                             <textarea
                                 id="compressInput"
-                                class="w-full h-96 p-3 text-xs font-mono resize-none focus:outline-none"
+                                class="w-full h-64 md:h-96 p-3 text-xs font-mono resize-none focus:outline-none"
                                 placeholder='{"users": [{"id": 1, "name": "Alice"}]}'
                             ></textarea>
                         </div>
@@ -170,7 +170,7 @@
                             </div>
                             <div
                                 id="compressOutput"
-                                class="w-full h-96 p-3 text-xs interactive-output bg-gray-50 overflow-auto"
+                                class="w-full h-64 md:h-96 p-3 text-xs interactive-output bg-gray-50 overflow-auto"
                             ></div>
                         </div>
                     </div>
@@ -186,7 +186,7 @@
 
                         <div
                             id="compressStats"
-                            class="flex items-center gap-4 text-sm hidden"
+                            class="flex flex-wrap items-center gap-4 text-sm hidden"
                         >
                             <div class="flex items-center gap-1.5">
                                 <span class="text-gray-600">Original:</span>
@@ -219,7 +219,7 @@
                 </div>
 
                 <div id="decompressMode" class="p-4 hidden">
-                    <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div class="border rounded-lg overflow-hidden">
                             <div
                                 class="flex items-center justify-between px-3 py-2 border-b bg-gray-50"
@@ -230,7 +230,7 @@
                             </div>
                             <textarea
                                 id="decompressInput"
-                                class="w-full h-96 p-3 text-xs font-mono resize-none focus:outline-none"
+                                class="w-full h-64 md:h-96 p-3 text-xs font-mono resize-none focus:outline-none"
                                 placeholder="users:[4]@id,name,email,age,active&#10;1,Alice,alice@example.com,25,true&#10;..."
                             ></textarea>
                         </div>
@@ -255,7 +255,7 @@
                             </div>
                             <textarea
                                 id="decompressOutput"
-                                class="w-full h-96 p-3 text-xs font-mono bg-gray-50 resize-none focus:outline-none"
+                                class="w-full h-64 md:h-96 p-3 text-xs font-mono bg-gray-50 resize-none focus:outline-none"
                                 readonly
                             ></textarea>
                         </div>

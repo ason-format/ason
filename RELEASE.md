@@ -40,7 +40,7 @@ Edit `nodejs-compressor/package.json`:
 Add a new section at the top:
 
 ```markdown
-## [1.1.0] - 2025-01-15
+## [1.0.0] - 2025-01-15
 
 ### Added
 - New feature X
@@ -57,7 +57,7 @@ Add a new section at the top:
 
 ```bash
 git add nodejs-compressor/package.json CHANGELOG.md
-git commit -m "Release v1.1.0"
+git commit -m "Release v1.0.0"
 git push origin main
 ```
 
@@ -65,31 +65,31 @@ git push origin main
 
 ```bash
 # Create annotated tag
-git tag -a v1.1.0 -m "Release v1.1.0
+git tag -a v1.0.0 -m "Release v1.0.0
 
 - New feature X
 - New feature Y
 - Bug fix Z"
 
 # Push tag to GitHub
-git push origin v1.1.0
+git push origin v1.0.0
 ```
 
 ### 5. Create GitHub Release
 
 **Option A: Using GitHub UI**
 
-1. Go to: https://github.com/SeanLuis/ason/releases/new
-2. Choose tag: `v1.1.0`
-3. Release title: `v1.1.0`
+1. Go to: https://github.com/ason-format/ason/releases/new
+2. Choose tag: `v1.0.0`
+3. Release title: `v1.0.0`
 4. Description: Copy from CHANGELOG.md
 5. Click "Publish release"
 
 **Option B: Using GitHub CLI**
 
 ```bash
-gh release create v1.1.0 \
-  --title "v1.1.0" \
+gh release create v1.0.0 \
+  --title "v1.0.0" \
   --notes-file - <<EOF
 ## What's New
 
@@ -100,12 +100,12 @@ gh release create v1.1.0 \
 ## Installation
 
 \`\`\`bash
-npm install ason
+npm install @ason-format/ason
 \`\`\`
 
 ## Full Changelog
 
-See [CHANGELOG.md](https://github.com/SeanLuis/ason/blob/main/CHANGELOG.md)
+See [CHANGELOG.md](https://github.com/ason-format/ason/blob/main/CHANGELOG.md)
 EOF
 ```
 
@@ -116,16 +116,16 @@ Once you create the GitHub release:
 1. GitHub Actions will automatically trigger
 2. Tests will run on Node 16.x, 18.x, 20.x
 3. If tests pass, package publishes to NPM
-4. Check workflow: https://github.com/SeanLuis/ason/actions
+4. Check workflow: https://github.com/ason-format/ason/actions
 
 ### 7. Verify Publication
 
 ```bash
 # Check NPM
-npm view ason
+npm view @ason-format/ason
 
 # Install and test
-npm install ason@latest
+npm install @ason-format/ason@latest
 ```
 
 ## Quick Release Checklist
@@ -137,7 +137,7 @@ npm install ason@latest
 - [ ] Create GitHub release
 - [ ] Verify GitHub Actions workflow passes
 - [ ] Verify package published to NPM
-- [ ] Test installation: `npm install ason@latest`
+- [ ] Test installation: `npm install @ason-format/ason@latest`
 
 ## Release Example
 
@@ -145,25 +145,25 @@ npm install ason@latest
 # 1. Update files (package.json, CHANGELOG.md)
 # 2. Commit
 git add -A
-git commit -m "Release v1.1.0"
+git commit -m "Release v1.0.0"
 git push origin main
 
 # 3. Tag
-git tag -a v1.1.0 -m "Release v1.1.0"
-git push origin v1.1.0
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
 
 # 4. Create release on GitHub
 # → GitHub Actions automatically publishes to NPM
 
 # 5. Verify
-npm view ason
+npm view @ason-format/ason
 ```
 
 ## Troubleshooting
 
 ### GitHub Action Fails
 
-1. Check workflow logs: https://github.com/SeanLuis/ason/actions
+1. Check workflow logs: https://github.com/ason-format/ason/actions
 2. Common issues:
    - `NPM_TOKEN` not set in secrets
    - Tests failing
@@ -210,15 +210,15 @@ For beta versions:
 # package.json: "1.1.0-beta.1"
 
 # Tag as pre-release
-git tag -a v1.1.0-beta.1 -m "Beta release"
-git push origin v1.1.0-beta.1
+git tag -a v1.0.0-beta.1 -m "Beta release"
+git push origin v1.0.0-beta.1
 
 # On GitHub, mark as "pre-release"
 ```
 
 Install beta:
 ```bash
-npm install ason@beta
+npm install @ason-format/ason@beta
 ```
 
 ## References

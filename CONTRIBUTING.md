@@ -45,7 +45,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 ```bash
 # Clone the repository
-git clone https://github.com/SeanLuis/ason.git
+git clone https://github.com/ason-format/ason.git
 cd ason
 
 # Install dependencies for Node.js version
@@ -229,7 +229,7 @@ Add test cases for:
 ## Questions?
 
 * Check the [documentation](./docs/docs.html)
-* Review [existing issues](https://github.com/SeanLuis/ason/issues)
+* Review [existing issues](https://github.com/ason-format/ason/issues)
 * Open a new issue for discussion
 
 ## Recognition
