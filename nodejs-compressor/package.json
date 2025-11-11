@@ -1,6 +1,6 @@
 {
   "name": "@ason-format/ason",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "ASON (Aliased Serialization Object Notation) - Token-optimized JSON compression for LLMs. Reduces tokens by 20-60% while maintaining perfect round-trip fidelity.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -35,8 +35,8 @@
   },
   "homepage": "https://ason-format.github.io/ason/",
   "scripts": {
-    "build": "tsup && npm run build:docs",
-    "build:docs": "cp dist/index.js ../docs/js/ason.js",
+    "build": "tsup",
+    "build:docs": "npm run build && cp dist/index.js ../docs/js/ason.js",
     "prepublishOnly": "npm run build",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
@@ -49,19 +49,11 @@
     "example": "node examples/example.js"
   },
   "keywords": [
-    "ason",
-    "json",
-    "compression",
-    "llm",
-    "tokens",
-    "optimization",
     "serialization",
-    "chatgpt",
-    "claude",
-    "gpt",
-    "ai",
-    "token-optimization",
-    "data-compression"
+    "tokenization",
+    "data-format",
+    "llm",
+    "compression"
   ],
   "author": "ASON Project Contributors",
   "license": "MIT",

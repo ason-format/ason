@@ -402,7 +402,73 @@ function runBenchmark(benchmark) {
   }
 }
 
-function createBenchmarkCard(result, benchmarkData) {
+function createBenchmarkRow(result, benchmarkData, index) {
+  const row = document.createElement("tr");
+  row.className = "hover:bg-gray-50 transition-colors cursor-pointer";
+  row.dataset.index = index;
+
+  const ourReduction = parseFloat(result.ourReduction);
+  const toonReduction = parseFloat(result.toonReduction);
+
+  // Determine winner with subtle colors
+  let winnerDisplay = "";
+  let winnerBadgeClass = "";
+  if (result.winner === "ours") {
+    winnerDisplay = "ASON";
+    winnerBadgeClass = "text-emerald-700 bg-emerald-50 border border-emerald-200";
+  } else if (result.winner === "toon") {
+    winnerDisplay = "Toon";
+    winnerBadgeClass = "text-blue-700 bg-blue-50 border border-blue-200";
+  } else {
+    winnerDisplay = "JSON";
+    winnerBadgeClass = "text-gray-600 bg-gray-50 border border-gray-200";
+  }
+
+  // Subtle color coding for reductions (Vercel/GitHub style)
+  const ourColor = ourReduction > 0 ? "text-emerald-600" : "text-rose-600";
+  const toonColor = toonReduction > 0 ? "text-emerald-600" : "text-rose-600";
+
+  row.innerHTML = `
+        <td class="px-4 py-3 font-medium text-gray-900">
+            <div class="flex items-center gap-2">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 transition-transform toggle-icon-${index}"></i>
+                ${result.name}
+            </div>
+        </td>
+        <td class="px-4 py-3 text-center text-gray-600 font-mono">${result.jsonTokens}</td>
+        <td class="px-4 py-3 text-center font-mono ${result.winner === "ours" ? "text-emerald-700 font-semibold" : "text-gray-700"}">${result.ourTokens}</td>
+        <td class="px-4 py-3 text-center font-mono ${result.winner === "toon" ? "text-blue-700 font-semibold" : "text-gray-700"}">${result.toonTokens}</td>
+        <td class="px-4 py-3 text-center">
+            <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md ${winnerBadgeClass}">${winnerDisplay}</span>
+        </td>
+        <td class="px-4 py-3 text-center ${ourColor} font-medium font-mono text-sm">
+            ${ourReduction > 0 ? "+" : ""}${ourReduction}%
+        </td>
+        <td class="px-4 py-3 text-center ${toonColor} font-medium font-mono text-sm">
+            ${toonReduction > 0 ? "+" : ""}${toonReduction}%
+        </td>
+    `;
+
+  // Create expandable row with data
+  const expandRow = document.createElement("tr");
+  expandRow.className = "hidden expandable-row bg-gray-50";
+  expandRow.dataset.index = index;
+  expandRow.innerHTML = `
+        <td colspan="7" class="px-4 py-0">
+            <div class="py-3 border-t border-gray-200">
+                <div class="text-xs font-medium text-gray-700 mb-2 flex items-center gap-2">
+                    <i data-lucide="database" class="w-3.5 h-3.5"></i>
+                    Sample Data Used
+                </div>
+                <pre class="text-xs font-mono overflow-auto max-h-96 bg-white border border-gray-200 rounded p-3 text-gray-800">${JSON.stringify(benchmarkData, null, 2)}</pre>
+            </div>
+        </td>
+    `;
+
+  return { row, expandRow };
+}
+
+function createOldBenchmarkCard(result, benchmarkData) {
   const card = document.createElement("div");
   const isWinner = result.winner === "ours";
   card.className = `border border-gray-200 rounded-lg overflow-hidden ${isWinner ? "ring-2 ring-gray-900" : ""}`;
@@ -485,23 +551,67 @@ function updateSummary(results) {
     parseFloat(avgReduction) - parseFloat(avgToonReduction)
   ).toFixed(1);
 
-  document.getElementById("victoriesText").textContent =
-    `${ourWins}/${validResults.length}`;
-  document.getElementById("avgReduction").textContent =
-    `${Math.abs(avgReduction)}%`;
-  document.getElementById("vsToon").textContent =
-    `${vsToon > 0 ? "+" : ""}${vsToon}%`;
-  document.getElementById("vsToon").className =
-    `text-2xl font-semibold ${vsToon > 0 ? "text-green-600" : "text-red-600"}`;
+  // Update summary cards with subtle Vercel/GitHub colors
+  document.getElementById("asonWins").textContent = `${ourWins}`;
+
+  const avgReductionEl = document.getElementById("avgReduction");
+  avgReductionEl.textContent = `${avgReduction > 0 ? "+" : ""}${avgReduction}%`;
+  avgReductionEl.className = `text-3xl font-semibold ${avgReduction > 0 ? "text-emerald-600" : "text-rose-600"}`;
+
+  const vsToonEl = document.getElementById("vsToon");
+  vsToonEl.textContent = `${vsToon > 0 ? "+" : ""}${vsToon}%`;
+  vsToonEl.className = `text-3xl font-semibold ${vsToon > 0 ? "text-emerald-600" : "text-rose-600"}`;
+
+  // Update summary text
+  document.getElementById("summaryWins").textContent =
+    `ASON wins ${ourWins} out of ${validResults.length}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const tableBody = document.getElementById("benchmarksTable");
+  const results = benchmarks.map(runBenchmark);
+
+  // Populate table
+  results.forEach((result, index) => {
+    if (result) {
+      const { row, expandRow } = createBenchmarkRow(result, benchmarks[index].data, index);
+      tableBody.appendChild(row);
+      tableBody.appendChild(expandRow);
+
+      // Add click handler for expand/collapse
+      row.addEventListener("click", () => {
+        const icon = row.querySelector(`.toggle-icon-${index}`);
+        const isHidden = expandRow.classList.contains("hidden");
+
+        expandRow.classList.toggle("hidden");
+
+        if (icon) {
+          icon.style.transform = isHidden ? "rotate(90deg)" : "rotate(0deg)";
+        }
+
+        // Reinitialize lucide icons for the newly shown expandRow
+        if (isHidden) {
+          setTimeout(() => lucide.createIcons(), 10);
+        }
+      });
+    }
+  });
+
+  // Update summary
+  updateSummary(results);
+
+  // Initialize lucide icons
+  lucide.createIcons();
+});
+
+// Old implementation kept for reference
+function oldDOMContentLoaded() {
   const container = document.getElementById("benchmarksContainer");
   const results = benchmarks.map(runBenchmark);
 
   results.forEach((result, index) => {
     if (result) {
-      const card = createBenchmarkCard(result, benchmarks[index].data);
+      const card = createOldBenchmarkCard(result, benchmarks[index].data);
       container.appendChild(card);
 
       // Setup toggle for this card's data
@@ -526,4 +636,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateSummary(results);
   setTimeout(() => lucide.createIcons(), 100);
-});
+}

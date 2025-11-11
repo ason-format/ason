@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-11
+
+### Changed
+- **Package Rename** - Migrated from `@seanluis47/ason` to `@ason-format/ason`
+  - Updated package name to reflect organization scope
+  - Updated all documentation and examples with new package name
+  - Updated repository URLs to `https://github.com/ason-format/ason`
+
+- **Token Estimation** - Removed external dependency for browser compatibility
+  - Removed `gpt-tokenizer` dependency from package
+  - Implemented lightweight approximation: `Math.ceil(text.length / 4)`
+  - Reduced package size and improved browser compatibility
+  - Updated all documentation to reflect token approximation method
+
+- **Documentation Improvements**
+  - Fixed indentation documentation (valid values: 1, 2, or 4 spaces - not 0)
+  - Updated all code examples to use `indent: 1` instead of `indent: 0`
+  - Corrected performance metrics throughout docs (up to 23% vs previous claims)
+  - Improved clarity in all README files
+
+- **Benchmarks Page Redesign**
+  - Redesigned `/docs/benchmarks.html` with Vercel/GitHub-style color palette
+  - Changed from bright colors to subtle emerald-600/rose-600 scheme
+  - Added clean table layout showing Dataset | JSON | ASON | Toon | Winner | Comparisons
+  - Improved readability with `font-mono` for numbers and better visual hierarchy
+  - Added proper badges and SVG icons for key findings
+
+### Added
+- **Automated Documentation Build** - `npm run build` now auto-generates docs
+  - Added `build:docs` script that copies `dist/index.js` to `docs/js/ason.js`
+  - Eliminated code duplication between source and documentation
+  - Ensures docs always use latest built version
+
+### Fixed
+- **CI/CD Pipeline** - GitHub Actions now properly build before testing
+  - Added `npm run build` step in `test.yml` workflow
+  - Added `npm run build` step in `npm-publish.yml` workflow
+  - Prevents test failures due to missing dist files
+
+- **Browser Compatibility** - Fixed web visualizer errors
+  - Removed Node.js-specific dependencies from browser builds
+  - Fixed "Cannot read properties of undefined" errors
+  - Fixed "Failed to resolve module specifier" errors in console
+
 ## [1.0.0] - 2025-01-10
 
 ### Added
@@ -77,4 +121,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `files` field to include only dist/, src/cli.js, and README.md
 - Repository URL format corrected to use `git+` prefix (eliminates npm publish warning)
 
+[1.1.0]: https://github.com/ason-format/ason/releases/tag/v1.1.0
 [1.0.0]: https://github.com/ason-format/ason/releases/tag/v1.0.0
