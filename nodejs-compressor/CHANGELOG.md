@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2025-01-12
+
+### Fixed
+- **Critical Bug Fix**: Object keys with reserved symbols now properly escaped during compression
+  - Keys starting with `@`, `$`, `#`, `&`, `-`, `[` are now wrapped in quotes
+  - Empty keys `""` are now properly escaped
+  - Keys matching reserved values (`null`, `true`, `false`) are now escaped
+  - Keys that look like numbers are now escaped
+  - Fixes issue where `"@ason-format/ason"` would be interpreted as uniform array marker
+  - Ensures perfect round-trip fidelity for all valid JSON object keys
+
 ## [1.1.2] - 2024-11-11
 
 ### Fixed

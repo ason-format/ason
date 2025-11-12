@@ -481,7 +481,10 @@ export class SmartCompressor {
             val === "null" ||
             val === "true" ||
             val === "false" ||
-            /^-?\d+\.?\d*$/.test(val);
+            /^-?\d+\.?\d*$/.test(val) ||
+            /^[@$&#\-\[]/.test(val) ||
+            val === "[]" ||
+            val === "{}";
 
           if (needsQuotes) {
             return `${JSON.stringify(val)} ${dictAlias}`;
@@ -492,13 +495,17 @@ export class SmartCompressor {
         return dictAlias;
       }
 
+      // Escape strings that could be confused with ASON syntax
       if (
         /[\n\r\t]/.test(val) ||
         val === "" ||
         val === "null" ||
         val === "true" ||
         val === "false" ||
-        /^-?\d+\.?\d*$/.test(val) // String that looks like a number
+        /^-?\d+\.?\d*$/.test(val) || // String that looks like a number
+        /^[@$&#\-\[]/.test(val) || // Starts with reserved symbols
+        val === "[]" ||
+        val === "{}"
       ) {
         return JSON.stringify(val);
       }
@@ -592,10 +599,17 @@ export class SmartCompressor {
       let s = level === 0 ? "" : "\n";
       for (const [k, v] of Object.entries(val)) {
         // Path flattening: if value is an object with single key, flatten the path
+        // BUT don't flatten if the key itself contains dots (to avoid ambiguity)
         let flattenedPath = k;
         let currentVal = v;
+        const originalKey = k;
+        let wasFlattened = false;
+
+        // Only do path flattening if key doesn't contain dots
+        const canFlatten = !k.includes('.');
 
         while (
+          canFlatten &&
           currentVal &&
           typeof currentVal === "object" &&
           !Array.isArray(currentVal) &&
@@ -603,13 +617,30 @@ export class SmartCompressor {
           !this.objectAliases.has(JSON.stringify(currentVal))
         ) {
           const nextKey = Object.keys(currentVal)[0];
+          // Don't flatten if the next key contains dots (would be ambiguous)
+          if (nextKey.includes('.')) break;
           flattenedPath += "." + nextKey;
           currentVal = currentVal[nextKey];
+          wasFlattened = true;
         }
 
-        const key = /[\n\r\t]/.test(flattenedPath)
-          ? JSON.stringify(flattenedPath)
-          : flattenedPath;
+        // Escape key if it contains special chars, reserved symbols, or patterns
+        const needsEscape =
+          // Whitespace chars
+          /[\n\r\t]/.test(flattenedPath) ||
+          // Dots not from flattening (includes key that is just ".")
+          (!wasFlattened && (k.includes('.') || k === '.')) ||
+          // Empty key
+          flattenedPath === '' ||
+          // Reserved values
+          flattenedPath === 'null' ||
+          flattenedPath === 'true' ||
+          flattenedPath === 'false' ||
+          // Starts with reserved symbols
+          /^[@$&#\-\[]/.test(flattenedPath) ||
+          // Looks like a number
+          /^-?\d+\.?\d*$/.test(flattenedPath);
+        const key = needsEscape ? JSON.stringify(flattenedPath) : flattenedPath;
         const value = this._serialize(currentVal, level + 1);
 
         if (value.startsWith("\n")) {
