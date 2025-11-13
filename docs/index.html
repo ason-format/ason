@@ -71,6 +71,16 @@
                 background-color: #f9fafb;
                 border-bottom-color: transparent;
             }
+
+            .tool-card {
+                transition: all 0.15s;
+                text-decoration: none;
+                color: inherit;
+            }
+
+            .tool-card:hover {
+                transform: translateY(-2px);
+            }
         </style>
     </head>
     <body class="bg-white text-gray-900 antialiased">
@@ -96,6 +106,13 @@
                     >
                         <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
                         Benchmarks
+                    </a>
+                    <a
+                        href="tools.html"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                    >
+                        <i data-lucide="puzzle" class="w-4 h-4"></i>
+                        Tools & Extensions
                     </a>
                 </nav>
             </header>
@@ -550,13 +567,82 @@
             </div>
         </section>
 
+        <!-- Tools & Extensions -->
+        <section class="max-w-7xl mx-auto px-4 py-12 border-t">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-lg font-semibold">Tools & Extensions</h2>
+                <a
+                    href="tools.html"
+                    class="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
+                >
+                    View all <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- MCP Server -->
+                <a href="tools.html" class="tool-card border rounded-lg p-6 hover:shadow-md transition-all block">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center">
+                            <i data-lucide="server" class="w-4 h-4 text-gray-700"></i>
+                        </div>
+                        <h3 class="text-sm font-semibold">MCP Server</h3>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-3">
+                        Enable ASON in Claude Desktop, Cline, Continue, and other MCP-compatible AI assistants.
+                    </p>
+                    <div class="flex flex-wrap gap-1">
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">compress_json</span>
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">decompress_ason</span>
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">stats</span>
+                    </div>
+                </a>
+
+                <!-- VS Code Extension -->
+                <a href="tools.html" class="tool-card border rounded-lg p-6 hover:shadow-md transition-all block">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center">
+                            <i data-lucide="code-2" class="w-4 h-4 text-gray-700"></i>
+                        </div>
+                        <h3 class="text-sm font-semibold">VS Code Extension</h3>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-3">
+                        Compress/decompress JSON with keyboard shortcuts, context menus, and GitHub Copilot integration.
+                    </p>
+                    <div class="flex flex-wrap gap-1">
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Cmd+Alt+C</span>
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Status bar</span>
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">MCP auto-config</span>
+                    </div>
+                </a>
+
+                <!-- Zed Extension -->
+                <a href="tools.html" class="tool-card border rounded-lg p-6 hover:shadow-md transition-all block">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center">
+                            <i data-lucide="zap" class="w-4 h-4 text-gray-700"></i>
+                        </div>
+                        <h3 class="text-sm font-semibold">Zed Extension</h3>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-3">
+                        Rust-based ASON extension with slash commands and AI assistant integration for Zed editor.
+                    </p>
+                    <div class="flex flex-wrap gap-1">
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">/ason-compress</span>
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Native Rust</span>
+                        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">AI integration</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
         </div>
 
         <div id="globalTooltip"></div>
 
         <!-- Footer -->
         <footer class="max-w-7xl mx-auto px-4 py-8 mt-12 border-t">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
                 <!-- Project Info -->
                 <div>
                     <h3 class="text-sm font-semibold mb-3">ASON Project</h3>
@@ -604,6 +690,30 @@
                                 target="_blank"
                             >
                                 GitHub Repository
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tools & Extensions -->
+                <div>
+                    <h3 class="text-sm font-semibold mb-3">Tools & Extensions</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a
+                                href="tools.html"
+                                class="text-gray-600 hover:text-gray-900"
+                            >
+                                All Tools
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://www.npmjs.com/package/@ason-format/ason"
+                                class="text-gray-600 hover:text-gray-900"
+                                target="_blank"
+                            >
+                                NPM Package
                             </a>
                         </li>
                     </ul>
