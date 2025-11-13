@@ -18,7 +18,7 @@ echo -e "${BLUE}╚════════════════════�
 echo ""
 
 # Get current version
-CURRENT_VERSION=$(node -p "require('./package.json').version")
+CURRENT_VERSION=$(node -p "require('../package.json').version")
 echo -e "Current version: ${YELLOW}v${CURRENT_VERSION}${NC}"
 
 # Select version bump type

@@ -1,6 +1,6 @@
 {
   "name": "@ason-format/ason",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "ASON (Aliased Serialization Object Notation) - Token-optimized JSON compression for LLMs. Reduces tokens by 20-60% while maintaining perfect round-trip fidelity.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

@@ -5,6 +5,83 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2025-11-13
+
+### Added
+- **Interactive Token Comparison Tool** - `/docs/tokenizer.html`
+  - Real GPT tokenization using `gpt-tokenizer` library
+  - Compare token counts across 6 formats: Pretty JSON, JSON, YAML, TOON, ASON, CSV
+  - Visual token highlighting - each token displayed with unique color
+  - 16 pastel color palette for token visualization
+  - Preset datasets: small-simple, small-nested, medium-users, large-complex (Stripe)
+  - Custom JSON input support with live analysis
+  - Dynamic baseline comparison (compare any format against any other)
+  - All permutations comparison table showing all datasets
+  - Compact Vercel-style UI matching docs design
+  - Local TOON library integration (`/docs/js/toon.js` + wrapper)
+  - Interactive hover effects on tokens (scale + shadow)
+  - Responsive grid layout for format cards
+  - Key findings section explaining token efficiency
+
+- **VSCode Extension - Language Server**
+  - ASON language server with LSP features
+  - Real-time syntax validation and error detection
+  - Autocomplete for dictionary references (`#0`, `#1`, etc.)
+  - Autocomplete for object aliases (`&obj0`, `&obj1`, etc.)
+  - Go to definition for references
+  - Hover tooltips showing full values
+  - Smart filtering - typing `#1` filters to `#1`, `#10`, `#11`, etc.
+  - Context caching for performance
+  - Proper `textEdit` range replacement (no duplicate insertions)
+  - Support for `$def:` and `$data:` sections
+  - Dictionary value detection in both sections
+  - Fix: Autocomplete now works immediately on file open
+
+- **VSCode Extension - Syntax Highlighting**
+  - TextMate grammar for `.ason` files
+  - Syntax highlighting for keys, values, references, sections
+  - File icon for `.ason` files in explorer
+  - Professional gradient icon design (teal with `#` symbol and braces)
+  - Icon theme integration
+  - Simplified syntax patterns for better color consistency
+
+### Changed
+- **CI/CD - Automated Publishing with Provenance**
+  - Updated `/.github/workflows/npm-publish.yml` with npm provenance support
+  - Added `--provenance` flag to npm publish command
+  - Added `permissions.id-token: write` for cryptographic signing
+  - Package now displays verified checkmark ✓ on npm
+  - Automated GitHub release creation with `changelogithub`
+  - Supports both manual releases and git tag triggers (`v*`)
+  - Node.js 20.x (updated from 18.x)
+  - Full transparency log and build attestation
+
+- **Documentation Navigation**
+  - Added "Token Comparison" link to main docs navigation
+  - Blue highlight for new tokenizer tool link
+  - Consistent navigation across all doc pages
+
+### Fixed
+- **Tokenizer Library Loading**
+  - Replaced `tiktoken` (ES module issues) with `gpt-tokenizer`
+  - Added local TOON library at `/docs/js/toon.js`
+  - Created `/docs/js/toon-wrapper.js` to expose TOON globally
+  - Removed broken CDN imports
+  - All libraries now load correctly in browser
+  - Console logs verify library availability
+
+- **CSV Conversion**
+  - Improved CSV generator to handle all unique keys
+  - Added automatic quoting for values containing commas
+  - Better detection of nested objects (shows "N/A (nested objects)")
+  - Handles null/undefined values gracefully
+
+- **TOON Conversion**
+  - Enhanced manual TOON fallback implementation
+  - Proper handling of non-uniform arrays
+  - String quoting for values with commas/spaces
+  - Clear error messages: "N/A (non-uniform)", "N/A (nested objects)"
+
 ## [1.1.3] - 2025-01-12
 
 ### Fixed
