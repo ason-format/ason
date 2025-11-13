@@ -23,28 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Responsive grid layout for format cards
   - Key findings section explaining token efficiency
 
-- **VSCode Extension - Language Server**
-  - ASON language server with LSP features
-  - Real-time syntax validation and error detection
-  - Autocomplete for dictionary references (`#0`, `#1`, etc.)
-  - Autocomplete for object aliases (`&obj0`, `&obj1`, etc.)
-  - Go to definition for references
-  - Hover tooltips showing full values
-  - Smart filtering - typing `#1` filters to `#1`, `#10`, `#11`, etc.
-  - Context caching for performance
-  - Proper `textEdit` range replacement (no duplicate insertions)
-  - Support for `$def:` and `$data:` sections
-  - Dictionary value detection in both sections
-  - Fix: Autocomplete now works immediately on file open
-
-- **VSCode Extension - Syntax Highlighting**
-  - TextMate grammar for `.ason` files
-  - Syntax highlighting for keys, values, references, sections
-  - File icon for `.ason` files in explorer
-  - Professional gradient icon design (teal with `#` symbol and braces)
-  - Icon theme integration
-  - Simplified syntax patterns for better color consistency
-
 ### Changed
 - **CI/CD - Automated Publishing with Provenance**
   - Updated `/.github/workflows/npm-publish.yml` with npm provenance support

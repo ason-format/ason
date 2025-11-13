@@ -21,46 +21,81 @@ echo ""
 CURRENT_VERSION=$(node -p "require('../package.json').version")
 echo -e "Current version: ${YELLOW}v${CURRENT_VERSION}${NC}"
 
-# Select version bump type
-echo ""
-echo -e "${GREEN}Select version bump:${NC}"
-echo "  1) patch - Bug fixes (${CURRENT_VERSION} → $(npm version patch --no-git-tag-version | tail -1 && npm version ${CURRENT_VERSION} --no-git-tag-version >/dev/null 2>&1))"
-echo "  2) minor - New features (${CURRENT_VERSION} → $(npm version minor --no-git-tag-version | tail -1 && npm version ${CURRENT_VERSION} --no-git-tag-version >/dev/null 2>&1))"
-echo "  3) major - Breaking changes (${CURRENT_VERSION} → $(npm version major --no-git-tag-version | tail -1 && npm version ${CURRENT_VERSION} --no-git-tag-version >/dev/null 2>&1))"
-echo ""
-read -p "Enter choice (1-3): " BUMP_CHOICE
+# Check if CHANGELOG already has this version
+if grep -q "## \[${CURRENT_VERSION}\]" ../CHANGELOG.md 2>/dev/null; then
+  echo -e "${YELLOW}⚠ CHANGELOG already updated for v${CURRENT_VERSION}${NC}"
+  echo ""
+  read -p "Use current version v${CURRENT_VERSION} for release? (Y/n): " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Nn]$ ]]; then
+    USE_CURRENT=false
+  else
+    USE_CURRENT=true
+  fi
+else
+  USE_CURRENT=false
+fi
 
-case $BUMP_CHOICE in
-  1) BUMP_TYPE="patch" ;;
-  2) BUMP_TYPE="minor" ;;
-  3) BUMP_TYPE="major" ;;
-  *)
-    echo -e "${RED}Invalid choice${NC}"
-    exit 1
-    ;;
-esac
+if [ "$USE_CURRENT" = true ]; then
+  NEW_VERSION=$CURRENT_VERSION
+  echo -e "Using current version: ${GREEN}v${NEW_VERSION}${NC}"
+  echo ""
+else
+  # Select version bump type
+  echo ""
+  echo -e "${GREEN}Select version bump:${NC}"
+  echo "  1) patch - Bug fixes (${CURRENT_VERSION} → v$(node -p "require('semver').inc('${CURRENT_VERSION}', 'patch')"))"
+  echo "  2) minor - New features (${CURRENT_VERSION} → v$(node -p "require('semver').inc('${CURRENT_VERSION}', 'minor')"))"
+  echo "  3) major - Breaking changes (${CURRENT_VERSION} → v$(node -p "require('semver').inc('${CURRENT_VERSION}', 'major')"))"
+  echo "  4) Use current version v${CURRENT_VERSION}"
+  echo ""
+  read -p "Enter choice (1-4): " BUMP_CHOICE
 
-# Bump version
-echo ""
-echo -e "${BLUE}Bumping version...${NC}"
-NEW_VERSION=$(npm version $BUMP_TYPE --no-git-tag-version)
-NEW_VERSION=${NEW_VERSION#v}
+  case $BUMP_CHOICE in
+    1) BUMP_TYPE="patch" ;;
+    2) BUMP_TYPE="minor" ;;
+    3) BUMP_TYPE="major" ;;
+    4)
+      NEW_VERSION=$CURRENT_VERSION
+      echo -e "Using current version: ${GREEN}v${NEW_VERSION}${NC}"
+      echo ""
+      ;;
+    *)
+      echo -e "${RED}Invalid choice${NC}"
+      exit 1
+      ;;
+  esac
 
-echo -e "New version: ${GREEN}v${NEW_VERSION}${NC}"
-echo ""
+  # Bump version if not using current
+  if [ "$BUMP_CHOICE" != "4" ]; then
+    echo ""
+    echo -e "${BLUE}Bumping version...${NC}"
+    NEW_VERSION=$(npm version $BUMP_TYPE --no-git-tag-version)
+    NEW_VERSION=${NEW_VERSION#v}
+    echo -e "New version: ${GREEN}v${NEW_VERSION}${NC}"
+    echo ""
+  fi
+fi
 
-# Update CHANGELOG
-echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${YELLOW}IMPORTANT: Update CHANGELOG.md${NC}"
-echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
-echo "Change from:"
-echo -e "  ${RED}## [Unreleased]${NC}"
-echo ""
-echo "To:"
-echo -e "  ${GREEN}## [${NEW_VERSION}] - $(date +%Y-%m-%d)${NC}"
-echo ""
-read -p "Press ENTER when you've updated CHANGELOG.md..."
+# Skip CHANGELOG update if already done
+if grep -q "## \[${NEW_VERSION}\]" ../CHANGELOG.md 2>/dev/null; then
+  echo -e "${GREEN}✓ CHANGELOG already updated for v${NEW_VERSION}${NC}"
+  echo ""
+else
+  # Update CHANGELOG
+  echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+  echo -e "${YELLOW}IMPORTANT: Update CHANGELOG.md${NC}"
+  echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+  echo ""
+  echo "Change from:"
+  echo -e "  ${RED}## [Unreleased]${NC}"
+  echo ""
+  echo "To:"
+  echo -e "  ${GREEN}## [${NEW_VERSION}] - $(date +%Y-%m-%d)${NC}"
+  echo ""
+  read -p "Press ENTER when you've updated CHANGELOG.md..."
+  echo ""
+fi
 
 # Build
 echo ""
@@ -79,11 +114,33 @@ npm test || {
   fi
 }
 
-# Commit and tag
-git add package.json CHANGELOG.md package-lock.json 2>/dev/null || true
-git commit -m "Release v${NEW_VERSION}"
-
+# Check if tag already exists
 TAG_NAME="v${NEW_VERSION}"
+if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+  echo -e "${YELLOW}⚠ Tag ${TAG_NAME} already exists${NC}"
+  read -p "Delete and recreate tag? (y/N): " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    git tag -d "$TAG_NAME"
+    echo -e "${GREEN}✓ Deleted existing tag${NC}"
+  else
+    echo -e "${RED}Aborting. Tag already exists.${NC}"
+    exit 1
+  fi
+fi
+
+# Add files
+git add package.json CHANGELOG.md package-lock.json dist/ 2>/dev/null || true
+
+# Check if there are changes to commit
+if git diff --cached --quiet; then
+  echo -e "${YELLOW}No changes to commit (files already staged or committed)${NC}"
+else
+  git commit -m "chore: release v${NEW_VERSION}"
+  echo -e "${GREEN}✓ Changes committed${NC}"
+fi
+
+# Create tag
 git tag -a "$TAG_NAME" -m "Release v${NEW_VERSION}"
 
 echo ""
