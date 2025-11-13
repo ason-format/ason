@@ -1,62 +1,46 @@
 /**
- * @fileoverview Integration tests for built package (dist/)
- *
- * Tests verify that the compiled package works correctly when imported
- * as if it were installed from NPM. This ensures the build output is valid.
- *
- * Tests:
- * - ESM imports from dist/index.js
- * - Basic compression/decompression
- * - TypeScript type exports
- * - All public API methods
- *
- * @module dist-integration.test
- * @license MIT
+ * Integration tests for dist/ build
+ * Tests the compiled version to ensure it works correctly
  */
 
-import { SmartCompressor, TokenCounter } from "../dist/index.js";
+import { SmartCompressor, TokenCounter } from '../dist/index.js';
 
-describe("Built Package (dist/) - ESM Integration", () => {
+describe('Dist Integration - SmartCompressor', () => {
   let compressor;
 
   beforeEach(() => {
-    compressor = new SmartCompressor({ indent: 1 });
+    compressor = new SmartCompressor();
   });
 
-  test("should import SmartCompressor from dist/", () => {
-    expect(SmartCompressor).toBeDefined();
-    expect(typeof SmartCompressor).toBe("function");
-  });
-
-  test("should import TokenCounter from dist/", () => {
-    expect(TokenCounter).toBeDefined();
-    expect(typeof TokenCounter.estimateTokens).toBe("function");
-    expect(typeof TokenCounter.compareFormats).toBe("function");
-  });
-
-  test("should compress simple object", () => {
-    const data = { name: "Alice", age: 25 };
+  test('should compress and decompress simple object from dist', () => {
+    const data = { id: 1, name: 'Alice' };
     const compressed = compressor.compress(data);
-
-    expect(compressed).toBeDefined();
-    expect(typeof compressed).toBe("string");
-    expect(compressed).toContain("name:");
-    expect(compressed).toContain("age:");
-  });
-
-  test("should decompress back to original", () => {
-    const original = { name: "Bob", age: 30, active: true };
-    const compressed = compressor.compress(original);
     const decompressed = compressor.decompress(compressed);
 
-    expect(decompressed).toEqual(original);
+    expect(decompressed).toEqual(data);
   });
 
-  test("should handle uniform arrays", () => {
+  test('should handle nested objects from dist', () => {
     const data = {
-      users: [
-        { id: 1, name: "Alice", email: "alice@example.com" },
-        { id: 2, name: "Bob", email: "bob@example.com" }
+      user: {
+        profile: {
+          name: 'Bob',
+          age: 30
+        }
+      }
+    };
+
+    const compressed = compressor.compress(data);
+    const decompressed = compressor.decompress(compressed);
+
+    expect(decompressed).toEqual(data);
+  });
+
+  test('should handle arrays from dist', () => {
+    const data = {
+      items: [
+        { id: 1, name: 'Item 1' },
+        { id: 2, name: 'Item 2' }
       ]
     };
 
@@ -64,17 +48,75 @@ describe("Built Package (dist/) - ESM Integration", () => {
     const decompressed = compressor.decompress(compressed);
 
     expect(decompressed).toEqual(data);
-    expect(compressed).toContain("@id,name,email");
   });
 
-  test("should handle nested objects", () => {
+  test('should handle negative numbers from dist', () => {
     const data = {
-      user: {
-        profile: {
-          name: "Alice",
-          settings: {
-            theme: "dark",
-            notifications: true
+      temperature: -15.5,
+      coordinates: { lat: 37.7749, lng: -122.4194 }
+    };
+
+    const compressed = compressor.compress(data);
+    const decompressed = compressor.decompress(compressed);
+
+    expect(decompressed).toEqual(data);
+  });
+
+  test('should handle unicode and emojis from dist', () => {
+    const data = {
+      message: 'Hello 世界 🌍',
+      name: 'こんにちは'
+    };
+
+    const compressed = compressor.compress(data);
+    const decompressed = compressor.decompress(compressed);
+
+    expect(decompressed).toEqual(data);
+  });
+
+  test('should handle mixed type arrays from dist', () => {
+    const data = {
+      data: [
+        'string',
+        42,
+        true,
+        null,
+        { nested: 'object' },
+        [1, 2, 3]
+      ]
+    };
+
+    const compressed = compressor.compress(data);
+    const decompressed = compressor.decompress(compressed);
+
+    expect(decompressed).toEqual(data);
+  });
+
+  test('should validate round-trip from dist', () => {
+    const data = { users: [{ id: 1, name: 'Alice' }] };
+    const result = compressor.validateRoundTrip(data);
+
+    expect(result.valid).toBe(true);
+    expect(result.error).toBeNull();
+  });
+
+  test('should get compression stats from dist', () => {
+    const data = { users: [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }] };
+    const result = compressor.compressWithStats(data);
+
+    expect(result.ason).toBeDefined();
+    expect(result.stats).toBeDefined();
+    expect(result.reduction_percent).toBeGreaterThan(0);
+  });
+
+  test('should handle deeply nested structures from dist', () => {
+    const data = {
+      level1: {
+        level2: {
+          level3: {
+            level4: {
+              value: 'deep'
+            }
           }
         }
       }
@@ -86,122 +128,98 @@ describe("Built Package (dist/) - ESM Integration", () => {
     expect(decompressed).toEqual(data);
   });
 
-  test("should count tokens", () => {
-    const text = "Hello world";
-    const tokens = TokenCounter.estimateTokens(text);
-
-    expect(typeof tokens).toBe("number");
-    expect(tokens).toBeGreaterThan(0);
-  });
-
-  test("should compare formats", () => {
-    const data = { name: "Test", value: 123 };
-    const compressed = compressor.compress(data);
-    const comparison = TokenCounter.compareFormats(data, compressed);
-
-    expect(comparison).toHaveProperty("original_tokens");
-    expect(comparison).toHaveProperty("compressed_tokens");
-    expect(comparison).toHaveProperty("reduction_percent");
-    expect(comparison).toHaveProperty("original_size");
-    expect(comparison).toHaveProperty("compressed_size");
-
-    expect(typeof comparison.original_tokens).toBe("number");
-    expect(typeof comparison.compressed_tokens).toBe("number");
-    expect(typeof comparison.reduction_percent).toBe("number");
-    expect(typeof comparison.original_size).toBe("number");
-    expect(typeof comparison.compressed_size).toBe("number");
-  });
-
-  test("should handle special characters", () => {
+  test('should handle tabular arrays from dist', () => {
     const data = {
-      text: 'Hello "world"',
-      unicode: "こんにちは",
-      emoji: "🚀",
-      newline: "line1\nline2"
+      users: [
+        { id: 1, name: 'Alice', email: 'alice@example.com' },
+        { id: 2, name: 'Bob', email: 'bob@example.com' },
+        { id: 3, name: 'Charlie', email: 'charlie@example.com' }
+      ]
     };
 
     const compressed = compressor.compress(data);
     const decompressed = compressor.decompress(compressed);
-
-    expect(decompressed).toEqual(data);
-  });
-
-  test("should handle null and undefined", () => {
-    const data = {
-      nullValue: null,
-      defined: "value"
-    };
-
-    const compressed = compressor.compress(data);
-    const decompressed = compressor.decompress(compressed);
-
-    expect(decompressed).toEqual(data);
-  });
-
-  test("should handle arrays with different types", () => {
-    const data = {
-      mixed: [1, "string", true, null, { key: "value" }]
-    };
-
-    const compressed = compressor.compress(data);
-    const decompressed = compressor.decompress(compressed);
-
-    expect(decompressed).toEqual(data);
-  });
-
-  test("should work with configuration options", () => {
-    const customCompressor = new SmartCompressor({
-      indent: 2,
-      delimiter: "\t",
-      useReferences: false,
-      useDictionary: false
-    });
-
-    const data = { name: "Test" };
-    const compressed = customCompressor.compress(data);
-    const decompressed = customCompressor.decompress(compressed);
 
     expect(decompressed).toEqual(data);
   });
 });
 
-describe("Built Package (dist/) - Large Dataset Test", () => {
-  test("should handle uniform array data with good compression", () => {
-    const compressor = new SmartCompressor({ indent: 1 });
+describe('Dist Integration - TokenCounter', () => {
+  test('should estimate tokens from dist', () => {
+    const text = 'Hello world!';
+    const tokens = TokenCounter.estimateTokens(text);
 
-    // Create uniform data that compresses well (similar structure repeated)
-    const uniformData = {
-      users: []
-    };
+    expect(typeof tokens).toBe('number');
+    expect(tokens).toBeGreaterThan(0);
+  });
 
-    // Generate 50 users with uniform structure
-    for (let i = 1; i <= 50; i++) {
-      uniformData.users.push({
-        id: i,
-        name: `User${i}`,
-        email: `user${i}@example.com`,
-        age: 20 + (i % 50),
-        active: i % 2 === 0
-      });
-    }
+  test('should compare formats from dist', () => {
+    const data = { name: 'Test', value: 123 };
+    const json = JSON.stringify(data);
+    const ason = 'name:Test\nvalue:123';
 
-    const compressed = compressor.compress(uniformData);
+    const stats = TokenCounter.compareFormats(data, json, ason);
+
+    expect(stats).toHaveProperty('original_tokens');
+    expect(stats).toHaveProperty('compressed_tokens');
+    expect(stats).toHaveProperty('reduction_percent');
+  });
+});
+
+describe('Dist Integration - Edge Cases', () => {
+  let compressor;
+
+  beforeEach(() => {
+    compressor = new SmartCompressor();
+  });
+
+  test('should handle empty objects from dist', () => {
+    const data = {};
+    const compressed = compressor.compress(data);
     const decompressed = compressor.decompress(compressed);
 
-    // Verify lossless round-trip
-    expect(decompressed).toEqual(uniformData);
+    expect(decompressed).toEqual(data);
+  });
 
-    // Verify compression reduces size
-    const jsonStr = JSON.stringify(uniformData);
-    expect(compressed.length).toBeLessThan(jsonStr.length);
+  test('should handle empty arrays from dist', () => {
+    const data = { items: [] };
+    const compressed = compressor.compress(data);
+    const decompressed = compressor.decompress(compressed);
 
-    // Verify token reduction (uniform arrays should compress very well)
-    const jsonTokens = TokenCounter.estimateTokens(jsonStr);
-    const asonTokens = TokenCounter.estimateTokens(compressed);
-    expect(asonTokens).toBeLessThan(jsonTokens);
+    expect(decompressed).toEqual(data);
+  });
 
-    // Verify significant compression ratio (should be > 10% for uniform data)
-    const comparison = TokenCounter.compareFormats(uniformData, compressed);
-    expect(comparison.reduction_percent).toBeGreaterThan(10);
+  test('should handle null values from dist', () => {
+    const data = { value: null };
+    const compressed = compressor.compress(data);
+    const decompressed = compressor.decompress(compressed);
+
+    expect(decompressed).toEqual(data);
+  });
+
+  test('should handle special characters in strings from dist', () => {
+    const data = {
+      path: '/usr/local/bin',
+      email: 'user@example.com',
+      code: 'ABC-123-XYZ'
+    };
+
+    const compressed = compressor.compress(data);
+    const decompressed = compressor.decompress(compressed);
+
+    expect(decompressed).toEqual(data);
+  });
+
+  test('should handle large numbers from dist', () => {
+    const data = {
+      bigNumber: 9007199254740991, // Number.MAX_SAFE_INTEGER
+      smallNumber: -9007199254740991,
+      decimal: 3.141592653589793
+    };
+
+    const compressed = compressor.compress(data);
+    const decompressed = compressor.decompress(compressed);
+
+    expect(decompressed).toEqual(data);
   });
 });

@@ -223,8 +223,9 @@ describe("TokenCounter", () => {
     const original = { name: "Test", value: 123, items: [1, 2, 3] };
     const compressor = new SmartCompressor();
     const compressed = compressor.compress(original);
+    const jsonString = JSON.stringify(original);
 
-    const comparison = TokenCounter.compareFormats(original, compressed);
+    const comparison = TokenCounter.compareFormats(original, jsonString, compressed);
 
     expect(comparison).toHaveProperty("original_tokens");
     expect(comparison).toHaveProperty("compressed_tokens");
@@ -251,7 +252,8 @@ describe("TokenCounter", () => {
 
     const compressor = new SmartCompressor();
     const compressed = compressor.compress(data);
-    const comparison = TokenCounter.compareFormats(data, compressed);
+    const jsonString = JSON.stringify(data);
+    const comparison = TokenCounter.compareFormats(data, jsonString, compressed);
 
     // Uniform arrays should compress well
     expect(comparison.reduction_percent).toBeGreaterThan(10);
