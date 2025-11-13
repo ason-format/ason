@@ -407,29 +407,44 @@ export class Serializer {
     const { sections, dotNotation } = this.sectionPlan;
     const sectionPaths = new Set(sections.map(s => s.path));
 
-    // Serialize sections
+    // Track which keys have been serialized
+    const serializedKeys = new Set();
+
+    // First: Serialize non-section fields (primitives and simple objects)
+    // This maintains the original JSON order - primitives first
+    for (const [key, value] of Object.entries(obj)) {
+      // Skip if this is a section - we'll do those later
+      if (sectionPaths.has(key)) {
+        continue;
+      }
+
+      const valuePath = path ? `${path}.${key}` : key;
+      const flatKey = this.needsQuotes(key) ? JSON.stringify(key) : key;
+
+      // Flatten if object (and not already a section)
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        const flattened = this.flattenObject(value, key);
+        for (const [flatKey, flatValue] of Object.entries(flattened)) {
+          output += flatKey + ':' + this.serializeValue(flatValue, level, valuePath) + '\n';
+        }
+      } else {
+        output += flatKey + ':' + this.serializeValue(value, level, valuePath) + '\n';
+      }
+
+      serializedKeys.add(key);
+    }
+
+    // Then: Serialize sections at the end
+    // Add blank line before first section if we had primitives
+    if (output.length > 0 && sectionPaths.size > 0) {
+      output += '\n';
+    }
+
     for (const [key, value] of Object.entries(obj)) {
       if (sectionPaths.has(key)) {
         output += this.serializeSection(key, value, level, path);
         output += '\n\n';
-      }
-    }
-
-    // Serialize dot notation fields
-    for (const [key, value] of Object.entries(obj)) {
-      if (!sectionPaths.has(key)) {
-        const valuePath = path ? `${path}.${key}` : key;
-        const flatKey = this.needsQuotes(key) ? JSON.stringify(key) : key;
-
-        // Flatten if object
-        if (value && typeof value === 'object' && !Array.isArray(value)) {
-          const flattened = this.flattenObject(value, key);
-          for (const [flatKey, flatValue] of Object.entries(flattened)) {
-            output += flatKey + ':' + this.serializeValue(flatValue, level, valuePath) + '\n';
-          }
-        } else {
-          output += flatKey + ':' + this.serializeValue(value, level, valuePath) + '\n';
-        }
+        serializedKeys.add(key);
       }
     }
 

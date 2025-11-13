@@ -2930,24 +2930,31 @@ var Serializer = class {
     let output = "";
     const { sections, dotNotation } = this.sectionPlan;
     const sectionPaths = new Set(sections.map((s) => s.path));
+    const serializedKeys = /* @__PURE__ */ new Set();
+    for (const [key, value] of Object.entries(obj)) {
+      if (sectionPaths.has(key)) {
+        continue;
+      }
+      const valuePath = path ? `${path}.${key}` : key;
+      const flatKey = this.needsQuotes(key) ? JSON.stringify(key) : key;
+      if (value && typeof value === "object" && !Array.isArray(value)) {
+        const flattened = this.flattenObject(value, key);
+        for (const [flatKey2, flatValue] of Object.entries(flattened)) {
+          output += flatKey2 + ":" + this.serializeValue(flatValue, level, valuePath) + "\n";
+        }
+      } else {
+        output += flatKey + ":" + this.serializeValue(value, level, valuePath) + "\n";
+      }
+      serializedKeys.add(key);
+    }
+    if (output.length > 0 && sectionPaths.size > 0) {
+      output += "\n";
+    }
     for (const [key, value] of Object.entries(obj)) {
       if (sectionPaths.has(key)) {
         output += this.serializeSection(key, value, level, path);
         output += "\n\n";
-      }
-    }
-    for (const [key, value] of Object.entries(obj)) {
-      if (!sectionPaths.has(key)) {
-        const valuePath = path ? `${path}.${key}` : key;
-        const flatKey = this.needsQuotes(key) ? JSON.stringify(key) : key;
-        if (value && typeof value === "object" && !Array.isArray(value)) {
-          const flattened = this.flattenObject(value, key);
-          for (const [flatKey2, flatValue] of Object.entries(flattened)) {
-            output += flatKey2 + ":" + this.serializeValue(flatValue, level, valuePath) + "\n";
-          }
-        } else {
-          output += flatKey + ":" + this.serializeValue(value, level, valuePath) + "\n";
-        }
+        serializedKeys.add(key);
       }
     }
     return output.trimEnd();

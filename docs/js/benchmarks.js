@@ -1,4 +1,4 @@
-import { SmartCompressor } from "./ason.js";
+import { SmartCompressor } from "./ason.js?v=2.0.0";
 
 const benchmarks = [
   {
