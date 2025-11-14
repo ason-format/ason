@@ -30,40 +30,4 @@
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
-    <url>
-        <loc>https://ason-format.github.io/ason/blog.html</loc>
-        <lastmod>2025-01-14</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://ason-format.github.io/ason/blog/cost-savings.html</loc>
-        <lastmod>2025-01-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://ason-format.github.io/ason/blog/rag-systems.html</loc>
-        <lastmod>2025-01-12</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://ason-format.github.io/ason/blog/function-calling.html</loc>
-        <lastmod>2025-01-10</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://ason-format.github.io/ason/blog/analytics.html</loc>
-        <lastmod>2025-01-08</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://ason-format.github.io/ason/blog/migration.html</loc>
-        <lastmod>2025-01-05</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
 </urlset>

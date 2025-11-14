@@ -9,7 +9,7 @@
 
 > **Token-optimized JSON compression for GPT-4, Claude, and all Large Language Models.** Reduce LLM API costs by **20-60%** with lossless compression. Perfect for RAG systems, function calling, analytics data, and any structured arrays sent to LLMs. ASON 2.0 uses smart compression with tabular arrays, semantic references, and pipe delimiters.
 
-**🎮 [Try Interactive Playground](https://ason-format.github.io/ason/)** • **📊 [View Benchmarks](https://ason-format.github.io/ason/benchmarks.html)** • **📖 [Read Documentation](https://ason-format.github.io/ason/docs.html)** • **📰 [Blog & Use Cases](https://ason-format.github.io/ason/blog.html)**
+**🎮 [Try Interactive Playground](https://ason-format.github.io/ason/)** • **📊 [View Benchmarks](https://ason-format.github.io/ason/benchmarks.html)** • **📖 [Read Documentation](https://ason-format.github.io/ason/docs.html)**
 
 ![ASON Overview](https://raw.githubusercontent.com/ason-format/ason/main/preview.png)
 
@@ -155,15 +155,12 @@ Tested on 5 real-world datasets:
 - 🎮 **[Interactive Playground](https://ason-format.github.io/ason/)** - Try ASON in your browser with real-time token counting
 - 📖 **[Complete Documentation](https://ason-format.github.io/ason/docs.html)** - Format specification, API guide, and best practices
 - 📊 **[Benchmarks & Comparisons](https://ason-format.github.io/ason/benchmarks.html)** - ASON vs JSON vs TOON vs YAML performance tests
-- 📰 **[Blog & Use Cases](https://ason-format.github.io/ason/blog.html)** - Real-world case studies, migration guides, and tutorials
 - 🔧 **[API Reference](./nodejs-compressor/README.md)** - Detailed Node.js API documentation
 - 🔢 **[Token Counter Tool](https://ason-format.github.io/ason/tokenizer.html)** - Visual token comparison across formats
 - 📦 **[Release Guide](./RELEASE.md)** - How to publish new versions
 - 📝 **[Changelog](./CHANGELOG.md)** - Version history and updates
 
 ## 🎯 Real-World Use Cases
-
-> **Case Study:** A production system processing 10M+ GPT-4 calls/month saved **$8,460/month** by switching to ASON. [Read full case study →](https://ason-format.github.io/ason/blog.html#case-study-cost-savings)
 
 ### 1. Reduce LLM API Costs (GPT-4, Claude, etc.)
 
@@ -265,12 +262,6 @@ app.get('/api/data/compact', (req, res) => {
 });
 ```
 
-## 💡 More Use Cases & Guides
-
-- **[RAG Systems Optimization](https://ason-format.github.io/ason/blog.html#rag-systems)** - 54% reduction on document metadata
-- **[Function Calling Guide](https://ason-format.github.io/ason/blog.html#function-calling)** - 40% savings on bulk operations
-- **[Analytics Data](https://ason-format.github.io/ason/blog.html#analytics)** - Time-series and metrics compression
-- **[Migration Guide](https://ason-format.github.io/ason/blog.html#migration-guide)** - Step-by-step JSON to ASON migration
 
 ## 🛠️ Development
 
@@ -300,7 +291,6 @@ node src/cli.js data.json --stats
 
 - 💬 **[GitHub Discussions](https://github.com/ason-format/ason/discussions)** - Ask questions, share use cases
 - 🐛 **[Issue Tracker](https://github.com/ason-format/ason/issues)** - Report bugs or request features
-- 📰 **[Blog](https://ason-format.github.io/ason/blog.html)** - Case studies, tutorials, and guides
 - 🔧 **[Tools & Extensions](https://ason-format.github.io/ason/tools.html)** - MCP Server, npm packages, CLI
 
 ## 🤝 Contributing
