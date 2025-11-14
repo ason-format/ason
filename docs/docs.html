@@ -3,8 +3,28 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="favicon.png" type="image/png" />
-        <title>ASON 2.0 Documentation</title>
+        <link rel="icon" href="icon.svg" type="image/svg+xml" />
+        <title>ASON 2.0 Documentation - Complete Format Specification & API Guide</title>
+
+        <!-- SEO Meta Tags -->
+        <meta name="description" content="Complete ASON 2.0 documentation with format specification, API reference, examples, and best practices. Learn how to optimize JSON for LLMs and reduce token usage by 20-60%." />
+        <meta name="keywords" content="ASON documentation, ASON API, JSON compression format, LLM optimization, token reduction guide, ASON syntax, ASON examples" />
+        <meta name="author" content="ASON Project Contributors" />
+        <link rel="canonical" href="https://ason-format.github.io/ason/docs.html" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://ason-format.github.io/ason/docs.html" />
+        <meta property="og:title" content="ASON 2.0 Documentation - Format Specification & API Guide" />
+        <meta property="og:description" content="Complete guide to ASON format, API usage, and best practices for token optimization in Large Language Models." />
+        <meta property="og:image" content="https://ason-format.github.io/ason/icon.svg" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:url" content="https://ason-format.github.io/ason/docs.html" />
+        <meta name="twitter:title" content="ASON 2.0 Documentation - Format Specification & API Guide" />
+        <meta name="twitter:description" content="Complete guide to ASON format, API usage, and best practices for token optimization in Large Language Models." />
+        <meta name="twitter:image" content="https://ason-format.github.io/ason/icon.svg" />
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/lucide@latest"></script>
         <style>
@@ -35,41 +55,62 @@
             .section-heading {
                 scroll-margin-top: 80px;
             }
+
+            .fixed-header {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background: white;
+                border-bottom: 1px solid #e5e7eb;
+            }
         </style>
     </head>
     <body class="bg-white text-gray-900 antialiased">
+        <header class="fixed-header">
+            <div class="max-w-7xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                        <img src="icon.svg" alt="ASON Logo" class="w-8 h-8" />
+                        <div>
+                            <h1 class="text-base font-semibold">ASON 2.0</h1>
+                            <p class="text-xs text-gray-600">Token-optimized for LLMs</p>
+                        </div>
+                    </a>
+                    <nav class="flex flex-wrap gap-2">
+                        <a
+                            href="index.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                            Playground
+                        </a>
+                        <a
+                            href="docs.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md bg-gray-50"
+                        >
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                            Docs
+                        </a>
+                        <a
+                            href="benchmarks.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                            Benchmarks
+                        </a>
+                        <a
+                            href="blog.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="newspaper" class="w-4 h-4"></i>
+                            Blog
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
         <div class="max-w-7xl mx-auto px-4 py-6">
-            <header class="border-b pb-4 mb-6">
-                <h1 class="text-xl font-semibold mb-1">
-                    ASON 2.0 - Aliased Serialization Object Notation
-                </h1>
-                <p class="text-sm text-gray-600">
-                    Token-optimized JSON compression format for LLMs • 20-60% token reduction
-                </p>
-                <nav class="mt-3 flex flex-wrap gap-2">
-                    <a
-                        href="index.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                        Back
-                    </a>
-                    <a
-                        href="benchmarks.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-                        Benchmarks
-                    </a>
-                    <a
-                        href="tools.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="puzzle" class="w-4 h-4"></i>
-                        Tools & Extensions
-                    </a>
-                </nav>
-            </header>
 
             <div class="flex flex-col md:flex-row gap-8">
                 <!-- Sidebar Navigation -->
@@ -356,10 +397,10 @@ npx ason data.json --stats
                             </div>
                             <div class="code-block">
                                 <pre>
-@users [3]{id,name,email,age,active}
-1|Alice|alice@example.com|25|true
-2|Bob|bob@example.com|30|true
-3|Charlie|charlie@example.com|35|false</pre
+users:[3]{id,name,email,age,active}
+1|Alice|"alice@example.com"|25|true
+2|Bob|"bob@example.com"|30|true
+3|Charlie|"charlie@example.com"|35|false</pre
                                 >
                             </div>
                         </div>
@@ -381,10 +422,10 @@ npx ason data.json --stats
                             </p>
                             <div class="code-block">
                                 <pre>
-@users [3]{id,name,email}
-1|Alice|alice@example.com
-2|Bob|bob@example.com
-3|Charlie|charlie@example.com</pre
+users:[3]{id,name,email}
+1|Alice|"alice@example.com"
+2|Bob|"bob@example.com"
+3|Charlie|"charlie@example.com"</pre
                                 >
                             </div>
                         </div>
@@ -428,8 +469,8 @@ config.database.host:localhost</pre
                             <div class="code-block">
                                 <pre>
 $def:
- $email:customer@example.com
- $city:San Francisco
+ $email:"customer@example.com"
+ $city:"San Francisco"
 $data:
 @billing
  email:$email
@@ -453,18 +494,17 @@ $data:
                                 Sections
                             </h3>
                             <p class="text-gray-700 mb-3 text-sm">
-                                Related data is organized using @section syntax,
-                                which saves tokens when objects have 3 or more fields.
-                                Sections can contain objects or tabular arrays.
+                                Objects with 3 or more fields are organized using @section syntax.
+                                Arrays use key:[N]{fields} format instead.
                             </p>
                             <div class="code-block">
                                 <pre>
 @customer
- name:Alice Johnson
- email:alice@example.com
- phone:+1-555-0100
+ name:"Alice Johnson"
+ email:"alice@example.com"
+ phone:"+1-555-0100"
 
-@items [2]{id,product,price}
+items:[2]{id,product,price}
 1|Laptop|999
 2|Mouse|29</pre
                                 >
@@ -712,6 +752,228 @@ $data:
                                     </li>
                                 </ul>
                             </div>
+                        </div>
+                    </section>
+
+                    <!-- LLM Optimization Details -->
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-semibold mb-4">
+                            Why ASON is Optimal for LLMs
+                        </h2>
+
+                        <p class="text-sm text-gray-700 mb-6 leading-relaxed">
+                            ASON 2.0 is specifically designed to maximize efficiency when working with Large Language Models. Every design decision reduces token count and parsing ambiguity.
+                        </p>
+
+                        <div class="space-y-6">
+                            <!-- Pipe Delimiters -->
+                            <div class="border rounded-lg p-6">
+                                <h3 class="font-semibold mb-3 text-sm flex items-center gap-2">
+                                    <span class="text-blue-600">1.</span>
+                                    Unambiguous Pipe Delimiters
+                                </h3>
+                                <p class="text-xs text-gray-700 mb-3 leading-relaxed">
+                                    Unlike commas, which appear in numbers (1,000), dates, and natural text, pipe characters (<code class="bg-gray-100 px-1 rounded">|</code>) are rarely used. This eliminates parsing ambiguity for LLMs.
+                                </p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="text-xs font-semibold text-green-700 mb-2">✓ ASON (Pipes)</div>
+                                        <pre class="bg-gray-50 p-3 rounded text-xs overflow-x-auto">1|"Product 1"|10.99|false|"Electronics"</pre>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-red-700 mb-2">✗ CSV (Commas)</div>
+                                        <pre class="bg-gray-50 p-3 rounded text-xs overflow-x-auto">1,Product 1,10.99,false,Electronics</pre>
+                                        <p class="text-xs text-gray-500 mt-2">Ambiguous: Is "Product 1" one field or two?</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Explicit Strings -->
+                            <div class="border rounded-lg p-6">
+                                <h3 class="font-semibold mb-3 text-sm flex items-center gap-2">
+                                    <span class="text-green-600">2.</span>
+                                    Explicit String Boundaries with Quotes
+                                </h3>
+                                <p class="text-xs text-gray-700 mb-3 leading-relaxed">
+                                    Every string is wrapped in quotes, making it crystal clear where text begins and ends. This prevents confusion with numbers, booleans, or null values.
+                                </p>
+                                <div class="bg-gray-50 p-4 rounded">
+                                    <div class="text-xs font-mono space-y-2">
+                                        <div><span class="text-green-600">✓</span> <code>"Product 1"</code> <span class="text-gray-500">← clearly a string</span></div>
+                                        <div><span class="text-green-600">✓</span> <code>10.99</code> <span class="text-gray-500">← clearly a number</span></div>
+                                        <div><span class="text-green-600">✓</span> <code>false</code> <span class="text-gray-500">← clearly a boolean</span></div>
+                                        <div class="pt-2 border-t mt-2">
+                                            <span class="text-red-600">✗</span> <code>Product 1</code> <span class="text-gray-500">← string or identifier?</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Semantic References -->
+                            <div class="border rounded-lg p-6">
+                                <h3 class="font-semibold mb-3 text-sm flex items-center gap-2">
+                                    <span class="text-purple-600">3.</span>
+                                    Semantic References Reduce Tokens
+                                </h3>
+                                <p class="text-xs text-gray-700 mb-3 leading-relaxed">
+                                    Variables like <code class="bg-gray-100 px-1 rounded">$category</code> dramatically reduce token count by eliminating repetition. LLMs can easily understand and follow these references.
+                                </p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="text-xs font-semibold text-purple-700 mb-2">With References</div>
+                                        <pre class="bg-gray-50 p-3 rounded text-xs overflow-x-auto">$def:
+ $cat:Electronics
+
+$data:
+1|"Product 1"|$cat
+2|"Product 2"|$cat
+3|"Product 3"|$cat</pre>
+                                        <p class="text-xs text-purple-600 mt-2 font-semibold">Tokens saved: ~30%</p>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-gray-700 mb-2">Without References</div>
+                                        <pre class="bg-gray-50 p-3 rounded text-xs overflow-x-auto">1|"Product 1"|"Electronics"
+2|"Product 2"|"Electronics"
+3|"Product 3"|"Electronics"</pre>
+                                        <p class="text-xs text-gray-500 mt-2">"Electronics" repeated 3 times</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Clear Sections -->
+                            <div class="border rounded-lg p-6">
+                                <h3 class="font-semibold mb-3 text-sm flex items-center gap-2">
+                                    <span class="text-orange-600">4.</span>
+                                    Explicit Section Boundaries
+                                </h3>
+                                <p class="text-xs text-gray-700 mb-3 leading-relaxed">
+                                    The <code class="bg-gray-100 px-1 rounded">$def:</code> and <code class="bg-gray-100 px-1 rounded">$data:</code> markers create clear boundaries between different parts of the structure, making it easier for LLMs to parse and understand the format.
+                                </p>
+                                <pre class="bg-gray-50 p-3 rounded text-xs overflow-x-auto">$def:              <span class="text-gray-500">← Definitions section</span>
+ $street:"123 Main St"
+ $city:"San Francisco"
+
+$data:             <span class="text-gray-500">← Data section</span>
+users:[2]{name,address.street,address.city}
+"Alice"|$street|$city
+"Bob"|$street|$city</pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- FAQs -->
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-semibold mb-6">
+                            Frequently Asked Questions
+                        </h2>
+
+                        <div class="space-y-4">
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>How much token reduction can I expect?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    Token reduction varies by data structure. For uniform arrays (like lists of users or products), expect 40-60% reduction. For mixed structures, 20-40%. For deeply nested non-uniform data, 10-20%. The playground lets you test with your actual data.
+                                </p>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>Is ASON lossless? Will I get my exact data back?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    Yes, ASON is 100% lossless. <code class="bg-gray-100 px-1 rounded">JSON.stringify(decompress(compress(data))) === JSON.stringify(data)</code> always returns true. All values, types, and structure are perfectly preserved.
+                                </p>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>How does ASON compare to TOON format?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    ASON consistently beats TOON by 5-15% on average. Key advantages: semantic references (<code class="bg-gray-100 px-1 rounded">$def</code>), pipe delimiters for clarity, and smarter detection of repeated values. See the <a href="benchmarks.html" class="text-blue-600 hover:underline">benchmarks page</a> for detailed comparisons.
+                                </p>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>Why use pipes (|) instead of commas?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    Pipes are unambiguous. Commas appear in numbers (1,000), dates (Jan 1, 2024), and natural text. This creates parsing confusion for LLMs. Pipes rarely appear in data, making field boundaries crystal clear.
+                                </p>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>Can LLMs generate valid ASON format?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    Yes! ASON's clear structure (pipe delimiters, quoted strings, explicit sections) makes it easy for LLMs to learn and generate. Provide examples in your prompt and models like GPT-4 and Claude can produce valid ASON output.
+                                </p>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>What happens if my data doesn't have patterns?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    ASON falls back to a compact nested object format. You'll still get some reduction from removing JSON syntax overhead, but it won't be as dramatic. For completely heterogeneous data, stick with regular JSON.
+                                </p>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>Is there a performance cost for compression?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    Compression/decompression is fast (&lt;1ms for typical payloads). The token savings on LLM API calls far outweigh any CPU cost. For a 1000-token payload reduced to 400 tokens, you save ~600 tokens on every request.
+                                </p>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>Can I use ASON with any LLM provider?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    Yes! ASON is just a text format. It works with OpenAI (GPT-3.5, GPT-4), Anthropic (Claude), Google (Gemini), local models (Llama), and any other LLM. Compress before sending, decompress after receiving.
+                                </p>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>How do I handle ASON errors in production?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    Wrap compress/decompress in try-catch blocks. If ASON fails, fall back to regular JSON. The library throws descriptive errors. Common issues: malformed ASON strings, incompatible data types, or corrupted compression output.
+                                </p>
+                                <pre class="bg-gray-50 p-3 rounded text-xs mt-2 overflow-x-auto">try {
+  const ason = compressor.compress(data);
+  // send ason to LLM
+} catch (error) {
+  // fallback to JSON
+  const json = JSON.stringify(data);
+}</pre>
+                            </details>
+
+                            <details class="border rounded-lg p-4 group">
+                                <summary class="font-semibold text-sm cursor-pointer flex items-center justify-between">
+                                    <span>Does ASON work with TypeScript?</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p class="text-xs text-gray-700 mt-3 leading-relaxed">
+                                    Yes! Full TypeScript support with type definitions included. The package exports <code class="bg-gray-100 px-1 rounded">SmartCompressor</code> class with proper typing for compress/decompress methods.
+                                </p>
+                            </details>
                         </div>
                     </section>
                 </main>

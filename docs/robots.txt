@@ -1,0 +1,26 @@
+# robots.txt for ASON 2.0 Project
+# Allow all search engines to index all content
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://ason-format.github.io/ason/sitemap.xml
+
+# Common search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Disallow access to JavaScript libraries and assets (optional)
+# These are already minified/CDN served, no need to index
+Disallow: /js/
+Disallow: /css/

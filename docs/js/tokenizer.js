@@ -1,24 +1,27 @@
 // Import ASON library
 import { SmartCompressor } from './ason.js?v=2.0.0';
+import { MultiModelTokenCounter } from './tokenCounter.js';
 
 const compressor = new SmartCompressor();
+const tokenCounter = new MultiModelTokenCounter();
 
-// GPT Tokenizer is loaded via CDN
-// Check if gpt-tokenizer is available
-function isTokenizerAvailable() {
-    return typeof GptTokenizer !== 'undefined';
+// Get tokenizer for advanced tokenization
+async function getTokenizer() {
+    return await tokenCounter.getTokenizer();
 }
 
 // Tokenize text using real GPT tokenizer
-function tokenizeText(text) {
-    if (!isTokenizerAvailable()) {
+async function tokenizeText(text) {
+    const tokenizer = await getTokenizer();
+
+    if (!tokenizer || !tokenizer.encode) {
         // Fallback: simple word-based tokenization
         return text.split(/(\s+|[{}[\]:,"'])/g).filter(t => t);
     }
 
     try {
-        const tokens = GptTokenizer.encode(text);
-        const decoded = tokens.map(token => GptTokenizer.decode([token]));
+        const tokens = tokenizer.encode(text);
+        const decoded = tokens.map(token => tokenizer.decode([token]));
         return decoded;
     } catch (error) {
         console.error('Tokenization error:', error);
@@ -27,21 +30,17 @@ function tokenizeText(text) {
 }
 
 // Count tokens (real count)
-function estimateTokens(text) {
-    if (!isTokenizerAvailable()) {
-        return Math.ceil(text.length / 4); // Fallback estimate
-    }
-
+async function estimateTokens(text) {
     try {
-        return GptTokenizer.encode(text).length;
+        return await tokenCounter.count(text, 'gpt-4');
     } catch (error) {
         return Math.ceil(text.length / 4);
     }
 }
 
 // Highlight tokens with different colors
-function highlightTokens(text) {
-    const tokens = tokenizeText(text);
+async function highlightTokens(text) {
+    const tokens = await tokenizeText(text);
 
     return tokens.map((token, index) => {
         // Escape HTML
@@ -302,19 +301,19 @@ function jsonToCsv(data) {
 }
 
 // Calculate token counts for all formats
-function calculateTokenCounts(formats) {
+async function calculateTokenCounts(formats) {
     const counts = {};
-    Object.entries(formats).forEach(([format, text]) => {
+    for (const [format, text] of Object.entries(formats)) {
         counts[format] = {
-            tokens: estimateTokens(text),
+            tokens: await estimateTokens(text),
             text: text
         };
-    });
+    }
     return counts;
 }
 
 // Render format cards
-function renderFormatCards(counts, baseline) {
+async function renderFormatCards(counts, baseline) {
     const formatCards = document.getElementById('formatCards');
     const baselineTokens = counts[baseline].tokens;
 
@@ -327,36 +326,40 @@ function renderFormatCards(counts, baseline) {
         'csv': 'CSV'
     };
 
-    formatCards.innerHTML = Object.entries(counts).map(([format, data]) => {
-        const tokens = data.tokens;
-        const percentage = baseline === format ? 0 :
-            ((tokens - baselineTokens) / baselineTokens * 100).toFixed(1);
-        const percentageText = baseline === format
-            ? '<span class="text-xs text-gray-500">baseline</span>'
-            : `<span class="text-xs font-medium ${percentage < 0 ? 'text-green-600' : 'text-red-600'}">${percentage}%</span>`;
+    const cards = await Promise.all(
+        Object.entries(counts).map(async ([format, data]) => {
+            const tokens = data.tokens;
+            const percentage = baseline === format ? 0 :
+                ((tokens - baselineTokens) / baselineTokens * 100).toFixed(1);
+            const percentageText = baseline === format
+                ? '<span class="text-xs text-gray-500">baseline</span>'
+                : `<span class="text-xs font-medium ${percentage < 0 ? 'text-green-600' : 'text-red-600'}">${percentage}%</span>`;
 
-        const highlighted = highlightTokens(data.text);
+            const highlighted = await highlightTokens(data.text);
 
-        return `
-            <div class="border rounded-lg overflow-hidden">
-                <div class="flex items-center justify-between px-3 py-2 border-b bg-gray-50">
-                    <h3 class="text-sm font-medium">${formatNames[format]}</h3>
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-lg font-semibold">${tokens}</span>
-                        <span class="text-xs text-gray-600">tokens</span>
-                        ${percentageText}
+            return `
+                <div class="border rounded-lg overflow-hidden">
+                    <div class="flex items-center justify-between px-3 py-2 border-b bg-gray-50">
+                        <h3 class="text-sm font-medium">${formatNames[format]}</h3>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-lg font-semibold">${tokens}</span>
+                            <span class="text-xs text-gray-600">tokens</span>
+                            ${percentageText}
+                        </div>
+                    </div>
+                    <div class="p-3 bg-gray-50 overflow-x-auto" style="max-height: 300px; font-size: 12px;">
+                        <div class="format-output">${highlighted}</div>
                     </div>
                 </div>
-                <div class="p-3 bg-gray-50 overflow-x-auto" style="max-height: 300px; font-size: 12px;">
-                    <div class="format-output">${highlighted}</div>
-                </div>
-            </div>
-        `;
-    }).join('');
+            `;
+        })
+    );
+
+    formatCards.innerHTML = cards.join('');
 }
 
 // Render comparison table with all datasets
-function renderComparisonTable(baselineFormat) {
+async function renderComparisonTable(baselineFormat) {
     const table = document.getElementById('comparisonTable');
 
     const datasetLabels = {
@@ -366,48 +369,51 @@ function renderComparisonTable(baselineFormat) {
         'large-complex': 'large-complex (stripe payment)'
     };
 
-    const rows = Object.entries(DATASETS).map(([datasetName, data]) => {
-        const formats = convertToFormats(data);
-        const counts = calculateTokenCounts(formats);
-        const baselineTokens = counts[baselineFormat].tokens;
+    const rows = await Promise.all(
+        Object.entries(DATASETS).map(async ([datasetName, data]) => {
+            const formats = convertToFormats(data);
+            const counts = await calculateTokenCounts(formats);
+            const baselineTokens = counts[baselineFormat].tokens;
 
-        const formatNames = ['pretty-json', 'json', 'yaml', 'toon', 'ason', 'csv'];
+            const formatNames = ['pretty-json', 'json', 'yaml', 'toon', 'ason', 'csv'];
 
-        const cells = formatNames.map(format => {
-            const tokens = counts[format].tokens;
-            const percentage = format === baselineFormat ? 0 :
-                ((tokens - baselineTokens) / baselineTokens * 100).toFixed(1);
+            const cells = formatNames.map(format => {
+                const tokens = counts[format].tokens;
+                const percentage = format === baselineFormat ? 0 :
+                    ((tokens - baselineTokens) / baselineTokens * 100).toFixed(1);
 
-            const isBaseline = format === baselineFormat;
-            const isAson = format === 'ason';
-            const color = isBaseline ? 'text-gray-600' :
-                percentage < 0 ? 'text-green-600' : 'text-red-600';
-            const bgColor = isAson ? 'bg-teal-50' : '';
+                const isBaseline = format === baselineFormat;
+                const isAson = format === 'ason';
+                const color = isBaseline ? 'text-gray-600' :
+                    percentage < 0 ? 'text-green-600' : 'text-red-600';
+                const bgColor = isAson ? 'bg-teal-50' : '';
+
+                return `
+                    <td class="text-center px-3 py-2 ${bgColor}">
+                        <div class="font-medium text-gray-900 text-xs">${tokens}</div>
+                        ${!isBaseline ? `<div class="text-xs ${color}">${percentage > 0 ? '+' : ''}${percentage}%</div>` : '<div class="text-xs text-gray-500">baseline</div>'}
+                    </td>
+                `;
+            }).join('');
 
             return `
-                <td class="text-center px-3 py-2 ${bgColor}">
-                    <div class="font-medium text-gray-900 text-xs">${tokens}</div>
-                    ${!isBaseline ? `<div class="text-xs ${color}">${percentage > 0 ? '+' : ''}${percentage}%</div>` : '<div class="text-xs text-gray-500">baseline</div>'}
-                </td>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-3 py-2 font-medium text-gray-700 text-xs">${datasetLabels[datasetName]}</td>
+                    ${cells}
+                </tr>
             `;
-        }).join('');
+        })
+    );
 
-        return `
-            <tr class="hover:bg-gray-50">
-                <td class="px-3 py-2 font-medium text-gray-700 text-xs">${datasetLabels[datasetName]}</td>
-                ${cells}
-            </tr>
-        `;
-    }).join('');
-
-    table.innerHTML = rows;
+    table.innerHTML = rows.join('');
 }
 
 // Initialize
-function init() {
+async function init() {
     // Log available libraries
     console.log('Libraries loaded:');
-    console.log('- GptTokenizer:', isTokenizerAvailable() ? '✓' : '✗');
+    const tokenizer = await getTokenizer();
+    console.log('- GptTokenizer:', tokenizer !== null ? '✓' : '✗');
     console.log('- Toon:', typeof Toon !== 'undefined' ? '✓' : '✗');
     console.log('- js-yaml:', typeof jsyaml !== 'undefined' ? '✓' : '✗');
     console.log('- ASON:', typeof SmartCompressor !== 'undefined' ? '✓' : '✗');
@@ -438,20 +444,20 @@ function init() {
     });
 
     // Update visualization
-    function updateViz() {
+    async function updateViz() {
         const dataset = DATASETS[datasetSelect.value];
         const formats = convertToFormats(dataset);
-        const counts = calculateTokenCounts(formats);
-        renderFormatCards(counts, baselineSelect.value);
+        const counts = await calculateTokenCounts(formats);
+        await renderFormatCards(counts, baselineSelect.value);
     }
 
     // Analyze custom data
-    analyzeBtn.addEventListener('click', () => {
+    analyzeBtn.addEventListener('click', async () => {
         try {
             const data = JSON.parse(customData.value);
             const formats = convertToFormats(data);
-            const counts = calculateTokenCounts(formats);
-            renderFormatCards(counts, baselineSelect.value);
+            const counts = await calculateTokenCounts(formats);
+            await renderFormatCards(counts, baselineSelect.value);
         } catch (e) {
             alert('Invalid JSON: ' + e.message);
         }
@@ -459,13 +465,13 @@ function init() {
 
     datasetSelect.addEventListener('change', updateViz);
     baselineSelect.addEventListener('change', updateViz);
-    tableBaselineSelect.addEventListener('change', () => {
-        renderComparisonTable(tableBaselineSelect.value);
+    tableBaselineSelect.addEventListener('change', async () => {
+        await renderComparisonTable(tableBaselineSelect.value);
     });
 
     // Initial render
-    updateViz();
-    renderComparisonTable('pretty-json');
+    await updateViz();
+    await renderComparisonTable('pretty-json');
 }
 
 // Start when DOM is loaded

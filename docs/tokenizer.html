@@ -3,12 +3,31 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="favicon.png" type="image/png" />
-        <title>Format Tokenization Comparison</title>
+        <link rel="icon" href="icon.svg" type="image/svg+xml" />
+        <title>Multi-Format Token Counter - Compare JSON, YAML, CSV, TOON & ASON</title>
+
+        <!-- SEO Meta Tags -->
+        <meta name="description" content="Visual token comparison tool for JSON, YAML, CSV, TOON, and ASON formats. See exactly how each format tokenizes your data with GPT-4, Claude, and other LLM tokenizers." />
+        <meta name="keywords" content="token counter, JSON tokenizer, YAML tokenizer, ASON tokenizer, GPT-4 token counter, Claude token counter, format comparison, token visualization" />
+        <meta name="author" content="ASON Project Contributors" />
+        <link rel="canonical" href="https://ason-format.github.io/ason/tokenizer.html" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ason-format.github.io/ason/tokenizer.html" />
+        <meta property="og:title" content="Multi-Format Token Counter - Visual LLM Token Comparison" />
+        <meta property="og:description" content="Interactive tool to compare token usage across JSON, YAML, CSV, TOON, and ASON formats with real tokenizers." />
+        <meta property="og:image" content="https://ason-format.github.io/ason/icon.svg" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:url" content="https://ason-format.github.io/ason/tokenizer.html" />
+        <meta name="twitter:title" content="Multi-Format Token Counter - Visual LLM Token Comparison" />
+        <meta name="twitter:description" content="Interactive tool to compare token usage across JSON, YAML, CSV, TOON, and ASON formats with real tokenizers." />
+        <meta name="twitter:image" content="https://ason-format.github.io/ason/icon.svg" />
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/lucide@latest"></script>
         <script src="https://unpkg.com/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/gpt-tokenizer@2.1.1/dist/main.js"></script>
         <script type="module" src="js/toon-wrapper.js"></script>
         <style>
             .token {
@@ -62,41 +81,62 @@
                 background-color: #f9fafb;
                 border-bottom-color: transparent;
             }
+
+            .fixed-header {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background: white;
+                border-bottom: 1px solid #e5e7eb;
+            }
         </style>
     </head>
     <body class="bg-white text-gray-900 antialiased">
+        <header class="fixed-header">
+            <div class="max-w-7xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                        <img src="icon.svg" alt="ASON Logo" class="w-8 h-8" />
+                        <div>
+                            <h1 class="text-base font-semibold">ASON 2.0</h1>
+                            <p class="text-xs text-gray-600">Token-optimized for LLMs</p>
+                        </div>
+                    </a>
+                    <nav class="flex flex-wrap gap-2">
+                        <a
+                            href="index.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                            Playground
+                        </a>
+                        <a
+                            href="docs.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                            Docs
+                        </a>
+                        <a
+                            href="benchmarks.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                            Benchmarks
+                        </a>
+                        <a
+                            href="blog.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="newspaper" class="w-4 h-4"></i>
+                            Blog
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
         <div class="max-w-7xl mx-auto px-4 py-6">
-            <header class="border-b pb-4 mb-6">
-                <h1 class="text-xl font-semibold mb-1">
-                    ASON 2.0 Token Comparison Tool
-                </h1>
-                <p class="text-sm text-gray-600">
-                    Compare token usage across CSV, JSON (pretty/compressed), YAML, TOON, and ASON 2.0 formats
-                </p>
-                <nav class="mt-3 flex flex-wrap gap-2">
-                    <a
-                        href="index.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                        Back
-                    </a>
-                    <a
-                        href="docs.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="book-open" class="w-4 h-4"></i>
-                        Documentation
-                    </a>
-                    <a
-                        href="benchmarks.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="bar-chart" class="w-4 h-4"></i>
-                        Benchmarks
-                    </a>
-                </nav>
-            </header>
 
             <!-- Data Input Section -->
             <div class="border rounded-lg overflow-hidden mb-4">
