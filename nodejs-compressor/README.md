@@ -41,15 +41,15 @@ LLM tokens cost money. Standard JSON is verbose and token-expensive. **ASON 2.0*
 
 ### After (ASON 2.0 - 23 tokens, **61% reduction**)
 ```
-@users [2]{id,name,email}
+users:[2]{id,name,email}
 1|Alice|alice@example.com
 2|Bob|bob@example.com
 ```
 
 ### What's New in ASON 2.0?
 
-- ✅ **Sections** (`@section`) - Organize related data, save tokens on deep structures
-- ✅ **Tabular Arrays** (`[N]{fields}`) - CSV-like format for uniform data
+- ✅ **Sections** (`@section`) - Organize related objects, save tokens on deep structures
+- ✅ **Tabular Arrays** (`key:[N]{fields}`) - CSV-like format for uniform arrays
 - ✅ **Semantic References** (`$email`, `&address`) - Human-readable variable names
 - ✅ **Pipe Delimiter** - More token-efficient than commas
 - ✅ **Lexer-Parser Architecture** - Robust parsing with proper AST
@@ -77,7 +77,7 @@ const data = {
 const ason = compressor.compress(data);
 console.log(ason);
 // Output:
-// @users [2]{id,name,email}
+// users:[2]{id,name,email}
 // 1|Alice|alice@ex.com
 // 2|Bob|bob@ex.com
 
@@ -91,8 +91,8 @@ const original = compressor.decompress(ason);
 - ✅ **20-60% Token Reduction** - Saves money on LLM API calls
 - ✅ **100% Lossless** - Perfect round-trip fidelity
 - ✅ **Fully Automatic** - Zero configuration, detects patterns automatically
-- ✅ **Sections** - Organize data with `@section` syntax
-- ✅ **Tabular Arrays** - CSV-like format `[N]{fields}` for uniform data
+- ✅ **Sections** - Organize objects with `@section` syntax
+- ✅ **Tabular Arrays** - CSV-like format `key:[N]{fields}` for uniform arrays
 - ✅ **Semantic References** - `$var`, `&obj`, `#N` for deduplication
 - ✅ **TypeScript Support** - Full `.d.ts` type definitions
 - ✅ **ESM + CJS** - Works in browser and Node.js
@@ -268,7 +268,7 @@ CSV-like format for uniform data:
 }
 
 // ASON 2.0
-@items [2]{id,name,price}
+items:[2]{id,name,price}
 1|Laptop|999
 2|Mouse|29
 ```
