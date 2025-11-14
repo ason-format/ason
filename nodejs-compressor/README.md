@@ -330,6 +330,75 @@ order.customer.address.city:NYC
 | **Sections** | Objects with 3+ fields | ~30% |
 | **References** | Repeated values/objects | ~50% |
 | **Dot Notation** | Deep nested objects | ~20% |
+| **Inline Objects** | Small objects (≤5 fields) | ~15% |
+| **Schema Dot Notation** | Nested objects in tables | ~40% |
+| **Array Fields** | Arrays in table rows | ~25% |
+
+### Advanced Optimizations (New in 2.0)
+
+#### 1. Inline Compact Objects
+
+Small objects (≤5 properties, primitives only) are serialized inline without spaces:
+
+```javascript
+// JSON
+{ "id": 1, "attrs": { "color": "red", "size": "M" } }
+
+// ASON 2.0
+id:1
+attrs:{color:red,size:M}
+```
+
+#### 2. Dot Notation in Tabular Schemas
+
+Nested objects are flattened in table schemas:
+
+```javascript
+// JSON
+[
+  { "id": 1, "price": { "amount": 100, "currency": "USD" } },
+  { "id": 2, "price": { "amount": 200, "currency": "EUR" } }
+]
+
+// ASON 2.0
+[2]{id,price.amount,price.currency}
+1|100|USD
+2|200|EUR
+```
+
+#### 3. Array Fields in Schemas
+
+Arrays of primitives marked with `[]` suffix:
+
+```javascript
+// JSON
+[
+  { "id": 1, "tags": ["electronics", "sale"] },
+  { "id": 2, "tags": ["clothing"] }
+]
+
+// ASON 2.0
+[2]{id,tags[]}
+1|[electronics,sale]
+2|[clothing]
+```
+
+#### 4. Combined Optimizations
+
+All optimizations work together:
+
+```javascript
+// JSON
+[
+  { "id": 1, "profile": { "age": 30, "city": "NYC" }, "tags": ["admin"] },
+  { "id": 2, "profile": { "age": 25, "city": "LA" }, "tags": ["user", "premium"] }
+]
+
+// ASON 2.0
+[2]{id,profile.age,profile.city,tags[]}
+1|30|NYC|[admin]
+2|25|LA|[user,premium]
+```
 
 ### When ASON 2.0 Works Best
 

@@ -439,7 +439,7 @@
                     <div class="p-4">
                         <div class="text-xs font-semibold mb-2 flex items-center justify-between">
                             <span>JSON</span>
-                            <span class="text-gray-500">384 tokens</span>
+                            <span class="text-gray-500">119 tokens</span>
                         </div>
                         <pre class="text-xs font-mono leading-relaxed overflow-auto"><code>{
   "order": {
@@ -470,36 +470,24 @@
                     <div class="p-4">
                         <div class="text-xs font-semibold mb-2 flex items-center justify-between">
                             <span>ASON 2.0</span>
-                            <span class="text-green-600">180 tokens (53% reduction)</span>
+                            <span class="text-green-600">68 tokens (42.9% reduction)</span>
                         </div>
-                        <pre class="text-xs font-mono leading-relaxed overflow-auto"><code><span class="bg-gray-200 text-gray-900 px-1 rounded">$def:</span>
- <span class="bg-green-100 text-green-900 px-1 rounded">$addr</span>:123 Main St
-<span class="bg-gray-200 text-gray-900 px-1 rounded">$data:</span>
-<span class="bg-orange-100 text-orange-900 px-1 rounded">order.id</span>:ORD-2024-001
-<span class="bg-purple-100 text-purple-900 px-1 rounded">@order.customer</span>
- name:Alice Johnson
- email:alice@example.com
-<span class="bg-purple-100 text-purple-900 px-1 rounded">@order.billing</span>
- street:<span class="bg-green-100 text-green-900 px-1 rounded">$addr</span>
- city:San Francisco
- zip:94102
-<span class="bg-purple-100 text-purple-900 px-1 rounded">@order.shipping</span>
- street:<span class="bg-green-100 text-green-900 px-1 rounded">$addr</span>
- city:San Francisco
- zip:94102
-<span class="bg-purple-100 text-purple-900 px-1 rounded">@order.items</span> <span class="bg-blue-100 text-blue-900 px-1 rounded">[2]{id,product,price}</span>
- 1|Laptop|999
- 2|Mouse|29</code></pre>
+                        <pre class="text-xs font-mono leading-relaxed overflow-auto"><code><span class="bg-purple-100 text-purple-900 px-1 rounded">@order</span>
+ <span class="text-blue-600">id</span>:"ORD-2024-001"
+ <span class="text-blue-600">customer</span>:<span class="bg-pink-100 text-pink-900 px-1 rounded">{name:"Alice Johnson",email:"alice@example.com"}</span>
+ <span class="text-blue-600">billing</span>:<span class="bg-pink-100 text-pink-900 px-1 rounded">{street:"123 Main St",city:"San Francisco",zip:"94102"}</span>
+ <span class="text-blue-600">shipping</span>:<span class="bg-pink-100 text-pink-900 px-1 rounded">{street:"123 Main St",city:"San Francisco",zip:"94102"}</span>
+ <span class="text-blue-600">items</span>:<span class="bg-blue-100 text-blue-900 px-1 rounded">[2]{id,product,price}</span>
+  1|Laptop|999
+  2|Mouse|29</code></pre>
                     </div>
                 </div>
                 <div class="px-4 py-3 bg-blue-50 border-t text-xs">
                     <div class="flex items-center gap-4 flex-wrap">
                         <span class="font-medium">Components:</span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-gray-200 text-gray-900 px-1.5 py-0.5 rounded text-xs">$def / $data</span> <span class="text-gray-600">- Structure</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded text-xs">[N]{keys}</span> <span class="text-gray-600">- Tabular</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-purple-100 text-purple-900 px-1.5 py-0.5 rounded text-xs">@section</span> <span class="text-gray-600">- Sections</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-orange-100 text-orange-900 px-1.5 py-0.5 rounded text-xs">a.b.c</span> <span class="text-gray-600">- Dot Notation</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-green-100 text-green-900 px-1.5 py-0.5 rounded text-xs">$var</span> <span class="text-gray-600">- References</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-purple-100 text-purple-900 px-1.5 py-0.5 rounded text-xs">@section</span> <span class="text-gray-600">- Named Section</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-pink-100 text-pink-900 px-1.5 py-0.5 rounded text-xs">{k:v}</span> <span class="text-gray-600">- Inline Objects</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded text-xs">[N]{keys}</span> <span class="text-gray-600">- Tabular Arrays</span></span>
                     </div>
                 </div>
             </div>
@@ -585,7 +573,7 @@
         </section>
 
         <!-- Tools & Extensions -->
-        <section class="max-w-7xl mx-auto px-4 py-12 border-t">
+        <section class="max-w-7xl mx-auto py-12 border-t">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold">Tools & Extensions</h2>
                 <a

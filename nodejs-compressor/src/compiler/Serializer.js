@@ -278,6 +278,32 @@ export class Serializer {
   }
 
   /**
+   * Gets a value from an object using dot notation.
+   *
+   * @private
+   * @param {Object} obj - Object to get value from
+   * @param {string} path - Property path (e.g., "price.amount")
+   * @returns {*} Value at path
+   */
+  getNestedValue(obj, path) {
+    if (!path.includes('.')) {
+      return obj[path];
+    }
+
+    const parts = path.split('.');
+    let current = obj;
+
+    for (const part of parts) {
+      if (current === null || current === undefined) {
+        return undefined;
+      }
+      current = current[part];
+    }
+
+    return current;
+  }
+
+  /**
    * Serializes a tabular array.
    *
    * @private
@@ -296,7 +322,18 @@ export class Serializer {
     // Data rows
     for (const obj of arr) {
       const values = schema.map(field => {
-        const value = obj[field];
+        // Check if field is an array field (ends with [])
+        const isArrayField = field.endsWith('[]');
+        const actualField = isArrayField ? field.slice(0, -2) : field;
+
+        // Handle dot notation in field names (e.g., price.amount)
+        const value = this.getNestedValue(obj, actualField);
+
+        // Serialize array fields as inline arrays
+        if (isArrayField && Array.isArray(value)) {
+          return this.serializeInlineArrayForTabular(value);
+        }
+
         return this.serializeTabularValue(value);
       });
 
@@ -304,6 +341,34 @@ export class Serializer {
     }
 
     return output.trimEnd();
+  }
+
+  /**
+   * Serializes an array for use in tabular context: [item1,item2]
+   *
+   * @private
+   * @param {Array} arr - Array to serialize
+   * @returns {string} Serialized inline array
+   */
+  serializeInlineArrayForTabular(arr) {
+    if (!arr || arr.length === 0) return '[]';
+
+    const items = arr.map(item => {
+      if (item === null || item === undefined) return 'null';
+      if (typeof item === 'boolean') return item ? 'true' : 'false';
+      if (typeof item === 'number') return String(item);
+      if (typeof item === 'string') {
+        // Quote if contains delimiter, comma, or brackets
+        if (item.includes(this.delimiter) || item.includes(',') ||
+            item.includes('[') || item.includes(']') || this.needsQuotes(item)) {
+          return JSON.stringify(item);
+        }
+        return item;
+      }
+      return JSON.stringify(item);
+    });
+
+    return '[' + items.join(',') + ']';
   }
 
   /**
@@ -340,6 +405,63 @@ export class Serializer {
   }
 
   /**
+   * Checks if an object should be serialized inline.
+   *
+   * @private
+   * @param {Object} obj - Object to check
+   * @returns {boolean} True if should be inline
+   */
+  shouldSerializeInline(obj) {
+    const entries = Object.entries(obj);
+
+    // Only inline if small (max 5 properties)
+    if (entries.length > 5) return false;
+
+    // Only inline if all values are primitives (no nested objects/arrays)
+    return entries.every(([key, value]) => {
+      return value === null ||
+             value === undefined ||
+             typeof value === 'boolean' ||
+             typeof value === 'number' ||
+             typeof value === 'string';
+    });
+  }
+
+  /**
+   * Serializes an object inline: {key:value,key2:value2}
+   *
+   * @private
+   * @param {Object} obj - Object to serialize
+   * @returns {string} Inline serialized object
+   */
+  serializeInlineObject(obj) {
+    const entries = Object.entries(obj);
+
+    const parts = entries.map(([key, value]) => {
+      // Don't quote keys unless necessary
+      const serializedKey = this.needsQuotes(key) ? JSON.stringify(key) : key;
+
+      // Serialize value (will be primitive)
+      let serializedValue;
+      if (value === null || value === undefined) {
+        serializedValue = 'null';
+      } else if (typeof value === 'boolean') {
+        serializedValue = value ? 'true' : 'false';
+      } else if (typeof value === 'number') {
+        serializedValue = String(value);
+      } else if (typeof value === 'string') {
+        serializedValue = this.serializeString(value);
+      } else {
+        serializedValue = String(value);
+      }
+
+      return `${serializedKey}:${serializedValue}`;
+    });
+
+    return `{${parts.join(',')}}`;
+  }
+
+  /**
    * Serializes an object.
    *
    * @private
@@ -356,6 +478,12 @@ export class Serializer {
 
     if (useSections) {
       return this.serializeWithSections(obj, level, path);
+    }
+
+    // Check if this should be inline
+    // Only use inline for objects that are NOT at root level
+    if (level > 0 && this.shouldSerializeInline(obj)) {
+      return this.serializeInlineObject(obj);
     }
 
     // Regular object serialization

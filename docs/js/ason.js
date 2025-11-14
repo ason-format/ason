@@ -1436,9 +1436,9 @@ var Parser = class {
       this.advance();
       this.skipWhitespace();
     }
-    if (this.check([TokenType.LBRACKET, TokenType.LBRACE]) || this.isAtEnd() === false && !this.check([TokenType.SECTION, TokenType.IDENTIFIER])) {
+    if (this.check([TokenType.LBRACKET, TokenType.LBRACE, TokenType.DASH]) || this.isAtEnd() === false && !this.check([TokenType.SECTION, TokenType.IDENTIFIER])) {
       const nextToken = this.peek();
-      const isInlineValue = nextToken && (nextToken.type === TokenType.LBRACKET || nextToken.type === TokenType.LBRACE || nextToken.type === TokenType.NUMBER || nextToken.type === TokenType.STRING || nextToken.type === TokenType.BOOLEAN || nextToken.type === TokenType.NULL);
+      const isInlineValue = nextToken && (nextToken.type === TokenType.LBRACKET || nextToken.type === TokenType.LBRACE || nextToken.type === TokenType.DASH || nextToken.type === TokenType.NUMBER || nextToken.type === TokenType.STRING || nextToken.type === TokenType.BOOLEAN || nextToken.type === TokenType.NULL);
       if (isInlineValue) {
         const value = this.parseValue();
         this.resolveReferences(value);
@@ -1585,8 +1585,19 @@ var Parser = class {
     this.expect(TokenType.LBRACE);
     const fields = [];
     while (!this.check(TokenType.RBRACE)) {
-      const field = this.expect(TokenType.IDENTIFIER);
-      fields.push(field.value);
+      let fieldName = "";
+      while (this.check([TokenType.IDENTIFIER, TokenType.DOT])) {
+        const token = this.advance();
+        fieldName += token.value;
+      }
+      if (this.check(TokenType.LBRACKET)) {
+        this.advance();
+        this.expect(TokenType.RBRACKET);
+        fieldName += "[]";
+      }
+      if (fieldName) {
+        fields.push(fieldName);
+      }
       if (this.check(TokenType.COMMA)) {
         this.advance();
       }
@@ -1630,7 +1641,15 @@ var Parser = class {
     if (values.length === 0) return null;
     const row = new ObjectNode();
     for (let i = 0; i < fields.length; i++) {
-      row.setProperty(fields[i], values[i] || new PrimitiveNode(null));
+      const fieldName = fields[i];
+      const value = values[i] || new PrimitiveNode(null);
+      const isArrayField = fieldName.endsWith("[]");
+      const actualField = isArrayField ? fieldName.slice(0, -2) : fieldName;
+      if (actualField.includes(".")) {
+        this.setNestedProperty(row, actualField, value);
+      } else {
+        row.setProperty(actualField, value);
+      }
     }
     return row;
   }
@@ -2504,6 +2523,28 @@ var TabularAnalyzer = class {
     };
   }
   /**
+   * Flattens an object's keys to dot notation and marks arrays with [].
+   *
+   * @private
+   * @param {Object} obj - Object to flatten
+   * @param {string} prefix - Key prefix
+   * @returns {string[]} Flattened keys
+   */
+  flattenKeys(obj, prefix = "") {
+    const keys = [];
+    for (const [key, value] of Object.entries(obj)) {
+      const fullKey = prefix ? `${prefix}.${key}` : key;
+      if (Array.isArray(value)) {
+        keys.push(fullKey + "[]");
+      } else if (value && typeof value === "object") {
+        keys.push(...this.flattenKeys(value, fullKey));
+      } else {
+        keys.push(fullKey);
+      }
+    }
+    return keys;
+  }
+  /**
    * Analyzes array schema and uniformity.
    *
    * @private
@@ -2514,12 +2555,12 @@ var TabularAnalyzer = class {
     const signatureCounts = /* @__PURE__ */ new Map();
     const signatureKeys = /* @__PURE__ */ new Map();
     for (const item of array) {
-      const originalKeys = Object.keys(item);
-      const sortedKeys = [...originalKeys].sort();
+      const flattenedKeys = this.flattenKeys(item);
+      const sortedKeys = [...flattenedKeys].sort();
       const signature = sortedKeys.join("|");
       signatureCounts.set(signature, (signatureCounts.get(signature) || 0) + 1);
       if (!signatureKeys.has(signature)) {
-        signatureKeys.set(signature, originalKeys);
+        signatureKeys.set(signature, flattenedKeys);
       }
     }
     let maxCount = 0;
@@ -2535,20 +2576,60 @@ var TabularAnalyzer = class {
     return { schema, uniformity };
   }
   /**
-   * Checks if all values in array are primitive (suitable for tabular).
+   * Checks if all values in array are primitive, simple objects, or primitive arrays (suitable for tabular).
    *
    * @private
    * @param {Array<Object>} array - Array of objects
    * @param {string[]} schema - Field names
-   * @returns {boolean} True if all primitive
+   * @returns {boolean} True if all primitive or flattenable
    */
   areAllValuesPrimitive(array, schema) {
     return array.every(
       (obj) => schema.every((field) => {
-        const value = obj[field];
-        return value === null || value === void 0 || typeof value === "string" || typeof value === "number" || typeof value === "boolean";
+        const actualField = field.endsWith("[]") ? field.slice(0, -2) : field;
+        const value = this.getNestedValue(obj, actualField);
+        if (value === null || value === void 0 || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+          return true;
+        }
+        if (Array.isArray(value)) {
+          if (value.length > 10) return false;
+          return value.every(
+            (item) => item === null || item === void 0 || typeof item === "string" || typeof item === "number" || typeof item === "boolean"
+          );
+        }
+        if (value && typeof value === "object") {
+          const nestedKeys = Object.keys(value);
+          if (nestedKeys.length > 5) return false;
+          return nestedKeys.every((nestedKey) => {
+            const nestedValue = value[nestedKey];
+            return nestedValue === null || nestedValue === void 0 || typeof nestedValue === "string" || typeof nestedValue === "number" || typeof nestedValue === "boolean";
+          });
+        }
+        return false;
       })
     );
+  }
+  /**
+   * Gets a value from an object using dot notation.
+   *
+   * @private
+   * @param {Object} obj - Object to get value from
+   * @param {string} path - Property path (e.g., "price.amount")
+   * @returns {*} Value at path
+   */
+  getNestedValue(obj, path) {
+    if (!path.includes(".")) {
+      return obj[path];
+    }
+    const parts = path.split(".");
+    let current = obj;
+    for (const part of parts) {
+      if (current === null || current === void 0) {
+        return void 0;
+      }
+      current = current[part];
+    }
+    return current;
   }
   /**
    * Calculates token savings of using tabular format.
@@ -2838,6 +2919,28 @@ var Serializer = class {
     return output.trimEnd();
   }
   /**
+   * Gets a value from an object using dot notation.
+   *
+   * @private
+   * @param {Object} obj - Object to get value from
+   * @param {string} path - Property path (e.g., "price.amount")
+   * @returns {*} Value at path
+   */
+  getNestedValue(obj, path) {
+    if (!path.includes(".")) {
+      return obj[path];
+    }
+    const parts = path.split(".");
+    let current = obj;
+    for (const part of parts) {
+      if (current === null || current === void 0) {
+        return void 0;
+      }
+      current = current[part];
+    }
+    return current;
+  }
+  /**
    * Serializes a tabular array.
    *
    * @private
@@ -2852,12 +2955,40 @@ var Serializer = class {
     output += "\n";
     for (const obj of arr) {
       const values = schema.map((field) => {
-        const value = obj[field];
+        const isArrayField = field.endsWith("[]");
+        const actualField = isArrayField ? field.slice(0, -2) : field;
+        const value = this.getNestedValue(obj, actualField);
+        if (isArrayField && Array.isArray(value)) {
+          return this.serializeInlineArrayForTabular(value);
+        }
         return this.serializeTabularValue(value);
       });
       output += this._sp(level) + values.join(this.delimiter) + "\n";
     }
     return output.trimEnd();
+  }
+  /**
+   * Serializes an array for use in tabular context: [item1,item2]
+   *
+   * @private
+   * @param {Array} arr - Array to serialize
+   * @returns {string} Serialized inline array
+   */
+  serializeInlineArrayForTabular(arr) {
+    if (!arr || arr.length === 0) return "[]";
+    const items = arr.map((item) => {
+      if (item === null || item === void 0) return "null";
+      if (typeof item === "boolean") return item ? "true" : "false";
+      if (typeof item === "number") return String(item);
+      if (typeof item === "string") {
+        if (item.includes(this.delimiter) || item.includes(",") || item.includes("[") || item.includes("]") || this.needsQuotes(item)) {
+          return JSON.stringify(item);
+        }
+        return item;
+      }
+      return JSON.stringify(item);
+    });
+    return "[" + items.join(",") + "]";
   }
   /**
    * Serializes a value for tabular context (CSV-like).
@@ -2881,6 +3012,47 @@ var Serializer = class {
     return JSON.stringify(value);
   }
   /**
+   * Checks if an object should be serialized inline.
+   *
+   * @private
+   * @param {Object} obj - Object to check
+   * @returns {boolean} True if should be inline
+   */
+  shouldSerializeInline(obj) {
+    const entries = Object.entries(obj);
+    if (entries.length > 5) return false;
+    return entries.every(([key, value]) => {
+      return value === null || value === void 0 || typeof value === "boolean" || typeof value === "number" || typeof value === "string";
+    });
+  }
+  /**
+   * Serializes an object inline: {key:value,key2:value2}
+   *
+   * @private
+   * @param {Object} obj - Object to serialize
+   * @returns {string} Inline serialized object
+   */
+  serializeInlineObject(obj) {
+    const entries = Object.entries(obj);
+    const parts = entries.map(([key, value]) => {
+      const serializedKey = this.needsQuotes(key) ? JSON.stringify(key) : key;
+      let serializedValue;
+      if (value === null || value === void 0) {
+        serializedValue = "null";
+      } else if (typeof value === "boolean") {
+        serializedValue = value ? "true" : "false";
+      } else if (typeof value === "number") {
+        serializedValue = String(value);
+      } else if (typeof value === "string") {
+        serializedValue = this.serializeString(value);
+      } else {
+        serializedValue = String(value);
+      }
+      return `${serializedKey}:${serializedValue}`;
+    });
+    return `{${parts.join(",")}}`;
+  }
+  /**
    * Serializes an object.
    *
    * @private
@@ -2894,6 +3066,9 @@ var Serializer = class {
     const useSections = this.sectionPlan && level === 0;
     if (useSections) {
       return this.serializeWithSections(obj, level, path);
+    }
+    if (level > 0 && this.shouldSerializeInline(obj)) {
+      return this.serializeInlineObject(obj);
     }
     let output = level === 0 ? "" : "\n";
     for (const [key, value] of Object.entries(obj)) {

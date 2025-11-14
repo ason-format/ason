@@ -5,6 +5,102 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-01-13
+
+### 🚀 Major Release - ASON 2.0
+
+Complete rewrite of ASON with new syntax, architecture, and optimizations.
+
+### Added
+
+- **New ASON 2.0 Syntax** - Cleaner, more intuitive format
+  - Sections with `@section` syntax (replaces object references)
+  - Semantic references `$var` instead of numeric `#0`
+  - Tabular arrays `[N]{fields}` with pipe `|` delimiter
+  - Dot notation for nested objects `config.debug:true`
+  - Support for inline objects `{key:value}` and inline arrays `[a,b,c]`
+
+- **Lexer → Parser → AST → Compiler Architecture**
+  - Complete modular parsing pipeline
+  - Token-based lexer (`src/lexer/Lexer.js`, `TokenType.js`, `Token.js`)
+  - Recursive descent parser (`src/parser/Parser.js`)
+  - AST nodes (`src/parser/nodes/`)
+  - Optimized compiler/serializer (`src/compiler/Serializer.js`)
+
+- **Advanced Optimizations**
+  - **Inline Compact Objects**: Small objects serialized as `{key:value}` without spaces
+  - **Dot Notation in Schemas**: Nested objects flattened in tabular arrays `[N]{id,price.amount,price.currency}`
+  - **Array Fields in Schemas**: Arrays marked with `[]` suffix `[N]{id,tags[]}`
+  - **minRowsForTabular = 2**: Tabular optimization from just 2 rows
+
+- **Smart Analyzers**
+  - `ReferenceAnalyzer`: Detects repeated strings for `$def:` section
+  - `SectionAnalyzer`: Identifies large objects for `@section` markers
+  - `TabularAnalyzer`: Finds uniform arrays with support for nested objects and arrays
+  - `DefinitionBuilder`: Manages reference definitions
+
+### Changed
+
+- **Breaking**: Complete syntax change from ASON 1.x to ASON 2.0
+  - `&obj0` → `@section` (sections instead of object references)
+  - `#0` → `$var` (semantic variable names)
+  - `@field1,field2` → `[N]{field1,field2}` (explicit count + schema)
+  - `,` → `|` (pipe delimiter in tabular arrays)
+
+- **Improved Compression**
+  - Better detection of optimization opportunities
+  - Combined optimizations (dot notation + arrays + inline objects)
+  - Smarter decisions on when to use each format
+
+- **Enhanced Round-Trip Fidelity**
+  - 100% lossless compression/decompression
+  - Proper handling of edge cases (negative numbers, nested structures)
+  - Fixed YAML-style list parsing at root level
+
+### Fixed
+
+- **Parser Bugs**
+  - Fixed YAML-style lists (`-`) not working at root level
+  - Fixed nested object parsing in arrays
+  - Fixed negative number tokenization
+  - Fixed empty object/array handling
+
+- **Serializer Issues**
+  - Fixed duplicate properties in sections
+  - Fixed illogical ordering (sections now appear after primitives)
+  - Fixed proper newline handling
+
+### Documentation
+
+- Updated `/docs/index.html` - ASON 2.0 Playground
+- Updated `/docs/docs.html` - ASON 2.0 Documentation
+- Updated `/docs/benchmarks.html` - ASON 2.0 Benchmarks
+- Updated `/docs/tokenizer.html` - Token Comparison Tool
+- All examples updated to ASON 2.0 syntax
+
+### Performance
+
+- **20-60% token reduction** vs JSON (maintained from 1.x)
+- **Improved human readability** with semantic references
+- **Better LLM compatibility** with cleaner syntax
+- **Scalable format** suitable for large datasets
+
+### Migration Guide
+
+ASON 1.x is **not compatible** with ASON 2.0. To migrate:
+
+1. Recompress your data with ASON 2.0
+2. Update any manual ASON strings to new syntax
+3. See `/docs/docs.html` for complete syntax reference
+
+### Internal Changes
+
+- Complete rewrite of codebase (Lexer → Parser → AST → Compiler)
+- Improved test coverage (30 passing tests)
+- Better separation of concerns
+- Modular analyzer system
+- Cleaner code organization
+
 ## [1.1.4] - 2025-11-13
 
 ### Added

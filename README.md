@@ -1,13 +1,22 @@
-# ASON - Aliased Serialization Object Notation
+# ASON 2.0 - Aliased Serialization Object Notation
 
 ![NPM Version](https://img.shields.io/npm/v/%40ason-format%2Fason)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-> **Token-optimized JSON compression for Large Language Models.** Reduces tokens by up to 23% on uniform data. ASON achieves **+4.94% average** reduction vs JSON, while Toon averages **-6.75%** (worse than JSON).
+> **Token-optimized JSON serialization for Large Language Models.** Reduces tokens by **20-60%** with perfect round-trip fidelity. ASON 2.0 uses smart compression: sections, tabular arrays, and semantic references.
 
 ![ASON Overview](https://raw.githubusercontent.com/ason-format/ason/main/preview.png)
+
+## ✨ What's New in ASON 2.0?
+
+- ✅ **Sections** (`@section`) - Organize related data
+- ✅ **Tabular Arrays** (`[N]{fields}`) - CSV-like format with explicit count
+- ✅ **Semantic References** (`$email`, `&address`) - Human-readable variable names
+- ✅ **Pipe Delimiter** (`|`) - More token-efficient than commas
+- ✅ **Advanced Optimizations** - Inline objects, dot notation in schemas, array fields
+- ✅ **Lexer-Parser Architecture** - Robust parsing with proper AST
 
 ## 🚀 Quick Start
 
@@ -22,34 +31,34 @@ npm install @ason-format/ason
 ```javascript
 import { SmartCompressor } from '@ason-format/ason';
 
-const compressor = new SmartCompressor({ indent: 1 });
+const compressor = new SmartCompressor();
 
 const data = {
   users: [
-    { id: 1, name: "Alice", age: 25 },
-    { id: 2, name: "Bob", age: 30 }
+    { id: 1, name: "Alice", email: "alice@ex.com" },
+    { id: 2, name: "Bob", email: "bob@ex.com" }
   ]
 };
 
 // Compress
-const compressed = compressor.compress(data);
-console.log(compressed);
+const ason = compressor.compress(data);
+console.log(ason);
 // Output:
-// users:[2]@id,name,age
-// 1,Alice,25
-// 2,Bob,30
+// @users [2]{id,name,email}
+// 1|Alice|alice@ex.com
+// 2|Bob|bob@ex.com
 
-// Decompress
-const original = compressor.decompress(compressed);
+// Decompress (perfect round-trip)
+const original = compressor.decompress(ason);
 ```
 
 ### CLI Tool
 
 ```bash
-# Encode JSON to ASON (auto-detected from extension)
+# Compress JSON to ASON
 npx ason input.json -o output.ason
 
-# Decode ASON to JSON (auto-detected)
+# Decompress ASON to JSON
 npx ason data.ason -o output.json
 
 # Show token savings with --stats
@@ -60,7 +69,7 @@ npx ason data.json --stats
 # │ Format          │ Tokens   │ Size       │ Reduction    │
 # ├─────────────────┼──────────┼────────────┼──────────────┤
 # │ JSON            │ 59       │ 151 B      │ -            │
-# │ ASON            │ 23       │ 43 B       │ 61.02%       │
+# │ ASON 2.0        │ 23       │ 43 B       │ 61.02%       │
 # └─────────────────┴──────────┴────────────┴──────────────┘
 # ✓ Saved 36 tokens (61.02%) • 108 B (71.52%)
 

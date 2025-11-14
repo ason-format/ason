@@ -163,9 +163,9 @@ export class Parser {
       this.skipWhitespace();
     }
 
-    // Check if entire document is a single value (array or inline object)
-    // This handles cases like: [1,2,3] or {a:1,b:2} at root level
-    if (this.check([TokenType.LBRACKET, TokenType.LBRACE]) ||
+    // Check if entire document is a single value (array, inline object, or YAML-style list)
+    // This handles cases like: [1,2,3] or {a:1,b:2} or - item at root level
+    if (this.check([TokenType.LBRACKET, TokenType.LBRACE, TokenType.DASH]) ||
         (this.isAtEnd() === false &&
          !this.check([TokenType.SECTION, TokenType.IDENTIFIER]))) {
       // Check if it's a single inline value at root
@@ -173,6 +173,7 @@ export class Parser {
       const isInlineValue = nextToken && (
         nextToken.type === TokenType.LBRACKET ||
         nextToken.type === TokenType.LBRACE ||
+        nextToken.type === TokenType.DASH ||
         nextToken.type === TokenType.NUMBER ||
         nextToken.type === TokenType.STRING ||
         nextToken.type === TokenType.BOOLEAN ||
@@ -400,8 +401,23 @@ export class Parser {
 
     const fields = [];
     while (!this.check(TokenType.RBRACE)) {
-      const field = this.expect(TokenType.IDENTIFIER);
-      fields.push(field.value);
+      // Read field name (can include dots: price.amount and arrays: tags[])
+      let fieldName = '';
+      while (this.check([TokenType.IDENTIFIER, TokenType.DOT])) {
+        const token = this.advance();
+        fieldName += token.value;
+      }
+
+      // Check for array marker []
+      if (this.check(TokenType.LBRACKET)) {
+        this.advance(); // consume [
+        this.expect(TokenType.RBRACKET); // expect ]
+        fieldName += '[]';
+      }
+
+      if (fieldName) {
+        fields.push(fieldName);
+      }
 
       if (this.check(TokenType.COMMA)) {
         this.advance();
@@ -464,7 +480,19 @@ export class Parser {
     // Create object from fields and values
     const row = new ObjectNode();
     for (let i = 0; i < fields.length; i++) {
-      row.setProperty(fields[i], values[i] || new PrimitiveNode(null));
+      const fieldName = fields[i];
+      const value = values[i] || new PrimitiveNode(null);
+
+      // Check if field is an array field (ends with [])
+      const isArrayField = fieldName.endsWith('[]');
+      const actualField = isArrayField ? fieldName.slice(0, -2) : fieldName;
+
+      // Use dot notation if field contains dots (e.g., price.amount)
+      if (actualField.includes('.')) {
+        this.setNestedProperty(row, actualField, value);
+      } else {
+        row.setProperty(actualField, value);
+      }
     }
 
     return row;
