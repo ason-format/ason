@@ -1,4 +1,4 @@
-import { SmartCompressor } from "./ason.js";
+import { SmartCompressor } from "./ason.js?v=2.0.0";
 
 // DOM elements - Mode tabs
 const compressModeTab = document.getElementById("compressModeTab");
@@ -293,8 +293,8 @@ function createInteractiveOutput(compressed) {
   const lines = compressed.split("\n");
   const container = document.createElement("div");
 
-  // Parse value dictionary from $def section
-  const valueDictionary = new Map();
+  // Parse references from $def section
+  const references = new Map();
   let inDefSection = false;
 
   lines.forEach((line) => {
@@ -302,164 +302,154 @@ function createInteractiveOutput(compressed) {
       inDefSection = true;
     } else if (line.trim() === "$data:") {
       inDefSection = false;
-    } else if (inDefSection && line.match(/^\s+(#\d+):(.+)$/)) {
-      const match = line.match(/^\s+(#\d+):(.+)$/);
+    } else if (inDefSection && line.match(/^\s+(\$\w+):(.+)$/)) {
+      const match = line.match(/^\s+(\$\w+):(.+)$/);
       const ref = match[1];
       let value = match[2];
       // Remove quotes if present
       if (value.startsWith('"') && value.endsWith('"')) {
         value = value.slice(1, -1);
       }
-      valueDictionary.set(ref, value);
-    }
-  });
-
-  // Also parse inline dictionary (first occurrence with value #N)
-  lines.forEach((line) => {
-    // Match patterns like: value #0 or "value" #0
-    const inlineMatch = line.match(/[:\s]([^#\s]+|"[^"]+")(\s+)(#\d+)/g);
-    if (inlineMatch) {
-      inlineMatch.forEach((match) => {
-        const parts = match.match(/[:\s]([^#\s]+|"[^"]+")(\s+)(#\d+)/);
-        if (parts) {
-          let value = parts[1].trim();
-          const ref = parts[3];
-          if (value.startsWith('"') && value.endsWith('"')) {
-            value = value.slice(1, -1);
-          }
-          if (!valueDictionary.has(ref)) {
-            valueDictionary.set(ref, value);
-          }
-        }
-      });
+      references.set(ref, value);
     }
   });
 
   lines.forEach((line, idx) => {
     const lineDiv = document.createElement("div");
+    let html = line;
     let processed = false;
 
-    // Schema line
-    if (line.startsWith("$schema:")) {
-      const parts = line.split(":");
-      lineDiv.innerHTML =
-        `<span class="hover-part bg-gray-200 text-gray-900 px-1 rounded" data-tooltip="Format version">$schema</span>:` +
-        `<span class="hover-part text-blue-600" data-tooltip="Version number">${parts[1]}</span>`;
-      processed = true;
-    }
-    // Def marker
-    else if (line.startsWith("$def:")) {
-      lineDiv.innerHTML = `<span class="hover-part bg-gray-200 text-gray-900 px-1 rounded" data-tooltip="Definitions section: repeated objects and schemas">$def:</span>`;
-      processed = true;
-    }
-    // Data marker
-    else if (line.startsWith("$data:")) {
-      lineDiv.innerHTML = `<span class="hover-part bg-gray-200 text-gray-900 px-1 rounded" data-tooltip="Data section: actual compressed content">$data:</span>`;
-      processed = true;
-    }
-    // Uniform array with [N]@keys pattern
-    else if (line.match(/^(\s*)(\w+)\[(\d+)\]@(.+):$/)) {
-      const match = line.match(/^(\s*)(\w+)\[(\d+)\]@(.+):$/);
-      const indent = match[1];
-      const key = match[2];
-      const count = match[3];
-      const keys = match[4];
-
-      lineDiv.innerHTML =
-        `${indent}<span class="hover-part text-green-600" data-tooltip="Array name">${key}</span>` +
-        `<span class="hover-part text-orange-600" data-tooltip="Number of elements">[${count}]</span>` +
-        `<span class="hover-part text-red-600" data-tooltip="Uniform array indicator">@</span>` +
-        `<span class="hover-part text-blue-600" data-tooltip="Common object keys">${keys}</span>:`;
-      processed = true;
-    }
-    // Path flattening (properties with dots like order.customer.name)
-    else if (line.match(/^(\s*)([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)+):/)) {
-      const match = line.match(/^(\s*)([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)+):(.*)$/);
-      const indent = match[1];
-      const path = match[2];
-      let value = match[3];
-
-      // Highlight special values in the path flattening line
-      if (value.includes("&obj")) {
-        value = value.replace(
-          /(&obj\d+)/g,
-          `<span class="hover-part text-purple-600" data-tooltip="Reference to defined object">$1</span>`,
-        );
-      }
-      if (value.includes("#")) {
-        value = value.replace(
-          /(#\d+)/g,
-          (match) => {
-            const dictValue = valueDictionary.get(match) || "Unknown value";
-            return `<span class="hover-part text-green-600" data-tooltip="Value: ${dictValue}">${match}</span>`;
-          }
-        );
-      }
-      if (value.match(/\[(\d+)\]@/)) {
-        value = value.replace(
-          /(\[(\d+)\]@([\w,]+))/g,
-          `<span class="hover-part text-blue-600" data-tooltip="Uniform array">$1</span>`,
-        );
-      }
-
-      lineDiv.innerHTML =
-        `${indent}<span class="hover-part text-orange-600" data-tooltip="Flattened nested path">${path}</span>:${value}`;
-      processed = true;
+    // $def: section marker
+    if (line.trim() === "$def:") {
+      lineDiv.innerHTML = `<span class="hover-part bg-gray-200 text-gray-900 px-1 rounded" data-tooltip="Definitions section: reusable references">$def:</span>`;
+      container.appendChild(lineDiv);
+      return;
     }
 
-    if (!processed) {
-      // Process inline patterns in any line
-      let html = line;
-
-      // Value dictionary references #N
-      if (html.includes("#")) {
-        html = html.replace(
-          /(#\d+)/g,
-          (match) => {
-            const dictValue = valueDictionary.get(match) || "Unknown value";
-            return `<span class="hover-part text-green-600" data-tooltip="Value: ${dictValue}">${match}</span>`;
-          }
-        );
-        processed = true;
-      }
-
-      // Object reference &obj0
-      if (html.includes("&obj")) {
-        html = html.replace(
-          /(&obj\d+)/g,
-          `<span class="hover-part text-purple-600" data-tooltip="Reference to defined object">$1</span>`,
-        );
-        processed = true;
-      }
-
-      // Only highlight keys at the start of a line (after whitespace)
-      // This avoids false positives with dates like "2025-01-10T10:30:00Z"
-      if (html.match(/^\s+\w+:/)) {
-        html = html.replace(
-          /^(\s+)(\w+):/,
-          `$1<span class="hover-part text-green-600" data-tooltip="Object key">$2</span>:`,
-        );
-        processed = true;
-      }
-
-      // Arrays at start of line (with optional indent)
-      if (html.match(/^\s*\[.*\]$/)) {
-        html = html.replace(
-          /^(\s*)(\[.*?\])$/,
-          `$1<span class="hover-part text-cyan-600" data-tooltip="Value array">$2</span>`,
-        );
-        processed = true;
-      }
-
-      if (processed) {
-        lineDiv.innerHTML = html;
-      } else {
-        lineDiv.textContent = line;
-      }
+    // $data: section marker
+    if (line.trim() === "$data:") {
+      lineDiv.innerHTML = `<span class="hover-part bg-gray-200 text-gray-900 px-1 rounded" data-tooltip="Data section: main content">$data:</span>`;
+      container.appendChild(lineDiv);
+      return;
     }
 
+    // Section marker: @section or @section.nested
+    if (line.match(/^(\s*)(@[\w.]+)/)) {
+      html = html.replace(/^(\s*)(@[\w.]+)(.*)$/, (full, indent, section, rest) => {
+        let result = indent + `<span class="hover-part bg-purple-100 text-purple-900 px-1 rounded" data-tooltip="Section: organized group of data">${section}</span>`;
+
+        // Check if there's a tabular array marker after the section
+        if (rest.match(/\s*\[(\d+)\]\{([^}]+)\}/)) {
+          result += rest.replace(/\s*(\[(\d+)\]\{([^}]+)\})/, (m, full, count, schema) => {
+            return ` <span class="hover-part bg-blue-100 text-blue-900 px-1 rounded" data-tooltip="Tabular array: ${count} items with fields: ${schema}">${full}</span>`;
+          });
+        } else {
+          result += rest;
+        }
+
+        return result;
+      });
+      lineDiv.innerHTML = html;
+      container.appendChild(lineDiv);
+      return;
+    }
+
+    // Tabular array declaration: [N]{field1,field2,...}
+    if (line.match(/^(\s*)\[(\d+)\]\{([^}]+)\}/)) {
+      html = html.replace(/^(\s*)(\[(\d+)\]\{([^}]+)\})/, (full, indent, tabular, count, schema) => {
+        return indent + `<span class="hover-part bg-blue-100 text-blue-900 px-1 rounded" data-tooltip="Tabular array: ${count} rows with fields: ${schema}">${tabular}</span>`;
+      });
+      lineDiv.innerHTML = html;
+      container.appendChild(lineDiv);
+      return;
+    }
+
+    // Tabular data row (contains pipe delimiter)
+    if (line.includes('|') && !line.includes(':')) {
+      const parts = line.split('|');
+      const indent = line.match(/^(\s*)/)[1];
+      lineDiv.innerHTML = indent + parts.map((part, i) =>
+        `<span class="hover-part bg-gray-100 text-gray-700 px-1 rounded" data-tooltip="Field ${i + 1}">${part.trim()}</span>`
+      ).join('<span class="text-gray-400">|</span>');
+      container.appendChild(lineDiv);
+      return;
+    }
+
+    // Dot notation: a.b.c:value
+    if (line.match(/^(\s*)([a-zA-Z_][\w.]*\.[a-zA-Z_][\w.]*):(.*)$/)) {
+      html = html.replace(/^(\s*)([a-zA-Z_][\w.]*\.[a-zA-Z_][\w.]*):(.*)$/, (full, indent, path, value) => {
+        return indent +
+          `<span class="hover-part bg-orange-100 text-orange-900 px-1 rounded" data-tooltip="Dot notation: flattened nested path">${path}</span>:` +
+          highlightValue(value, references);
+      });
+      lineDiv.innerHTML = html;
+      container.appendChild(lineDiv);
+      return;
+    }
+
+    // Property: key:value (at any indent level, including root)
+    if (line.match(/^(\s*)([a-zA-Z_]\w*):(.*)$/)) {
+      html = html.replace(/^(\s*)([a-zA-Z_]\w*):(.*)$/, (full, indent, key, value) => {
+        return indent +
+          `<span class="hover-part text-blue-600" data-tooltip="Property key">${key}</span>:` +
+          highlightValue(value, references);
+      });
+      lineDiv.innerHTML = html;
+      container.appendChild(lineDiv);
+      return;
+    }
+
+    // Reference definition in $def: section
+    if (line.match(/^\s+(\$\w+):(.+)$/)) {
+      html = html.replace(/^(\s+)(\$\w+):(.+)$/, (full, indent, ref, value) => {
+        return indent +
+          `<span class="hover-part bg-green-100 text-green-900 px-1 rounded" data-tooltip="Reference definition">${ref}</span>:` +
+          highlightValue(value, references);
+      });
+      lineDiv.innerHTML = html;
+      container.appendChild(lineDiv);
+      return;
+    }
+
+    // Array item marker: -
+    if (line.match(/^(\s+)-\s*/)) {
+      html = html.replace(/^(\s+)-\s*(.*)$/, (full, indent, content) => {
+        return indent +
+          `<span class="hover-part text-gray-500" data-tooltip="Array item">-</span> ` +
+          highlightValue(content, references);
+      });
+      lineDiv.innerHTML = html;
+      container.appendChild(lineDiv);
+      return;
+    }
+
+    // Default: just show the line
+    lineDiv.textContent = line;
     container.appendChild(lineDiv);
   });
+
+  // Helper function to highlight values
+  function highlightValue(value, references) {
+    let result = value;
+
+    // Reference: $var
+    result = result.replace(/(\$\w+)/g, (match) => {
+      const refValue = references.get(match) || 'reference';
+      return `<span class="hover-part bg-green-100 text-green-900 px-1 rounded" data-tooltip="Reference: ${refValue}">${match}</span>`;
+    });
+
+    // Inline object: {key:value,...}
+    result = result.replace(/(\{[^}]+\})/g, (match) => {
+      return `<span class="hover-part bg-pink-100 text-pink-900 px-1 rounded" data-tooltip="Inline compact object">${match}</span>`;
+    });
+
+    // Inline array: [item1,item2,...]
+    result = result.replace(/(\[[^\]]+\])/g, (match) => {
+      return `<span class="hover-part bg-cyan-100 text-cyan-900 px-1 rounded" data-tooltip="Inline array">${match}</span>`;
+    });
+
+    return result;
+  }
 
   // Add event listeners to all hover parts
   container.querySelectorAll(".hover-part").forEach((part) => {

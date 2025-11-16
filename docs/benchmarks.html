@@ -3,33 +3,79 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="favicon.png" type="image/png" />
-        <title>Benchmarks</title>
+        <link rel="icon" href="icon.svg" type="image/svg+xml" />
+        <title>ASON 2.0 Benchmarks - Real-World Token Reduction Results vs JSON & TOON</title>
+
+        <!-- SEO Meta Tags -->
+        <meta name="description" content="ASON 2.0 benchmarks showing 20-60% token reduction vs JSON. Compare real-world performance with GPT-4, Claude, and other LLM tokenizers. ASON vs TOON vs JSON comparison." />
+        <meta name="keywords" content="ASON benchmarks, token reduction results, JSON vs ASON, TOON vs ASON, LLM token comparison, GPT-4 tokens, Claude tokens, API cost savings" />
+        <meta name="author" content="ASON Project Contributors" />
+        <link rel="canonical" href="https://ason-format.github.io/ason/benchmarks.html" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://ason-format.github.io/ason/benchmarks.html" />
+        <meta property="og:title" content="ASON 2.0 Benchmarks - Real-World Token Reduction Results" />
+        <meta property="og:description" content="See how ASON reduces LLM tokens by 20-60% compared to JSON and TOON formats across real-world datasets." />
+        <meta property="og:image" content="https://ason-format.github.io/ason/icon.svg" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:url" content="https://ason-format.github.io/ason/benchmarks.html" />
+        <meta name="twitter:title" content="ASON 2.0 Benchmarks - Real-World Token Reduction Results" />
+        <meta name="twitter:description" content="See how ASON reduces LLM tokens by 20-60% compared to JSON and TOON formats across real-world datasets." />
+        <meta name="twitter:image" content="https://ason-format.github.io/ason/icon.svg" />
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/lucide@latest"></script>
+        <style>
+            .fixed-header {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background: white;
+                border-bottom: 1px solid #e5e7eb;
+            }
+        </style>
     </head>
     <body class="bg-white text-gray-900 antialiased">
+        <header class="fixed-header">
+            <div class="max-w-7xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                        <img src="icon.svg" alt="ASON Logo" class="w-8 h-8" />
+                        <div>
+                            <h1 class="text-base font-semibold">ASON 2.0</h1>
+                            <p class="text-xs text-gray-600">Token-optimized for LLMs</p>
+                        </div>
+                    </a>
+                    <nav class="flex flex-wrap gap-2">
+                        <a
+                            href="index.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                            Playground
+                        </a>
+                        <a
+                            href="docs.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
+                        >
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                            Docs
+                        </a>
+                        <a
+                            href="benchmarks.html"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md bg-gray-50"
+                        >
+                            <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                            Benchmarks
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
         <div class="max-w-7xl mx-auto px-4 py-6">
-            <header class="border-b pb-4 mb-6">
-                <h1 class="text-xl font-semibold mb-1">Benchmarks</h1>
-                <p class="text-sm text-gray-600">ASON vs Toon vs JSON</p>
-                <nav class="mt-3 flex flex-wrap gap-2">
-                    <a
-                        href="index.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                        Back
-                    </a>
-                    <a
-                        href="docs.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="book-open" class="w-4 h-4"></i>
-                        Documentation
-                    </a>
-                </nav>
-            </header>
 
             <!-- Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -73,6 +119,31 @@
                         average difference
                     </div>
                 </div>
+            </div>
+
+            <!-- Model Selector -->
+            <div class="mb-6 flex items-center justify-between bg-white border rounded-lg p-4">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="cpu" class="w-5 h-5 text-gray-600"></i>
+                    <div>
+                        <div class="text-sm font-medium text-gray-900 mb-1">
+                            Tokenizer Model
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            Select which model's tokenizer to use for counting
+                        </div>
+                    </div>
+                </div>
+                <select
+                    id="modelSelector"
+                    class="px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                >
+                    <option value="estimated" selected>Estimated (4 chars/token - same as playground)</option>
+                    <option value="gpt-4">GPT-4 (Real tokenizer)</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Real tokenizer)</option>
+                    <option value="claude-3-opus">Claude 3 Opus (Heuristic ~3.2 chars/token)</option>
+                    <option value="claude-3-sonnet">Claude 3 Sonnet (Heuristic ~3.2 chars/token)</option>
+                </select>
             </div>
 
             <!-- Benchmarks Table -->
@@ -236,13 +307,13 @@ cd nodejs-compressor && node benchmarks/toon-comparison-benchmark.js</pre
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
                 <!-- Project Info -->
                 <div>
-                    <h3 class="text-sm font-semibold mb-3">ASON Project</h3>
+                    <h3 class="text-sm font-semibold mb-3">ASON 2.0 Project</h3>
                     <p class="text-xs text-gray-600 mb-2">
                         Token-optimized JSON compression format for Large
                         Language Models
                     </p>
                     <p class="text-xs text-gray-500">
-                        Up to 23% token reduction • Beats Toon • Open Source
+                        20-60% token reduction • 100% lossless • Open Source
                     </p>
                 </div>
 
@@ -345,6 +416,7 @@ cd nodejs-compressor && node benchmarks/toon-comparison-benchmark.js</pre
             </div>
         </footer>
 
+        <!-- Import gpt-tokenizer and benchmarks -->
         <script type="module" src="js/benchmarks.js"></script>
         <script>
             lucide.createIcons();

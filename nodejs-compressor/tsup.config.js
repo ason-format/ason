@@ -9,8 +9,8 @@ export default defineConfig({
   splitting: false,
   sourcemap: false,
   clean: true,
-  minify: true,
-  treeshake: true,
+  minify: false, // Disabled - can break complex parsing logic
+  treeshake: false, // Disabled - can remove needed code
   outDir: "dist",
   external: ["gpt-tokenizer", "@toon-format/toon"],
   async onSuccess() {

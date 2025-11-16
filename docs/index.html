@@ -3,11 +3,62 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="favicon.png" type="image/png" />
-        <title>JSON Compressor</title>
+        <link rel="icon" href="icon.svg" type="image/svg+xml" />
+        <title>ASON 2.0 Playground - Interactive JSON Compressor for LLMs</title>
+
+        <!-- SEO Meta Tags -->
+        <meta name="description" content="Interactive playground for ASON 2.0 - Token-optimized JSON compression format. Reduce LLM token usage by 20-60% with lossless compression. Try it now with real-time conversion and token counting." />
+        <meta name="keywords" content="ASON, JSON compression, LLM tokens, token optimization, GPT tokens, Claude tokens, JSON to ASON, API cost reduction, token counter" />
+        <meta name="author" content="ASON Project Contributors" />
+        <link rel="canonical" href="https://ason-format.github.io/ason/" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ason-format.github.io/ason/" />
+        <meta property="og:title" content="ASON 2.0 - Token-Optimized JSON Compression for LLMs" />
+        <meta property="og:description" content="Reduce LLM API costs by 20-60% with ASON's lossless JSON compression. Interactive playground with real-time token counting." />
+        <meta property="og:image" content="https://ason-format.github.io/ason/icon.svg" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://ason-format.github.io/ason/" />
+        <meta name="twitter:title" content="ASON 2.0 - Token-Optimized JSON Compression for LLMs" />
+        <meta name="twitter:description" content="Reduce LLM API costs by 20-60% with ASON's lossless JSON compression. Interactive playground with real-time token counting." />
+        <meta name="twitter:image" content="https://ason-format.github.io/ason/icon.svg" />
+
+        <!-- Structured Data -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "ASON 2.0 Playground",
+          "description": "Interactive JSON to ASON converter with token optimization for Large Language Models",
+          "url": "https://ason-format.github.io/ason/",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "author": {
+            "@type": "Organization",
+            "name": "ASON Project"
+          }
+        }
+        </script>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/lucide@latest"></script>
         <style>
+            /* Fixed header */
+            .fixed-header {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background: white;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
             .interactive-output {
                 font-family: "Courier New", monospace;
                 line-height: 1.8;
@@ -84,45 +135,36 @@
         </style>
     </head>
     <body class="bg-white text-gray-900 antialiased">
+        <!-- Fixed Header -->
+        <header class="fixed-header">
+            <div class="max-w-7xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                        <img src="icon.svg" alt="ASON Logo" class="w-8 h-8" />
+                        <div>
+                            <h1 class="text-base font-semibold">ASON 2.0</h1>
+                            <p class="text-xs text-gray-600">Token-optimized for LLMs</p>
+                        </div>
+                    </a>
+                    <nav class="flex flex-wrap gap-2">
+                        <a href="index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50 bg-gray-50">
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                            <span class="hidden sm:inline">Playground</span>
+                        </a>
+                        <a href="docs.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50">
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                            <span class="hidden sm:inline">Docs</span>
+                        </a>
+                        <a href="benchmarks.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                            <span class="hidden sm:inline">Benchmarks</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
         <div class="max-w-7xl mx-auto px-4 py-6">
-            <header class="border-b pb-4 mb-6">
-                <h1 class="text-xl font-semibold mb-1">
-                    ASON - Aliased Serialization Object Notation
-                </h1>
-                <p class="text-sm text-gray-600">
-                    Token-optimized JSON compression format for LLMs
-                </p>
-                <nav class="mt-3 flex flex-wrap gap-2">
-                    <a
-                        href="docs.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="book-open" class="w-4 h-4"></i>
-                        Documentation
-                    </a>
-                    <a
-                        href="benchmarks.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-                        Benchmarks
-                    </a>
-                    <a
-                        href="tokenizer.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50 bg-blue-50 border-blue-200"
-                    >
-                        <i data-lucide="hash" class="w-4 h-4"></i>
-                        Token Comparison
-                    </a>
-                    <a
-                        href="tools.html"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-md hover:bg-gray-50"
-                    >
-                        <i data-lucide="puzzle" class="w-4 h-4"></i>
-                        Tools & Extensions
-                    </a>
-                </nav>
-            </header>
 
             <div class="border rounded-lg overflow-hidden mb-4">
                 <div class="flex border-b">
@@ -252,7 +294,7 @@
                             <textarea
                                 id="decompressInput"
                                 class="w-full h-64 md:h-96 p-3 text-xs font-mono resize-none focus:outline-none"
-                                placeholder="users:[4]@id,name,email,age,active&#10;1,Alice,alice@example.com,25,true&#10;..."
+                                placeholder="@users [2]{id,name,email}&#10;1|Alice|alice@example.com&#10;2|Bob|bob@example.com"
                             ></textarea>
                         </div>
 
@@ -303,116 +345,120 @@
 
         <!-- How it Works Section -->
         <section class="border-t pt-12 pb-12">
-            <h2 class="text-lg font-semibold mb-6">How ASON Compresses Your Data</h2>
+            <h2 class="text-lg font-semibold mb-6">How ASON 2.0 Compresses Your Data</h2>
 
-            <!-- Sections Explanation -->
-            <div class="border rounded-lg p-4 mb-6 bg-gray-50">
-                <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded bg-gray-200 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="file-text" class="w-4 h-4 text-gray-700"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Document Structure -->
+                <div class="border rounded-lg overflow-hidden">
+                    <div class="px-4 py-2 bg-gray-50 border-b flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-gray-200 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-gray-700"></i>
+                        </div>
+                        <h3 class="text-sm font-semibold">Document Structure</h3>
                     </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-semibold mb-2">Document Structure</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                            <div>
-                                <span class="bg-gray-200 text-gray-900 px-2 py-1 rounded font-mono">$def:</span>
-                                <p class="text-gray-600 mt-1">Definitions section where repeated objects and array schemas are declared once and referenced later.</p>
-                            </div>
-                            <div>
-                                <span class="bg-gray-200 text-gray-900 px-2 py-1 rounded font-mono">$data:</span>
-                                <p class="text-gray-600 mt-1">Data section containing the actual compressed content using the definitions from above.</p>
-                            </div>
+                    <div class="p-4 space-y-3 text-xs">
+                        <div>
+                            <div class="font-mono mb-1"><span class="bg-gray-200 text-gray-900 px-1.5 py-0.5 rounded">$def:</span></div>
+                            <p class="text-gray-600 leading-relaxed">Definitions section where repeated values are declared once and referenced later using semantic variables ($var).</p>
+                        </div>
+                        <div>
+                            <div class="font-mono mb-1"><span class="bg-gray-200 text-gray-900 px-1.5 py-0.5 rounded">$data:</span></div>
+                            <p class="text-gray-600 leading-relaxed">Data section containing the actual compressed content using the definitions from above.</p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <!-- Uniform Arrays -->
-                <div class="border rounded-lg p-4">
-                    <div class="flex items-start gap-3 mb-3">
-                        <div class="w-8 h-8 rounded bg-blue-50 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="table" class="w-4 h-4 text-blue-600"></i>
+                <!-- Tabular Arrays -->
+                <div class="border rounded-lg overflow-hidden">
+                    <div class="px-4 py-2 bg-gray-50 border-b flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-blue-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="table" class="w-3.5 h-3.5 text-blue-700"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-semibold mb-1">Uniform Arrays</h3>
-                            <p class="text-xs text-gray-600">Extract common keys to a header</p>
+                            <h3 class="text-sm font-semibold">Tabular Arrays</h3>
+                            <p class="text-xs text-gray-600">CSV-like format with pipe delimiter</p>
                         </div>
                     </div>
-                    <div class="border rounded p-3 font-mono text-xs">
+                    <div class="p-4 font-mono text-xs">
                         <div class="mb-2 text-gray-500">// Instead of repeating keys:</div>
                         <div class="mb-3 text-gray-700">[{id:1,name:"Alice"},{id:2,name:"Bob"}]</div>
-                        <div class="mb-2 text-gray-500">// ASON uses:</div>
+                        <div class="mb-2 text-gray-500">// ASON 2.0 uses:</div>
                         <div>
-                            <span class="bg-blue-100 text-blue-900 px-1 rounded">[2]@id,name</span>
+                            <span class="bg-blue-100 text-blue-900 px-1 rounded">[2]{id,name}</span>
                             <br/>
-                            <span>1,Alice</span>
+                            <span>1|Alice</span>
                             <br/>
-                            <span>2,Bob</span>
+                            <span>2|Bob</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Value Dictionary -->
-                <div class="border rounded-lg p-4">
-                    <div class="flex items-start gap-3 mb-3">
-                        <div class="w-8 h-8 rounded bg-green-50 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="hash" class="w-4 h-4 text-green-600"></i>
+                <!-- Semantic References -->
+                <div class="border rounded-lg overflow-hidden">
+                    <div class="px-4 py-2 bg-gray-50 border-b flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-green-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="hash" class="w-3.5 h-3.5 text-green-700"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-semibold mb-1">Value Dictionary</h3>
-                            <p class="text-xs text-gray-600">Deduplicate repeated values</p>
+                            <h3 class="text-sm font-semibold">Semantic References</h3>
+                            <p class="text-xs text-gray-600">Human-readable variable names</p>
                         </div>
                     </div>
-                    <div class="border rounded p-3 font-mono text-xs">
-                        <div class="mb-2 text-gray-500">// First occurrence:</div>
+                    <div class="p-4 font-mono text-xs">
+                        <div class="mb-2 text-gray-500">// Define in $def:</div>
                         <div class="mb-3">
-                            email:<span class="bg-green-100 text-green-900 px-1 rounded">user@example.com #0</span>
+                            <span class="bg-green-100 text-green-900 px-1 rounded">$email</span>:user@example.com
                         </div>
-                        <div class="mb-2 text-gray-500">// Subsequent uses:</div>
+                        <div class="mb-2 text-gray-500">// Use in $data:</div>
                         <div>
-                            shipping.email:<span class="bg-green-100 text-green-900 px-1 rounded">#0</span>
+                            customer.email:<span class="bg-green-100 text-green-900 px-1 rounded">$email</span>
+                            <br/>
+                            billing.email:<span class="bg-green-100 text-green-900 px-1 rounded">$email</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Object References -->
-                <div class="border rounded-lg p-4">
-                    <div class="flex items-start gap-3 mb-3">
-                        <div class="w-8 h-8 rounded bg-purple-50 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="link" class="w-4 h-4 text-purple-600"></i>
+                <!-- Sections -->
+                <div class="border rounded-lg overflow-hidden">
+                    <div class="px-4 py-2 bg-gray-50 border-b flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-purple-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="folder" class="w-3.5 h-3.5 text-purple-700"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-semibold mb-1">Object References</h3>
-                            <p class="text-xs text-gray-600">Reuse repeated structures</p>
+                            <h3 class="text-sm font-semibold">Sections</h3>
+                            <p class="text-xs text-gray-600">Organize related data with @section</p>
                         </div>
                     </div>
-                    <div class="border rounded p-3 font-mono text-xs">
-                        <div class="mb-2 text-gray-500">// Define once:</div>
+                    <div class="p-4 font-mono text-xs">
+                        <div class="mb-2 text-gray-500">// Group object properties:</div>
                         <div class="mb-3">
-                            <span class="bg-purple-100 text-purple-900 px-1 rounded">&obj0</span>:{city:"SF",zip:"94102"}
-                        </div>
-                        <div class="mb-2 text-gray-500">// Reference everywhere:</div>
-                        <div>
-                            billing:<span class="bg-purple-100 text-purple-900 px-1 rounded">&obj0</span>
+                            <span class="bg-purple-100 text-purple-900 px-1 rounded">@customer</span>
                             <br/>
-                            shipping:<span class="bg-purple-100 text-purple-900 px-1 rounded">&obj0</span>
+                            <span class="ml-2">name:Alice</span>
+                            <br/>
+                            <span class="ml-2">email:alice@ex.com</span>
+                        </div>
+                        <div class="mb-2 text-gray-500">// Or tabular arrays:</div>
+                        <div>
+                            <span class="bg-purple-100 text-purple-900 px-1 rounded">@users</span> [2]{id,name}
+                            <br/>
+                            <span class="ml-2">1|Alice</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Path Flattening -->
-                <div class="border rounded-lg p-4">
-                    <div class="flex items-start gap-3 mb-3">
-                        <div class="w-8 h-8 rounded bg-orange-50 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="minimize-2" class="w-4 h-4 text-orange-600"></i>
+                <div class="border rounded-lg overflow-hidden">
+                    <div class="px-4 py-2 bg-gray-50 border-b flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-orange-100 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="minimize-2" class="w-3.5 h-3.5 text-orange-700"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-semibold mb-1">Path Flattening</h3>
+                            <h3 class="text-sm font-semibold">Path Flattening</h3>
                             <p class="text-xs text-gray-600">Collapse nested single properties</p>
                         </div>
                     </div>
-                    <div class="border rounded p-3 font-mono text-xs">
+                    <div class="p-4 font-mono text-xs">
                         <div class="mb-2 text-gray-500">// Instead of:</div>
                         <div class="mb-3 text-gray-700">user:{profile:{settings:{theme:"dark"}}}</div>
                         <div class="mb-2 text-gray-500">// ASON flattens to:</div>
@@ -433,63 +479,73 @@
                     <div class="p-4">
                         <div class="text-xs font-semibold mb-2 flex items-center justify-between">
                             <span>JSON</span>
-                            <span class="text-gray-500">384 tokens</span>
+                            <span class="text-gray-500">184 tokens</span>
                         </div>
                         <pre class="text-xs font-mono leading-relaxed overflow-auto"><code>{
-  "order": {
-    "id": "ORD-2024-001",
-    "customer": {
-      "name": "Alice Johnson",
-      "email": "alice@example.com"
-    },
-    "billing": {
-      "street": "123 Main St",
+  "company": {
+    "name": "TechCorp Inc",
+    "headquarters": {
+      "street": "123 Innovation Drive",
       "city": "San Francisco",
-      "zip": "94102"
+      "zip": "94105"
+    }
+  },
+  "offices": [
+    {
+      "location": "West Coast",
+      "address": {
+        "street": "123 Innovation Drive",
+        "city": "San Francisco",
+        "zip": "94105"
+      }
     },
-    "shipping": {
-      "street": "123 Main St",
-      "city": "San Francisco",
-      "zip": "94102"
-    },
-    "items": [
-      {"id": 1, "product": "Laptop", "price": 999},
-      {"id": 2, "product": "Mouse", "price": 29}
-    ]
-  }
+    {
+      "location": "Branch Office",
+      "address": {
+        "street": "123 Innovation Drive",
+        "city": "San Francisco",
+        "zip": "94105"
+      }
+    }
+  ],
+  "contacts": [
+    {"name": "John Doe", "email": "john@techcorp.com", "office": "123 Innovation Drive"},
+    {"name": "Jane Smith", "email": "jane@techcorp.com", "office": "123 Innovation Drive"}
+  ]
 }</code></pre>
                     </div>
 
                     <!-- ASON Side -->
                     <div class="p-4">
                         <div class="text-xs font-semibold mb-2 flex items-center justify-between">
-                            <span>ASON</span>
-                            <span class="text-green-600">287 tokens (25% reduction)</span>
+                            <span>ASON 2.0</span>
+                            <span class="text-green-600">107 tokens (42.0% reduction)</span>
                         </div>
                         <pre class="text-xs font-mono leading-relaxed overflow-auto"><code><span class="bg-gray-200 text-gray-900 px-1 rounded">$def:</span>
- <span class="bg-purple-100 text-purple-900 px-1 rounded">&obj0</span>:
-  street:123 Main St
-  city:San Francisco
-  zip:94102
+ <span class="bg-green-100 text-green-900 px-1 rounded">$street</span>:"123 Innovation Drive"
+ <span class="bg-green-100 text-green-900 px-1 rounded">$city</span>:"San Francisco"
+
 <span class="bg-gray-200 text-gray-900 px-1 rounded">$data:</span>
-<span class="bg-orange-100 text-orange-900 px-1 rounded">order.id</span>:ORD-2024-001
-<span class="bg-orange-100 text-orange-900 px-1 rounded">order.customer.name</span>:<span class="bg-green-100 text-green-900 px-1 rounded">Alice Johnson #0</span>
-<span class="bg-orange-100 text-orange-900 px-1 rounded">order.customer.email</span>:alice@example.com
-<span class="bg-orange-100 text-orange-900 px-1 rounded">order.billing</span>:<span class="bg-purple-100 text-purple-900 px-1 rounded">&obj0</span>
-<span class="bg-orange-100 text-orange-900 px-1 rounded">order.shipping</span>:<span class="bg-purple-100 text-purple-900 px-1 rounded">&obj0</span>
-<span class="bg-orange-100 text-orange-900 px-1 rounded">order.items</span>:<span class="bg-blue-100 text-blue-900 px-1 rounded">[2]@id,product,price</span>
- 1,Laptop,999
- 2,Mouse,29</code></pre>
+<span class="text-blue-600">offices</span>:<span class="bg-blue-100 text-blue-900 px-1 rounded">[2]{location,address.street,address.city,address.zip}</span>
+"West Coast"|<span class="bg-green-100 text-green-900 px-1 rounded">$street</span>|<span class="bg-green-100 text-green-900 px-1 rounded">$city</span>|"94105"
+"Branch Office"|<span class="bg-green-100 text-green-900 px-1 rounded">$street</span>|<span class="bg-green-100 text-green-900 px-1 rounded">$city</span>|"94105"
+<span class="text-blue-600">contacts</span>:<span class="bg-blue-100 text-blue-900 px-1 rounded">[2]{name,email,office}</span>
+"John Doe"|"john@techcorp.com"|<span class="bg-green-100 text-green-900 px-1 rounded">$street</span>
+"Jane Smith"|"jane@techcorp.com"|<span class="bg-green-100 text-green-900 px-1 rounded">$street</span>
+
+<span class="bg-purple-100 text-purple-900 px-1 rounded">@company</span>
+ <span class="text-blue-600">name</span>:"TechCorp Inc"
+ <span class="text-blue-600">headquarters</span>:<span class="bg-pink-100 text-pink-900 px-1 rounded">{street:"123 Innovation Drive",city:"San Francisco",zip:"94105"}</span></code></pre>
                     </div>
                 </div>
                 <div class="px-4 py-3 bg-blue-50 border-t text-xs">
                     <div class="flex items-center gap-4 flex-wrap">
                         <span class="font-medium">Components:</span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-gray-200 text-gray-900 px-1.5 py-0.5 rounded text-xs">$def / $data</span> <span class="text-gray-600">- Sections</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded text-xs">[N]@keys</span> <span class="text-gray-600">- Arrays</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-purple-100 text-purple-900 px-1.5 py-0.5 rounded text-xs">&obj0</span> <span class="text-gray-600">- References</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-orange-100 text-orange-900 px-1.5 py-0.5 rounded text-xs">a.b.c</span> <span class="text-gray-600">- Paths</span></span>
-                        <span class="inline-flex items-center gap-1"><span class="bg-green-100 text-green-900 px-1.5 py-0.5 rounded text-xs">#0</span> <span class="text-gray-600">- Values</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-gray-200 text-gray-900 px-1.5 py-0.5 rounded text-xs">$def/$data</span> <span class="text-gray-600">- Sections</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-green-100 text-green-900 px-1.5 py-0.5 rounded text-xs">$var</span> <span class="text-gray-600">- References</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded text-xs">[N]{a.b.c}</span> <span class="text-gray-600">- Tabular + Dot Notation</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-purple-100 text-purple-900 px-1.5 py-0.5 rounded text-xs">@section</span> <span class="text-gray-600">- Named Section</span></span>
+                        <span class="inline-flex items-center gap-1"><span class="bg-pink-100 text-pink-900 px-1.5 py-0.5 rounded text-xs">{k:v}</span> <span class="text-gray-600">- Inline Objects</span></span>
                     </div>
                 </div>
             </div>
@@ -497,7 +553,7 @@
 
         <!-- Features Section -->
         <section class="border-t pt-12 pb-8">
-            <h2 class="text-lg font-semibold mb-6">Why Choose ASON?</h2>
+            <h2 class="text-lg font-semibold mb-6">Why Choose ASON 2.0?</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
@@ -508,7 +564,7 @@
                         <h3 class="text-sm font-semibold">Zero Configuration</h3>
                     </div>
                     <p class="text-xs text-gray-600 leading-relaxed">
-                        No setup required. ASON automatically detects patterns and optimizes compression without any manual configuration.
+                        No setup required. ASON 2.0 automatically detects patterns and optimizes compression without any manual configuration.
                     </p>
                 </div>
 
@@ -520,7 +576,7 @@
                         <h3 class="text-sm font-semibold">Perfect Fidelity</h3>
                     </div>
                     <p class="text-xs text-gray-600 leading-relaxed">
-                        Lossless round-trip guaranteed. Your data structure and values remain exactly as they were after decompression.
+                        100% lossless round-trip guaranteed. Your data structure and values remain exactly as they were after decompression.
                     </p>
                 </div>
 
@@ -532,7 +588,7 @@
                         <h3 class="text-sm font-semibold">Proven Results</h3>
                     </div>
                     <p class="text-xs text-gray-600 leading-relaxed">
-                        Up to 23% token reduction on uniform data with 4.94% average savings across diverse datasets. Consistently beats alternatives.
+                        20-60% token reduction with 35.9% average savings. Up to 60% on uniform data. Significantly reduces LLM API costs.
                     </p>
                 </div>
 
@@ -568,14 +624,115 @@
                         <h3 class="text-sm font-semibold">Smart Patterns</h3>
                     </div>
                     <p class="text-xs text-gray-600 leading-relaxed">
-                        Combines multiple techniques: uniform arrays, object references, value dictionaries, and path flattening automatically.
+                        Combines sections, tabular arrays, semantic references, and dot notation automatically. Pipe delimiter for maximum efficiency.
                     </p>
                 </div>
             </div>
         </section>
 
+        <!-- LLM Optimization -->
+        <section class="border-t pt-12 pb-8">
+            <!-- ROI Callout -->
+            <div class="mt-6 border-2 border-blue-200 rounded-lg overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div class="p-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="trending-down" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-base font-semibold text-gray-900 mb-2">Lower Costs, Better Results</h3>
+                            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                                Every token saved is money saved. ASON's design makes it easier for LLMs to parse correctly—reducing errors and improving response quality while cutting your API bills by 20-60%.
+                            </p>
+                            <div class="flex flex-wrap gap-4 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <span class="text-gray-600">Fewer hallucinations</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <span class="text-gray-600">More context in prompts</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <span class="text-gray-600">Faster responses</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQs Section -->
+        <section class="border-t pt-12 pb-8">
+            <h2 class="text-lg font-semibold mb-6">Frequently Asked Questions</h2>
+
+            <div class="space-y-3">
+                <details class="border rounded-lg group">
+                    <summary class="px-4 py-3 cursor-pointer flex items-center justify-between font-medium text-sm hover:bg-gray-50">
+                        <span>How much token reduction can I expect?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <div class="px-4 pb-3 text-xs text-gray-700 leading-relaxed border-t pt-3 mt-2">
+                        Token reduction varies by data structure. For uniform arrays (like lists of users or products), expect 40-60% reduction. For mixed structures, 20-40%. For deeply nested non-uniform data, 10-20%. The playground lets you test with your actual data.
+                    </div>
+                </details>
+
+                <details class="border rounded-lg group">
+                    <summary class="px-4 py-3 cursor-pointer flex items-center justify-between font-medium text-sm hover:bg-gray-50">
+                        <span>Is ASON lossless? Will I get my exact data back?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <div class="px-4 pb-3 text-xs text-gray-700 leading-relaxed border-t pt-3 mt-2">
+                        Yes, ASON is 100% lossless. All values, types, and structure are perfectly preserved. Round-trip compression and decompression guarantees your data remains identical.
+                    </div>
+                </details>
+
+                <details class="border rounded-lg group">
+                    <summary class="px-4 py-3 cursor-pointer flex items-center justify-between font-medium text-sm hover:bg-gray-50">
+                        <span>How does ASON compare to TOON format?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <div class="px-4 pb-3 text-xs text-gray-700 leading-relaxed border-t pt-3 mt-2">
+                        ASON consistently beats TOON by 5-15% on average. Key advantages: semantic references (<code class="bg-gray-100 px-1 rounded">$def</code>), pipe delimiters for clarity, and smarter detection of repeated values. See the <a href="benchmarks.html" class="text-blue-600 hover:underline">benchmarks page</a> for detailed comparisons.
+                    </div>
+                </details>
+
+                <details class="border rounded-lg group">
+                    <summary class="px-4 py-3 cursor-pointer flex items-center justify-between font-medium text-sm hover:bg-gray-50">
+                        <span>Why use pipes (|) instead of commas?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <div class="px-4 pb-3 text-xs text-gray-700 leading-relaxed border-t pt-3 mt-2">
+                        Pipes are unambiguous. Commas appear in numbers (1,000), dates (Jan 1, 2024), and natural text. This creates parsing confusion for LLMs. Pipes rarely appear in data, making field boundaries crystal clear.
+                    </div>
+                </details>
+
+                <details class="border rounded-lg group">
+                    <summary class="px-4 py-3 cursor-pointer flex items-center justify-between font-medium text-sm hover:bg-gray-50">
+                        <span>Can LLMs generate valid ASON format?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <div class="px-4 pb-3 text-xs text-gray-700 leading-relaxed border-t pt-3 mt-2">
+                        Yes! ASON's clear structure (pipe delimiters, quoted strings, explicit sections) makes it easy for LLMs to learn and generate. Provide examples in your prompt and models like GPT-4 and Claude can produce valid ASON output.
+                    </div>
+                </details>
+
+                <details class="border rounded-lg group">
+                    <summary class="px-4 py-3 cursor-pointer flex items-center justify-between font-medium text-sm hover:bg-gray-50">
+                        <span>Can I use ASON with any LLM provider?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <div class="px-4 pb-3 text-xs text-gray-700 leading-relaxed border-t pt-3 mt-2">
+                        Yes! ASON is just a text format. It works with OpenAI (GPT-3.5, GPT-4), Anthropic (Claude), Google (Gemini), local models (Llama), and any other LLM. Compress before sending, decompress after receiving.
+                    </div>
+                </details>
+            </div>
+        </section>
+
         <!-- Tools & Extensions -->
-        <section class="max-w-7xl mx-auto px-4 py-12 border-t">
+        <section class="max-w-7xl mx-auto py-12 border-t">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-semibold">Tools & Extensions</h2>
                 <a
@@ -652,13 +809,13 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
                 <!-- Project Info -->
                 <div>
-                    <h3 class="text-sm font-semibold mb-3">ASON Project</h3>
+                    <h3 class="text-sm font-semibold mb-3">ASON 2.0 Project</h3>
                     <p class="text-xs text-gray-600 mb-2">
                         Token-optimized JSON compression format for Large
                         Language Models
                     </p>
                     <p class="text-xs text-gray-500">
-                        Up to 23% token reduction • Beats Toon • Open Source
+                        20-60% token reduction • 100% lossless • Open Source
                     </p>
                 </div>
 

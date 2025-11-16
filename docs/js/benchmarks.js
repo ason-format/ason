@@ -1,4 +1,10 @@
-import { SmartCompressor } from "./ason.js";
+import { SmartCompressor } from "./ason.js?v=2.0.0";
+import { MultiModelTokenCounter } from "./tokenCounter.js";
+import { encode as encodeToonReal } from "./toon.js";
+
+// Initialize token counter
+const tokenCounter = new MultiModelTokenCounter();
+let currentModel = 'estimated'; // Default model - same as playground (chars/4)
 
 const benchmarks = [
   {
@@ -285,90 +291,23 @@ const benchmarks = [
   },
 ];
 
-function encodeToon(data) {
-  // Basic Toon encoder - simplified implementation
-  function encode(obj, indent = 0) {
-    const ind = "  ".repeat(indent);
-
-    if (obj === null) return "null";
-    if (typeof obj === "boolean") return obj.toString();
-    if (typeof obj === "number") return obj.toString();
-    if (typeof obj === "string") return obj;
-
-    if (Array.isArray(obj)) {
-      if (obj.length === 0) return "[]";
-
-      // Check if uniform array
-      if (
-        obj.length > 0 &&
-        obj.every(
-          (item) =>
-            typeof item === "object" && item !== null && !Array.isArray(item),
-        )
-      ) {
-        const firstKeys = Object.keys(obj[0]).sort();
-        const isUniform = obj.every((item) => {
-          const keys = Object.keys(item).sort();
-          return (
-            keys.length === firstKeys.length &&
-            keys.every((k, i) => k === firstKeys[i])
-          );
-        });
-
-        if (isUniform) {
-          let result = `items[${obj.length}]{${firstKeys.join(",")}}:\n`;
-          obj.forEach((item) => {
-            result +=
-              ind +
-              "  " +
-              firstKeys.map((k) => encode(item[k], 0)).join(",") +
-              "\n";
-          });
-          return result;
-        }
-      }
-
-      // Non-uniform array
-      let result = "[\n";
-      obj.forEach((item, i) => {
-        result += ind + "  " + encode(item, indent + 1);
-        if (i < obj.length - 1) result += ",";
-        result += "\n";
-      });
-      result += ind + "]";
-      return result;
-    }
-
-    // Object
-    const keys = Object.keys(obj);
-    if (keys.length === 0) return "{}";
-
-    let result = "";
-    keys.forEach((key, i) => {
-      if (i > 0) result += "\n";
-      result += ind + key + ": " + encode(obj[key], indent + 1);
-    });
-    return result;
-  }
-
-  return encode(data, 0);
+async function estimateTokens(text, model = currentModel) {
+  return await tokenCounter.count(text, model);
 }
 
-function estimateTokens(text) {
-  return Math.ceil(text.length / 4);
-}
-
-function runBenchmark(benchmark) {
-  const jsonStr = JSON.stringify(benchmark.data);
+async function runBenchmark(benchmark, model = currentModel) {
+  // Use formatted JSON (2 spaces) as baseline, same as playground
+  const jsonStr = JSON.stringify(benchmark.data, null, 2);
   const compressor = new SmartCompressor({ indent: 1, useReferences: true });
 
   try {
     const ourCompressed = compressor.compress(benchmark.data);
-    const toonCompressed = encodeToon(benchmark.data);
+    // Use TOON with 4 spaces indent (as shown in toon.format playground)
+    const toonCompressed = encodeToonReal(benchmark.data, { indent: 4, delimiter: ',' });
 
-    const jsonTokens = estimateTokens(jsonStr);
-    const ourTokens = estimateTokens(ourCompressed);
-    const toonTokens = estimateTokens(toonCompressed);
+    const jsonTokens = await estimateTokens(jsonStr, model);
+    const ourTokens = await estimateTokens(ourCompressed, model);
+    const toonTokens = await estimateTokens(toonCompressed, model);
 
     let roundTripOurs = false;
     try {
@@ -378,10 +317,8 @@ function runBenchmark(benchmark) {
       roundTripOurs = false;
     }
 
-    const scores = { ours: ourTokens, toon: toonTokens, json: jsonTokens };
-    const winner = Object.keys(scores).reduce((a, b) =>
-      scores[a] < scores[b] ? a : b,
-    );
+    // Compare only ASON vs Toon (exclude json from winner calculation)
+    const winner = ourTokens < toonTokens ? 'ours' : (toonTokens < ourTokens ? 'toon' : 'tie');
 
     return {
       name: benchmark.name,
@@ -420,7 +357,7 @@ function createBenchmarkRow(result, benchmarkData, index) {
     winnerDisplay = "Toon";
     winnerBadgeClass = "text-blue-700 bg-blue-50 border border-blue-200";
   } else {
-    winnerDisplay = "JSON";
+    winnerDisplay = "Tie";
     winnerBadgeClass = "text-gray-600 bg-gray-50 border border-gray-200";
   }
 
@@ -442,10 +379,10 @@ function createBenchmarkRow(result, benchmarkData, index) {
             <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-md ${winnerBadgeClass}">${winnerDisplay}</span>
         </td>
         <td class="px-4 py-3 text-center ${ourColor} font-medium font-mono text-sm">
-            ${ourReduction > 0 ? "+" : ""}${ourReduction}%
+            ${ourReduction > 0 ? "-" : "+"}${Math.abs(ourReduction)}%
         </td>
         <td class="px-4 py-3 text-center ${toonColor} font-medium font-mono text-sm">
-            ${toonReduction > 0 ? "+" : ""}${toonReduction}%
+            ${toonReduction > 0 ? "-" : "+"}${Math.abs(toonReduction)}%
         </td>
     `;
 
@@ -567,9 +504,31 @@ function updateSummary(results) {
     `ASON wins ${ourWins} out of ${validResults.length}`;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+async function runAllBenchmarks(model = currentModel) {
   const tableBody = document.getElementById("benchmarksTable");
-  const results = benchmarks.map(runBenchmark);
+
+  // Clear existing table
+  tableBody.innerHTML = '';
+
+  // Show loading indicator
+  const loadingRow = document.createElement("tr");
+  loadingRow.innerHTML = `
+    <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+      <div class="flex items-center justify-center gap-2">
+        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
+        <span>Counting tokens with ${model}...</span>
+      </div>
+    </td>
+  `;
+  tableBody.appendChild(loadingRow);
+
+  // Run benchmarks with current model
+  const results = await Promise.all(
+    benchmarks.map(benchmark => runBenchmark(benchmark, model))
+  );
+
+  // Clear loading
+  tableBody.innerHTML = '';
 
   // Populate table
   results.forEach((result, index) => {
@@ -602,6 +561,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize lucide icons
   lucide.createIcons();
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // Add model selector change handler
+  const modelSelector = document.getElementById("modelSelector");
+  if (modelSelector) {
+    modelSelector.addEventListener("change", async (e) => {
+      currentModel = e.target.value;
+      await runAllBenchmarks(currentModel);
+    });
+  }
+
+  // Run initial benchmarks
+  await runAllBenchmarks(currentModel);
 });
 
 // Old implementation kept for reference
