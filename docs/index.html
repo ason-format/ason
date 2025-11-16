@@ -630,120 +630,36 @@
             </div>
         </section>
 
-        <!-- LLM Optimization Features -->
+        <!-- LLM Optimization -->
         <section class="border-t pt-12 pb-8">
-            <h2 class="text-lg font-semibold mb-4">Why ASON Format is Optimal for LLMs</h2>
-            <p class="text-sm text-gray-600 mb-6">
-                ASON uses <code class="bg-gray-100 px-1 rounded">$def</code> + pipe delimiters, which is significantly better than comma-based formats for language model processing.
-            </p>
-
-            <!-- Comparison: ASON vs Comma-based -->
-            <div class="border rounded-lg overflow-hidden mb-6">
-                <div class="px-4 py-2 bg-gray-50 border-b">
-                    <h3 class="text-sm font-semibold">Format Comparison</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-0 divide-x">
-                    <div class="p-4">
-                        <div class="text-xs font-semibold text-green-700 mb-2">✓ ASON Format (Recommended)</div>
-                        <pre class="bg-gray-50 p-3 rounded text-xs font-mono overflow-auto"><span class="bg-gray-200 text-gray-900 px-1 rounded">$def:</span>
- <span class="bg-green-100 text-green-900 px-1 rounded">$category</span>:Electronics
-
-<span class="bg-gray-200 text-gray-900 px-1 rounded">$data:</span>
-products:<span class="bg-blue-100 text-blue-900 px-1 rounded">[3]{id,name,price,category}</span>
-1|"Product 1"|10.99|<span class="bg-green-100 text-green-900 px-1 rounded">$category</span>
-2|"Product 2"|21.98|"Clothing"
-3|"Product 3"|32.97|"Food"</pre>
-                    </div>
-                    <div class="p-4">
-                        <div class="text-xs font-semibold text-red-700 mb-2">✗ Comma-based Format</div>
-                        <pre class="bg-gray-50 p-3 rounded text-xs font-mono overflow-auto">products[3]{id,name,price,category}:
-1,Product 1,10.99,Electronics
-2,Product 2,21.98,Clothing
-3,Product 3,32.97,Food</pre>
-                        <p class="text-xs text-gray-600 mt-2">Issues: Commas ambiguous, no quotes, repetitive values</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Key Advantages -->
-            <div class="border rounded-lg overflow-hidden mb-6">
-                <div class="px-4 py-2 bg-gray-50 border-b">
-                    <h3 class="text-sm font-semibold">Why ASON Wins for LLMs</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-                    <!-- Pipe Delimiters -->
-                    <div>
-                        <h3 class="text-sm font-semibold mb-2">1. Unambiguous Pipe Delimiters</h3>
-                        <p class="text-xs text-gray-600 mb-3 leading-relaxed">
-                            Commas appear everywhere: numbers (1,000), dates, text. Pipes (<code class="bg-gray-100 px-1 rounded">|</code>) are rare and unambiguous.
-                        </p>
-                        <div class="bg-gray-50 rounded p-3 text-xs font-mono space-y-1">
-                            <div><span class="text-green-600">✓</span> <code>1|"Product 1"|10.99</code> <span class="text-gray-500">← clear boundaries</span></div>
-                            <div><span class="text-red-600">✗</span> <code>1,Product 1,10.99</code> <span class="text-gray-500">← is it 2 or 3 fields?</span></div>
+            <!-- ROI Callout -->
+            <div class="mt-6 border-2 border-blue-200 rounded-lg overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div class="p-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="trending-down" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-base font-semibold text-gray-900 mb-2">Lower Costs, Better Results</h3>
+                            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                                Every token saved is money saved. ASON's design makes it easier for LLMs to parse correctly—reducing errors and improving response quality while cutting your API bills by 20-60%.
+                            </p>
+                            <div class="flex flex-wrap gap-4 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <span class="text-gray-600">Fewer hallucinations</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <span class="text-gray-600">More context in prompts</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <span class="text-gray-600">Faster responses</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Explicit Strings -->
-                    <div>
-                        <h3 class="text-sm font-semibold mb-2">2. Explicit String Boundaries</h3>
-                        <p class="text-xs text-gray-600 mb-3 leading-relaxed">
-                            Quoted strings prevent type confusion. LLMs know exactly where text starts/ends.
-                        </p>
-                        <div class="bg-gray-50 rounded p-3 text-xs font-mono space-y-1">
-                            <div><span class="text-green-600">✓</span> <code>"Product 1"</code> <span class="text-gray-500">← clearly a string</span></div>
-                            <div><span class="text-green-600">✓</span> <code>false</code> <span class="text-gray-500">← clearly a boolean</span></div>
-                            <div><span class="text-red-600">✗</span> <code>Product 1</code> <span class="text-gray-500">← string or identifier?</span></div>
-                        </div>
-                    </div>
-
-                    <!-- References -->
-                    <div>
-                        <h3 class="text-sm font-semibold mb-2">3. Reusable References Save Tokens</h3>
-                        <p class="text-xs text-gray-600 mb-3 leading-relaxed">
-                            Define once, reference many times. Crucial for LLM context windows.
-                        </p>
-                        <div class="bg-gray-50 rounded p-3 text-xs font-mono">
-                            <div><span class="bg-gray-200 text-gray-900 px-1 rounded">$def:</span> <span class="bg-green-100 text-green-900 px-1 rounded">$cat</span>:Electronics</div>
-                            <div class="text-gray-500 mt-1">→ Reused 17× saves ~30% tokens</div>
-                            <div class="text-gray-500">→ Less repetition = less errors</div>
-                        </div>
-                    </div>
-
-                    <!-- Section Boundaries -->
-                    <div>
-                        <h3 class="text-sm font-semibold mb-2">4. Clear Section Boundaries</h3>
-                        <p class="text-xs text-gray-600 mb-3 leading-relaxed">
-                            Explicit markers help LLMs understand structure at a glance.
-                        </p>
-                        <div class="bg-gray-50 rounded p-3 text-xs font-mono space-y-1">
-                            <div><span class="bg-gray-200 text-gray-900 px-1 rounded">$def:</span> <span class="text-gray-500">← define variables here</span></div>
-                            <div><span class="bg-gray-200 text-gray-900 px-1 rounded">$data:</span> <span class="text-gray-500">← actual data here</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Future Enhancement: Schema -->
-            <div class="border border-blue-200 rounded-lg overflow-hidden bg-blue-50">
-                <div class="px-4 py-2 bg-blue-100 border-b border-blue-200">
-                    <h3 class="text-sm font-semibold text-blue-900">Future Enhancement: Type Schemas</h3>
-                </div>
-                <div class="p-4">
-                    <p class="text-xs text-blue-900 mb-3 leading-relaxed">
-                        A proposed <code class="bg-white px-1 rounded">$schema:</code> section would make types even more explicit for LLMs:
-                    </p>
-                    <pre class="bg-white p-3 rounded text-xs font-mono overflow-auto border border-blue-200"><span class="bg-gray-200 text-gray-900 px-1 rounded">$def:</span>
- <span class="bg-green-100 text-green-900 px-1 rounded">$category</span>:Electronics
-
-<span class="bg-blue-200 text-blue-900 px-1 rounded">$schema:</span>
- products[10]:{id:int,name:str,price:float,inStock:bool,category:str}
-
-<span class="bg-gray-200 text-gray-900 px-1 rounded">$data:</span>
-1|"Product 1"|10.99|false|<span class="bg-green-100 text-green-900 px-1 rounded">$category</span>
-2|"Product 2"|21.98|true|"Clothing"</pre>
-                    <p class="text-xs text-blue-800 mt-3">
-                        This would provide complete type information, making ASON even easier for LLMs to understand and generate correctly.
-                    </p>
                 </div>
             </div>
         </section>
