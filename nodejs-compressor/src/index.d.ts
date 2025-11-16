@@ -19,8 +19,8 @@ export interface SmartCompressorOptions {
   indent?: number;
 
   /**
-   * Delimiter for CSV arrays
-   * @default ','
+   * Delimiter for tabular arrays
+   * @default '|'
    */
   delimiter?: string;
 
@@ -31,10 +31,34 @@ export interface SmartCompressorOptions {
   useReferences?: boolean;
 
   /**
-   * Enable inline-first value dictionary
+   * Enable section organization for objects
    * @default true
    */
-  useDictionary?: boolean;
+  useSections?: boolean;
+
+  /**
+   * Enable tabular array format for uniform arrays
+   * @default true
+   */
+  useTabular?: boolean;
+
+  /**
+   * Minimum fields required to create a section
+   * @default 3
+   */
+  minFieldsForSection?: number;
+
+  /**
+   * Minimum rows required for tabular format
+   * @default 2
+   */
+  minRowsForTabular?: number;
+
+  /**
+   * Minimum occurrences required to create a reference
+   * @default 2
+   */
+  minReferenceOccurrences?: number;
 }
 
 /**
@@ -94,10 +118,10 @@ export class SmartCompressor {
   /**
    * Compresses JSON data into ASON format.
    *
-   * Performs a three-pass compression:
-   * 1. Detect repeated array structures (3+ occurrences)
-   * 2. Detect repeated objects (2+ occurrences)
-   * 3. Detect frequent string values (2+ occurrences)
+   * Performs multi-pass compression:
+   * 1. Detect repeated values (references → $var)
+   * 2. Detect object organization (sections → @section)
+   * 3. Detect uniform arrays (tabular → key:[N]{fields})
    *
    * @param data - Any JSON-serializable data
    * @returns ASON-formatted string
@@ -111,7 +135,7 @@ export class SmartCompressor {
    *   ]
    * };
    * const compressed = compressor.compress(data);
-   * // Output: users:[2]@id,name,email\n1,Alice,alice@example.com\n2,Bob,bob@example.com
+   * // Output: users:[2]{id,name,email}\n1|Alice|alice@example.com\n2|Bob|bob@example.com
    * ```
    */
   compress(data: any): string;
@@ -120,12 +144,11 @@ export class SmartCompressor {
    * Decompresses ASON format back to original JSON structure.
    *
    * Parses the ASON format including:
-   * - $def: section for structure/object/value definitions
-   * - $data: section for actual data
-   * - Uniform array notation ([N]@keys)
-   * - Object aliases (&obj0)
-   * - Value dictionary references (#0)
+   * - Tabular arrays (key:[N]{fields})
+   * - Sections (@section)
+   * - References ($var)
    * - Path flattening (a.b.c)
+   * - Non-tabular arrays (- prefix)
    *
    * @param text - ASON formatted string
    * @returns Original JSON data structure
@@ -133,7 +156,7 @@ export class SmartCompressor {
    *
    * @example
    * ```typescript
-   * const ason = "users:[2]@id,name\n1,Alice\n2,Bob";
+   * const ason = "users:[2]{id,name}\n1|Alice\n2|Bob";
    * const original = compressor.decompress(ason);
    * // Returns: {users: [{id: 1, name: "Alice"}, {id: 2, name: "Bob"}]}
    * ```

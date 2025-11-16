@@ -15,11 +15,12 @@ function parseArgs(args) {
     output: null,
     encode: false,
     decode: false,
-    delimiter: ',',
+    delimiter: '|',
     indent: 1,
     stats: false,
     useReferences: true,
-    useDictionary: true
+    useSections: true,
+    useTabular: true
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -39,8 +40,10 @@ function parseArgs(args) {
       options.stats = true;
     } else if (arg === '--no-references') {
       options.useReferences = false;
-    } else if (arg === '--no-dictionary') {
-      options.useDictionary = false;
+    } else if (arg === '--no-sections') {
+      options.useSections = false;
+    } else if (arg === '--no-tabular') {
+      options.useTabular = false;
     } else if (arg === '-h' || arg === '--help') {
       showHelp();
       process.exit(0);
@@ -66,11 +69,12 @@ OPTIONS:
   -o, --output <file>  Output file path (prints to stdout if omitted)
   -e, --encode         Force encode mode (JSON → ASON)
   -d, --decode         Force decode mode (ASON → JSON)
-  --delimiter <char>   Delimiter for arrays: ',' (comma), '\\t' (tab), '|' (pipe)
+  --delimiter <char>   Delimiter for tabular arrays: '|' (pipe), ',' (comma), '\\t' (tab)
   --indent <number>    Indentation size (default: 1)
   --stats              Show token count estimates and savings
-  --no-references      Disable object reference detection
-  --no-dictionary      Disable value dictionary
+  --no-references      Disable reference detection ($var)
+  --no-sections        Disable section organization (@section)
+  --no-tabular         Disable tabular array format (key:[N]{fields})
   -h, --help           Show this help message
 
 EXAMPLES:
@@ -194,7 +198,8 @@ try {
     indent: options.indent,
     delimiter: options.delimiter,
     useReferences: options.useReferences,
-    useDictionary: options.useDictionary
+    useSections: options.useSections,
+    useTabular: options.useTabular
   });
 
   if (mode === 'encode') {
