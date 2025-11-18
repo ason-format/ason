@@ -1,8 +1,12 @@
 # ASON 2.0 - Aliased Serialization Object Notation
 
 ![NPM Version](https://img.shields.io/npm/v/%40ason-format%2Fason)
+![PyPI Version](https://img.shields.io/pypi/v/ason-compressor)
+![Go Version](https://img.shields.io/github/go-mod/go-version/ason-format/ason?filename=go-compressor/go.mod)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![Go](https://img.shields.io/badge/Go-1.20+-00ADD8.svg)](https://golang.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 ![Downloads](https://img.shields.io/npm/dm/%40ason-format%2Fason)
 [![GitHub Stars](https://img.shields.io/github/stars/ason-format/ason?style=social)](https://github.com/ason-format/ason)
@@ -24,14 +28,18 @@
 
 ## 🚀 Quick Start
 
+ASON is available for **Node.js**, **Python**, and **Go**:
+
 ### Installation
+
+<details open>
+<summary><b>Node.js</b></summary>
 
 ```bash
 npm install @ason-format/ason
 ```
 
-### Basic Usage
-
+**Usage:**
 ```javascript
 import { SmartCompressor } from '@ason-format/ason';
 
@@ -48,15 +56,82 @@ const data = {
 const ason = compressor.compress(data);
 console.log(ason);
 // Output:
-// @users [2]{id,name,email}
-// 1|Alice|alice@ex.com
-// 2|Bob|bob@ex.com
+// users:[2]{id,name,email}
+// 1|Alice|"alice@ex.com"
+// 2|Bob|"bob@ex.com"
 
 // Decompress (perfect round-trip)
 const original = compressor.decompress(ason);
 ```
+</details>
 
-### CLI Tool
+<details>
+<summary><b>Python</b></summary>
+
+```bash
+pip install ason-compressor
+```
+
+**Usage:**
+```python
+from ason import SmartCompressor
+
+compressor = SmartCompressor(indent=1)
+
+data = {
+    "users": [
+        {"id": 1, "name": "Alice", "email": "alice@ex.com"},
+        {"id": 2, "name": "Bob", "email": "bob@ex.com"}
+    ]
+}
+
+# Compress
+ason = compressor.compress(data)
+print(ason)
+# Output:
+# users:[2]{id,name,email}
+# 1|Alice|"alice@ex.com"
+# 2|Bob|"bob@ex.com"
+
+# Decompress (perfect round-trip)
+original = compressor.decompress(ason)
+```
+</details>
+
+<details>
+<summary><b>Go</b></summary>
+
+```bash
+go get github.com/ason-format/ason/go-compressor
+```
+
+**Usage:**
+```go
+import "github.com/ason-format/ason/go-compressor/pkg/ason"
+
+compressor := ason.NewSmartCompressor(ason.DefaultOptions())
+
+data := map[string]interface{}{
+    "users": []interface{}{
+        map[string]interface{}{"id": 1.0, "name": "Alice", "email": "alice@ex.com"},
+        map[string]interface{}{"id": 2.0, "name": "Bob", "email": "bob@ex.com"},
+    },
+}
+
+// Compress
+asonStr := compressor.Compress(data)
+fmt.Println(asonStr)
+// Output:
+// users:[2]{id,name,email}
+// 1|Alice|"alice@ex.com"
+// 2|Bob|"bob@ex.com"
+
+// Decompress (perfect round-trip)
+original, _ := compressor.Decompress(asonStr)
+```
+</details>
+
+### CLI Tool (Node.js)
 
 ```bash
 # Compress JSON to ASON

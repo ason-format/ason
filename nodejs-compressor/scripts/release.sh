@@ -115,7 +115,7 @@ npm test || {
 }
 
 # Check if tag already exists
-TAG_NAME="v${NEW_VERSION}"
+TAG_NAME="nodejs-v${NEW_VERSION}"
 if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
   echo -e "${YELLOW}⚠ Tag ${TAG_NAME} already exists${NC}"
   read -p "Delete and recreate tag? (y/N): " -n 1 -r
@@ -136,12 +136,12 @@ git add package.json CHANGELOG.md package-lock.json dist/ 2>/dev/null || true
 if git diff --cached --quiet; then
   echo -e "${YELLOW}No changes to commit (files already staged or committed)${NC}"
 else
-  git commit -m "chore: release v${NEW_VERSION}"
+  git commit -m "chore(nodejs): release v${NEW_VERSION}"
   echo -e "${GREEN}✓ Changes committed${NC}"
 fi
 
 # Create tag
-git tag -a "$TAG_NAME" -m "Release v${NEW_VERSION}"
+git tag -a "$TAG_NAME" -m "Node.js Release v${NEW_VERSION}"
 
 echo ""
 echo -e "${GREEN}✓ Tag created: ${TAG_NAME}${NC}"
