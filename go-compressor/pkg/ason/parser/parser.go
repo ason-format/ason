@@ -40,6 +40,32 @@ func (p *Parser) Parse() (ASTNode, error) {
 		return p.parseRootWithSections()
 	}
 	
+	// Check if we have reference definitions followed by an array
+	// Format: &var0 = Value\n[N]{fields}...
+	if p.current.Type == lexer.AMPERSAND {
+		// Parse all reference definitions first
+		for p.current.Type == lexer.AMPERSAND && p.current.Type != lexer.EOF {
+			p.parseReferenceDefinition()
+			p.skipNewlines()
+		}
+		
+		// After references, check what follows
+		if p.current.Type == lexer.LBRACKET {
+			// Array follows references
+			return p.parseValue()
+		}
+	}
+	
+	// Check if this looks like a  key:value document (e.g., "name:Bob\nage:25")
+	// By checking if current token is STRING and next is COLON
+	if p.current.Type == lexer.STRING && p.position+1 < len(p.tokens) {
+		nextToken := p.tokens[p.position+1]
+		if nextToken.Type == lexer.COLON {
+			// This is a key:value document, parse as implicit object
+			return p.parseImplicitObject()
+		}
+	}
+	
 	return p.parseValue()
 }
 
@@ -169,6 +195,51 @@ func (p *Parser) parseObject() (ASTNode, error) {
 		return nil, fmt.Errorf("expected '}', got %s", p.current.Type)
 	}
 	p.advance() // skip }
+	
+	return obj, nil
+}
+
+// parseImplicitObject parses key:value pairs without braces (e.g., "name:Bob\nage:25")
+func (p *Parser) parseImplicitObject() (ASTNode, error) {
+	obj := NewObjectNode()
+	
+	for p.current.Type != lexer.EOF {
+		p.skipWhitespace()
+		
+		if p.current.Type == lexer.EOF {
+			break
+		}
+		
+		// Parse key
+		if p.current.Type != lexer.STRING {
+			// Not a key:value pair, stop parsing
+			break
+		}
+		
+		key := p.current.Value
+		p.advance()
+		
+		p.skipWhitespace()
+		
+		// Expect colon
+		if p.current.Type != lexer.COLON {
+			return nil, fmt.Errorf("expected ':', got %s", p.current.Type)
+		}
+		p.advance()
+		
+		p.skipWhitespace()
+		
+		// Parse value
+		value, err := p.parseValue()
+		if err != nil {
+			return nil, err
+		}
+		
+		obj.Set(key, value)
+		
+		// Skip newlines between key:value pairs
+		p.skipNewlines()
+	}
 	
 	return obj, nil
 }

@@ -1,65 +1,60 @@
 """
-Comprehensive test suite for ASON SmartCompressor
+Comprehensive test suite for ASON SmartCompressor using pytest
 
 Tests cover:
 - Basic compression/decompression (round-trip guarantee)
-- Complex nested structures
+- Complex nested structures  
 - Edge cases (nulls, empty values, special characters)
 - Token counting and compression metrics
-- Real-world data examples
 
 All tests verify lossless round-trip: compress(data) → decompress → original data
 """
 
-import sys
-import os
+import pytest
 import json
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
-
 from ason import SmartCompressor
 
 
-class TestSmartCompressor:
+@pytest.fixture
+def compressor():
+    """Fixture providing a fresh SmartCompressor instance for each test"""
+    return SmartCompressor(indent=1)
+
+
+class TestBasicFunctionality:
     """Test suite for SmartCompressor basic functionality"""
     
-    def setup_method(self):
-        """Setup test fixtures"""
-        self.compressor = SmartCompressor(indent=1)
-    
-    def test_simple_object(self):
+    def test_simple_object(self, compressor):
         """Test compression of simple flat object with primitives"""
         data = {"name": "Alice", "age": 30, "active": True}
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Round-trip failed for simple object"
-        print("✓ test_simple_object passed")
+        assert decompressed == data
     
-    def test_nested_object(self):
+    def test_nested_object(self, compressor):
         """Test compression of nested objects"""
         data = {
             "user": {"id": 1, "name": "Bob"},
             "settings": {"theme": "dark", "lang": "en"}
         }
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Round-trip failed for nested object"
-        print("✓ test_nested_object passed")
+        assert decompressed == data
     
-    def test_array_of_primitives(self):
+    def test_array_of_primitives(self, compressor):
         """Test compression of primitive arrays"""
         data = [1, 2, 3, "a", "b", True, False, None]
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Round-trip failed for primitive array"
-        print("✓ test_array_of_primitives passed")
+        assert decompressed == data
     
-    def test_uniform_array(self):
+    def test_uniform_array(self, compressor):
         """Test efficient compression of uniform arrays"""
         data = [
             {"id": 1, "name": "Alice", "age": 25},
@@ -67,31 +62,29 @@ class TestSmartCompressor:
             {"id": 3, "name": "Charlie", "age": 35}
         ]
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
         # Test round-trip
-        assert decompressed == data, "Round-trip failed for uniform array"
+        assert decompressed == data
         
         # Test compression efficiency
         original_str = json.dumps(data)
-        assert len(compressed) < len(original_str), "Uniform array should compress"
-        print("✓ test_uniform_array passed")
+        assert len(compressed) < len(original_str)
     
-    def test_null_and_empty_values(self):
+    def test_null_and_empty_values(self, compressor):
         """Test handling of null, 0, and empty strings"""
         data = {"a": None, "b": 0, "c": "", "d": False}
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed["a"] is None, "Null value not preserved"
-        assert decompressed["b"] == 0, "Zero not preserved"
-        assert decompressed["c"] == "", "Empty string not preserved"
-        assert decompressed["d"] == False, "False not preserved"
-        print("✓ test_null_and_empty_values passed")
+        assert decompressed["a"] is None
+        assert decompressed["b"] == 0
+        assert decompressed["c"] == ""
+        assert decompressed["d"] is False
     
-    def test_special_characters_in_strings(self):
+    def test_special_characters_in_strings(self, compressor):
         """Test strings with special characters like @, $, &"""
         data = {
             "email": "user@example.com",
@@ -99,13 +92,12 @@ class TestSmartCompressor:
             "company": "Smith & Co"
         }
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Special characters not preserved"
-        print("✓ test_special_characters_in_strings passed")
+        assert decompressed == data
     
-    def test_deeply_nested_objects(self):
+    def test_deeply_nested_objects(self, compressor):
         """Test deeply nested object structures"""
         data = {
             "level1": {
@@ -119,13 +111,12 @@ class TestSmartCompressor:
             }
         }
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Deep nesting not preserved"
-        print("✓ test_deeply_nested_objects passed")
+        assert decompressed == data
     
-    def test_mixed_type_array(self):
+    def test_mixed_type_array(self, compressor):
         """Test arrays with mixed types"""
         data = {
             "items": [
@@ -137,13 +128,12 @@ class TestSmartCompressor:
             ]
         }
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Mixed type array not preserved"
-        print("✓ test_mixed_type_array passed")
+        assert decompressed == data
     
-    def test_large_uniform_array(self):
+    def test_large_uniform_array(self, compressor):
         """Test compression benefit on large uniform arrays"""
         data = [
             {
@@ -155,10 +145,10 @@ class TestSmartCompressor:
             for i in range(50)
         ]
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Large array round-trip failed"
+        assert decompressed == data
         
         # Should show significant compression
         original_size = len(json.dumps(data))
@@ -166,23 +156,20 @@ class TestSmartCompressor:
         reduction = (original_size - compressed_size) / original_size * 100
         
         assert reduction > 20, f"Expected >20% compression, got {reduction:.1f}%"
-        print(f"✓ test_large_uniform_array passed (compressed {reduction:.1f}%)")
     
-    def test_empty_structures(self):
-        """Test empty objects and arrays"""
-        # Note: Empty structures may behave differently depending on implementation
+    def test_basic_structures(self, compressor):
+        """Test basic data structures"""
         data = {
             "value": 1,
             "array": [1, 2]
         }
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Basic structures not preserved"
-        print("✓ test_empty_structures passed")
+        assert decompressed == data
     
-    def test_boolean_values(self):
+    def test_boolean_values(self, compressor):
         """Test all boolean combinations"""
         data = {
             "true_val": True,
@@ -190,65 +177,58 @@ class TestSmartCompressor:
             "in_array": [True, False, True]
         }
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Boolean values not preserved"
+        assert decompressed == data
         assert decompressed["true_val"] is True
         assert decompressed["false_val"] is False
-        print("✓ test_boolean_values passed")
     
-    def test_number_types(self):
+    @pytest.mark.parametrize("value,expected", [
+        (42, 42),
+        (3.14159, 3.14159),
+        (-100, -100),
+        (0, 0),
+        (1e10, 1e10)
+    ])
+    def test_number_types(self, compressor, value, expected):
         """Test various number formats"""
-        data = {
-            "integer": 42,
-            "float": 3.14159,
-            "negative": -100,
-            "zero": 0,
-            "scientific": 1e10
-        }
+        data = {"number": value}
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "Number types not preserved"
-        print("✓ test_number_types passed")
+        assert decompressed["number"] == expected
     
-    def test_string_escaping(self):
-        """Test strings with quotes"""
+    def test_string_handling(self, compressor):
+        """Test various string formats"""
         data = {
             "simple": "hello world",
             "with_space": "hello world",
             "numeric_string": "12345"
         }
         
-        compressed = self.compressor.compress(data)
-        decompressed = self.compressor.decompress(compressed)
+        compressed = compressor.compress(data)
+        decompressed = compressor.decompress(compressed)
         
-        assert decompressed == data, "String handling failed"
-        print("✓ test_string_escaping passed")
+        assert decompressed == data
 
 
 class TestCompressorFeatures:
     """Test suite for SmartCompressor advanced features"""
     
-    def setup_method(self):
-        """Setup test fixtures"""
-        self.compressor = SmartCompressor(indent=1)
-    
-    def test_compress_with_stats(self):
+    def test_compress_with_stats(self, compressor):
         """Test compression with statistics"""
         data = {"test": "data", "nested": {"value": 123}}
         
-        result = self.compressor.compress_with_stats(data)
+        result = compressor.compress_with_stats(data)
         
-        assert 'ason' in result, "Missing 'ason' in stats result"
-        assert 'stats' in result, "Missing 'stats' in result"
-        assert 'reduction_percent' in result, "Missing 'reduction_percent'"
+        assert 'ason' in result
+        assert 'stats' in result
+        assert 'reduction_percent' in result
         assert isinstance(result['reduction_percent'], (int, float))
-        print("✓ test_compress_with_stats passed")
     
-    def test_validate_round_trip(self):
+    def test_validate_round_trip(self, compressor):
         """Test round-trip validation"""
         data = {
             "customer": {
@@ -261,12 +241,11 @@ class TestCompressorFeatures:
             }
         }
         
-        result = self.compressor.validate_round_trip(data)
+        result = compressor.validate_round_trip(data)
         
-        assert result['valid'] == True, "Round-trip validation failed"
-        print("✓ test_validate_round_trip passed")
+        assert result['valid'] is True
     
-    def test_tabular_array_detection(self):
+    def test_tabular_array_detection(self, compressor):
         """Test that uniform arrays use tabular format"""
         data = {
             "users": [
@@ -275,18 +254,17 @@ class TestCompressorFeatures:
             ]
         }
         
-        compressed = self.compressor.compress(data)
+        compressed = compressor.compress(data)
         
         # Should contain tabular format indicators
-        assert "[" in compressed and "]" in compressed, "Missing tabular format"
-        assert "{" in compressed, "Missing field schema"
+        assert "[" in compressed and "]" in compressed
+        assert "{" in compressed
         
         # Verify round-trip
-        decompressed = self.compressor.decompress(compressed)
-        assert decompressed == data, "Tabular array round-trip failed"
-        print("✓ test_tabular_array_detection passed")
+        decompressed = compressor.decompress(compressed)
+        assert decompressed == data
     
-    def test_optimization_stats(self):
+    def test_optimization_stats(self, compressor):
         """Test optimization statistics"""
         data = [
             {"id": i, "name": f"Item{i}", "value": i * 10}
@@ -294,67 +272,8 @@ class TestCompressorFeatures:
         ]
         
         try:
-            stats = self.compressor.get_optimization_stats(data)
-            # Just verify we get some stats back
+            stats = compressor.get_optimization_stats(data)
             assert stats is not None
-            print("✓ test_optimization_stats passed")
         except AttributeError:
             # Method might not exist in all implementations
-            print("✓ test_optimization_stats passed (method not available)")
-
-
-def run_all_tests():
-    """Run all test suites"""
-    print("=" * 60)
-    print("Running ASON Python Compressor Tests")
-    print("=" * 60)
-    
-    # Basic functionality tests
-    print("\n[Basic Functionality Tests]")
-    test_class = TestSmartCompressor()
-    test_class.setup_method()
-    test_class.test_simple_object()
-    test_class.setup_method()
-    test_class.test_nested_object()
-    test_class.setup_method()
-    test_class.test_array_of_primitives()
-    test_class.setup_method()
-    test_class.test_uniform_array()
-    test_class.setup_method()
-    test_class.test_null_and_empty_values()
-    test_class.setup_method()
-    test_class.test_special_characters_in_strings()
-    test_class.setup_method()
-    test_class.test_deeply_nested_objects()
-    test_class.setup_method()
-    test_class.test_mixed_type_array()
-    test_class.setup_method()
-    test_class.test_large_uniform_array()
-    test_class.setup_method()
-    test_class.test_empty_structures()
-    test_class.setup_method()
-    test_class.test_boolean_values()
-    test_class.setup_method()
-    test_class.test_number_types()
-    test_class.setup_method()
-    test_class.test_string_escaping()
-    
-    # Feature tests
-    print("\n[Feature Tests]")
-    feature_class = TestCompressorFeatures()
-    feature_class.setup_method()
-    feature_class.test_compress_with_stats()
-    feature_class.setup_method()
-    feature_class.test_validate_round_trip()
-    feature_class.setup_method()
-    feature_class.test_tabular_array_detection()
-    feature_class.setup_method()
-    feature_class.test_optimization_stats()
-    
-    print("\n" + "=" * 60)
-    print("✓ ALL TESTS PASSED!")
-    print("=" * 60)
-
-
-if __name__ == '__main__':
-    run_all_tests()
+            pytest.skip("get_optimization_stats not available")

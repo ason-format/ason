@@ -3,5 +3,8 @@ module github.com/ason-format/ason/go-compressor
 go 1.21
 
 require (
-	// No external dependencies - uses only Go standard library
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/stretchr/testify v1.11.1 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
