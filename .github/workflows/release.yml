@@ -6,6 +6,7 @@ on:
       - 'nodejs-v*'
       - 'python-v*'
       - 'go-v*'
+      - 'rust-v*'
 
 permissions:
   id-token: write
@@ -33,6 +34,9 @@ jobs:
           elif [[ "$TAG" == go-v* ]]; then
             echo "language=go" >> $GITHUB_OUTPUT
             echo "version=${TAG#go-v}" >> $GITHUB_OUTPUT
+          elif [[ "$TAG" == rust-v* ]]; then
+            echo "language=rust" >> $GITHUB_OUTPUT
+            echo "version=${TAG#rust-v}" >> $GITHUB_OUTPUT
           else
             echo "Unknown tag format: $TAG"
             exit 1

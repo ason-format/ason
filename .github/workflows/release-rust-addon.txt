@@ -1,0 +1,47 @@
+
+  # Release Rust package to crates.io
+  release-rust:
+    needs: detect
+    if: needs.detect.outputs.language == 'rust'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      
+      - name: Run tests
+        run: |
+          cd rust-compressor
+          cargo test
+      
+      - name: Build release
+        run: |
+          cd rust-compressor
+          cargo build --release
+      
+      - name: Publish to crates.io
+        run: |
+          cd rust-compressor
+          cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_TOKEN }}
+      
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Rust v${{ needs.detect.outputs.version }}
+          body: |
+            Rust ASON Compressor v${{ needs.detect.outputs.version }}
+            
+            Install: Add to Cargo.toml: `ason-compressor = "${{ needs.detect.outputs.version }}"`
+            
+            Documentation: https://docs.rs/ason-compressor
