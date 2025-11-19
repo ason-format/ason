@@ -2,9 +2,9 @@ name: Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test-nodejs:
@@ -12,30 +12,30 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x, 18.x, 20.x]
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      
+
       - name: Install dependencies
         run: |
           cd nodejs-compressor
           npm ci
-      
+
       - name: Build package
         run: |
           cd nodejs-compressor
           npm run build
-      
+
       - name: Run tests
         run: |
           cd nodejs-compressor
           npm test
-      
+
       - name: Run benchmarks
         run: |
           cd nodejs-compressor
@@ -45,21 +45,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
-    
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Install package
         run: |
           cd python-compressor
           pip install -e .
-      
+
       - name: Run tests
         run: |
           cd python-compressor
@@ -69,22 +69,46 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ['1.20', '1.21']
-    
+        go-version: ["1.20", "1.21"]
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Go ${{ matrix.go-version }}
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
-      
+
       - name: Run tests
         run: |
           cd go-compressor
           go test ./tests/... -v
-      
+
       - name: Run tests with race detector
         run: |
           cd go-compressor
           go test ./... -race
+
+  test-rust:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust-version: ["stable", "1.70"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust ${{ matrix.rust-version }}
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust-version }}
+
+      - name: Run tests
+        run: |
+          cd rust-compressor
+          cargo test --verbose
+
+      - name: Run tests with all features
+        run: |
+          cd rust-compressor
+          cargo test --all-features
