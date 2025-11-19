@@ -7,6 +7,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-v16+-green.svg)](https://nodejs.org/)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Go](https://img.shields.io/badge/Go-1.20+-00ADD8.svg)](https://golang.org/)
+[![Rust](https://img.shields.io/badge/Rust-1.70+-orange.svg)](https://www.rust-lang.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 ![Downloads](https://img.shields.io/npm/dm/%40ason-format%2Fason)
 [![GitHub Stars](https://img.shields.io/github/stars/ason-format/ason?style=social)](https://github.com/ason-format/ason)
@@ -28,7 +29,7 @@
 
 ## 🚀 Quick Start
 
-ASON is available for **Node.js**, **Python**, and **Go**:
+ASON is available for **Node.js**, **Python**, **Go**, and **Rust**:
 
 ### Installation
 
@@ -128,6 +129,42 @@ fmt.Println(asonStr)
 
 // Decompress (perfect round-trip)
 original, _ := compressor.Decompress(asonStr)
+```
+</details>
+
+<details>
+<summary><b>Rust</b></summary>
+
+Add to your `Cargo.toml`:
+```toml
+[dependencies]
+ason-compressor = "1.0"
+```
+
+**Usage:**
+```rust
+use ason_compressor::SmartCompressor;
+use serde_json::json;
+
+let compressor = SmartCompressor::default();
+
+let data = json!({
+    "users": [
+        {"id": 1, "name": "Alice", "email": "alice@ex.com"},
+        {"id": 2, "name": "Bob", "email": "bob@ex.com"}
+    ]
+});
+
+// Compress
+let ason = compressor.compress(&data);
+println!("{}", ason);
+// Output:
+// users:[2]{id,name,email}
+// 1|Alice|"alice@ex.com"
+// 2|Bob|"bob@ex.com"
+
+// Decompress (perfect round-trip)
+let original = compressor.decompress(&ason).unwrap();
 ```
 </details>
 

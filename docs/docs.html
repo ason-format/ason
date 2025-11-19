@@ -214,8 +214,8 @@
                     <h2 class="text-2xl font-semibold mb-4">Installation & Usage</h2>
 
                     <p class="text-sm text-gray-700 mb-6">
-                        ASON is available for <strong>Node.js</strong>, <strong>Python</strong>, and
-                        <strong>Go</strong>:
+                        ASON is available for <strong>Node.js</strong>, <strong>Python</strong>,
+                        <strong>Go</strong>, and <strong>Rust</strong>:
                     </p>
 
                     <!-- NPM -->
@@ -270,6 +270,24 @@ data := map[string]interface{}{
 
 compressed := compressor.Compress(data)
 original, _ := compressor.Decompress(compressed)</pre>
+                        </div>
+                    </div>
+
+                    <!-- Rust -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium mb-3">Rust (crates.io)</h3>
+                        <div class="code-block mb-3">
+                            <pre>ason-compressor = "1.0"</pre>
+                        </div>
+                        <div class="code-block">
+                            <pre>use ason_compressor::SmartCompressor;
+use serde_json::json;
+
+let compressor = SmartCompressor::default();
+let data = json!({"users": [{"id": 1, "name": "Alice"}]});
+
+let compressed = compressor.compress(&data);
+let original = compressor.decompress(&compressed).unwrap();</pre>
                         </div>
                     </div>
 
