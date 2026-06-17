@@ -212,8 +212,8 @@ export class Serializer {
     // Quote reserved keywords
     if (str === 'null' || str === 'true' || str === 'false') return true;
 
-    // Quote if starts with digit
-    if (/^-?\d/.test(str)) return true;
+    // Quote if starts with digit, plus '+' or minus '-'
+    if (/^[-+]?\d/.test(str)) return true;
 
     // Quote if starts with ASON special characters or slash
     if (/^[@$&#\[\{\/]/.test(str)) return true;
@@ -631,6 +631,9 @@ export class Serializer {
    * @returns {Object} Flattened object
    */
   flattenObject(obj, prefix) {
+    // Handle empty obj === {}
+    if (Object.keys(obj).length === 0) return { [prefix]: {} };
+
     const result = {};
 
     for (const [key, value] of Object.entries(obj)) {
